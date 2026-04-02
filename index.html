@@ -14,7 +14,6 @@
         .glow-text { text-shadow: 0 0 12px rgba(0, 255, 156, 0.8), 0 0 20px rgba(0, 255, 156, 0.4); }
         .glow-text-red { text-shadow: 0 0 12px rgba(255, 77, 77, 0.8); }
 
-        /* PRZYCISKI JĘZYKÓW */
         .lang-btn {
             border: 1px solid #00ff9c;
             background: rgba(0, 255, 156, 0.1);
@@ -231,7 +230,8 @@
                 added: "Added to Watchlist:",
                 online: "is ONLINE on",
                 joined: "JOINED",
-                left: "LEFT"
+                left: "LEFT",
+                searching: "Searching..."
             },
             pl: {
                 manual: "MANUAL SYSTEMU [?]",
@@ -254,7 +254,8 @@
                 added: "Dodano do listy:",
                 online: "jest ONLINE na",
                 joined: "WSZEDŁ NA",
-                left: "OPUŚCIŁ"
+                left: "OPUŚCIŁ",
+                searching: "Szukanie..."
             },
             se: {
                 manual: "SYSTEM MANUAL [?]",
@@ -277,7 +278,8 @@
                 added: "Tillagd i listan:",
                 online: "är ONLINE på",
                 joined: "ANSLÖT TILL",
-                left: "LÄMNADE"
+                left: "LÄMNADE",
+                searching: "Söker..."
             }
         };
 
@@ -328,7 +330,6 @@
         }
 
         function isPlayerWatched(name) { return name && WATCH.some(w => w.toLowerCase() === name.toLowerCase()); }
-        function formatTime(ms) { const s = Math.floor(ms/1000); return `${Math.floor(s/60)}m ${s % 60}s`; }
         function alertSound() { alarmAudio.currentTime = 0; alarmAudio.play().catch(()=>{}); }
 
         function logEvent(text, color = "text-green-500") {
@@ -337,7 +338,7 @@
             if (log.children.length > 50) log.removeChild(log.lastChild);
         }
 
-        function addAlert(text, type = 'leave') {
+        function addAlert(text, type = 'join') {
             const box = document.getElementById("alertBox");
             const colorClass = type === 'join' ? 'text-green-400 border-green-500' : 'text-red-400 border-red-500';
             box.innerHTML = `<div class="mb-1 border-l-2 pl-2 ${colorClass} font-bold"><span class="opacity-50 font-normal">[${new Date().toLocaleTimeString()}]</span> ${text}</div>` + box.innerHTML;
@@ -380,7 +381,6 @@
                 const currentNames = players.map(p => p.name);
 
                 currentNames.filter(p => !previous[name].includes(p)).forEach(pName => {
-                    sessions[pName] = Date.now();
                     if (!isFirstLoad && isPlayerWatched(pName)) { alertSound(); addAlert(`${pName} ${i18n[currentLang].joined} ${name}`, 'join'); }
                 });
                 previous[name].filter(p => !currentNames.includes(p)).forEach(pName => {
@@ -388,7 +388,9 @@
                 });
                 previous[name] = currentNames;
                 cache[name] = { ...attr, list: players, ping: Math.round(performance.now() - start) };
-            } catch (err) {}
+            } catch (err) {
+                console.error("Error fetching " + name, err);
+            }
         }
 
         async function updateAllServers() {
@@ -411,7 +413,11 @@
                 sEl.innerText = (c.status || "offline").toUpperCase();
                 sEl.className = `text-[10px] px-2 py-0.5 rounded border w-full text-right ${c.status === 'online' ? 'border-green-500 text-green-500' : 'border-red-500 text-red-500'}`;
                 document.getElementById(`players${name}`).innerText = `${c.players || 0}/${c.maxPlayers || 0}`;
-                document.getElementById(`map${name}`).innerText = c.map || "Altis";
+                
+                // POPRAWKA MAPY: Inteligentne sprawdzanie atrybutów
+                const mapDisplay = c.map || (c.details && c.details.map) || i18n[currentLang].searching;
+                document.getElementById(`map${name}`).innerText = mapDisplay;
+                
                 document.getElementById(`ping${name}`).innerText = `${c.ping || 0}ms`;
                 document.getElementById(`alert${name}`).style.display = c.list?.some(p => isPlayerWatched(p.name)) ? 'block' : 'none';
                 if (c.list) {
