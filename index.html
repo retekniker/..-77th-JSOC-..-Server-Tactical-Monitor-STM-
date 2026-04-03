@@ -22,7 +22,6 @@
             opacity: 0.8;
         }
 
-        /* Animacja pulsowania dla Refresh */
         @keyframes refresh-glow {
             0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 156, 0.2); border-color: rgba(0, 255, 156, 0.4); }
             50% { box-shadow: 0 0 15px rgba(0, 255, 156, 0.6); border-color: #00ff9c; }
@@ -255,6 +254,7 @@
         let currentLang = localStorage.getItem('jsoc_lang') || 'en';
         let isMuted = localStorage.getItem('jsoc_muted') === 'true';
         let currentVolume = parseFloat(localStorage.getItem('jsoc_volume')) || 1.0;
+        let testSoundToggle = false; // Do przełączania dźwięków testowych
         const SERVERS = { EU1: "14808491", EU2: "30137964", EU3: "28825461" };
         let WATCH = JSON.parse(localStorage.getItem('jsoc_watch')) || [];
         let previous = { EU1: [], EU2: [], EU3: [] };
@@ -263,7 +263,24 @@
         const soundLeave = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
 
         function playAudioFile(audioObj) { if(!isMuted) { const clone = audioObj.cloneNode(); clone.volume = currentVolume; clone.play().catch(()=>{}); } }
-        function setVolume(level) { currentVolume = level; localStorage.setItem('jsoc_volume', level); updateVolumeUI(); }
+        
+        // Zaktualizowana funkcja ustawiania głośności z testem dźwięku w pętli
+        function setVolume(level) { 
+            currentVolume = level; 
+            localStorage.setItem('jsoc_volume', level); 
+            updateVolumeUI(); 
+            
+            // Test dźwięku przy kliknięciu paska
+            if (!isMuted) {
+                if (testSoundToggle) {
+                    playAudioFile(soundLeave);
+                } else {
+                    playAudioFile(soundJoin);
+                }
+                testSoundToggle = !testSoundToggle; // Zmiana na przeciwny przy kolejnym kliknięciu
+            }
+        }
+
         function updateVolumeUI() { document.querySelectorAll('.vol-level').forEach(el => { const vol = parseFloat(el.getAttribute('data-vol')); el.className = vol <= currentVolume ? "vol-level w-6 h-1.5 cursor-pointer rounded-sm bg-green-400 shadow-[0_0_8px_#00ff9c]" : "vol-level w-6 h-1.5 cursor-pointer rounded-sm bg-green-900/40"; }); }
         function toggleMute() { isMuted = !isMuted; localStorage.setItem('jsoc_muted', isMuted); updateMuteUI(); }
         function updateMuteUI() {
