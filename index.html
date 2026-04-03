@@ -184,21 +184,21 @@
                 refresh: "System Refresh", manual: "SYSTEM MANUAL [?]", totalPop: "Total Population", watchlist: "SQUAD MANAGEMENT", notifications: "Notifications", 
                 trend: "Population Trend", syslog: "System Log", add: "ADD", clear: "Clear", players: "Players:", map: "Map:", ping: "Ping:",
                 modalTitle: "S.A.M. OPERATIONAL GUIDE", modalClose: "CLOSE INTERFACE",
-                modalContent: "<strong>1. Monitoring:</strong> Real-time tracking. Dbl-click a name on server lists to add.<br><br><strong>2. Squads:</strong> 8 slots. Alfa-Golf (max 11), FAV (max 210). Only ACTIVE squad members are highlighted.<br><br><strong>3. Alerts & Watchdog:</strong> System alerts on global joins/leaves (all 8 squads) and monitors API health every 20s.",
+                modalContent: "<strong>1. Monitoring:</strong> Real-time tracking. Dbl-click a name on server lists to add.<br><br><strong>2. Squads:</strong> 8 slots. Alfa-Golf (max 11), FAV (max 210). Only ACTIVE squad members are highlighted.<br><br><strong>3. Alerts & API:</strong> System alerts on global joins/leaves (all 8 squads). Automatic Rate-Limit detection applied.",
                 placeholder: "Nickname..."
             },
             pl: {
                 refresh: "Odśwież System", manual: "INSTRUKCJA SYSTEMU [?]", totalPop: "Populacja Ogólna", watchlist: "ZARZĄDZANIE ODDZIAŁAMI", notifications: "Powiadomienia", 
                 trend: "Trend Populacji", syslog: "Log Systemowy", add: "DODAJ", clear: "Wyczyść", players: "Graczy:", map: "Mapa:", ping: "Ping:",
                 modalTitle: "INSTRUKCJA OPERACYJNA S.A.M.", modalClose: "ZAMKNIJ INTERFEJS",
-                modalContent: "<strong>1. Monitorowanie:</strong> Śledzenie na żywo. Kliknij dwukrotnie nick na liście, by dodać.<br><br><strong>2. Oddziały:</strong> 8 list. Alfa-Golf (max 11), FAV (max 210). Podświetlani są tylko członkowie AKTYWNEGO oddziału.<br><br><strong>3. Alerty i Watchdog:</strong> Powiadomienia działają globalnie (dla wszystkich list), a Watchdog bada stan API co 20s.",
+                modalContent: "<strong>1. Monitorowanie:</strong> Śledzenie na żywo. Kliknij dwukrotnie nick na liście, by dodać.<br><br><strong>2. Oddziały:</strong> 8 list. Alfa-Golf (max 11), FAV (max 210). Podświetlani są tylko członkowie AKTYWNEGO oddziału.<br><br><strong>3. Alerty i API:</strong> Powiadomienia działają globalnie. System zapobiega blokadom poprzez automatyczny Anti-Spam API.",
                 placeholder: "Pseudonim..."
             },
             se: {
                 refresh: "Systemåterställning", manual: "SYSTEMHANDBOK [?]", totalPop: "Total Population", watchlist: "GRUPPHANTERING", notifications: "Meddelanden", 
                 trend: "Populationstrend", syslog: "Systemlogg", add: "LÄGG TILL", clear: "Rensa", players: "Spelare:", map: "Karta:", ping: "Ping:",
                 modalTitle: "S.A.M. OPERATIV GUIDE", modalClose: "STÄNG GRÄNSSNITT",
-                modalContent: "<strong>1. Övervakning:</strong> Spårning i realtid. Dubbelklicka på ett namn för att lägga till.<br><br><strong>2. Grupper:</strong> 8 listor. Alfa-Golf (max 11), FAV (max 210). Endast AKTIVA gruppmedlemmar markeras på listan.<br><br><strong>3. Larm & Watchdog:</strong> Varnar vid inloggningar på alla listor och övervakar API var 20:e sekund.",
+                modalContent: "<strong>1. Övervakning:</strong> Spårning i realtid. Dubbelklicka på ett namn för att lägga till.<br><br><strong>2. Grupper:</strong> 8 listor. Alfa-Golf (max 11), FAV (max 210). Endast AKTIVA gruppmedlemmar markeras på listan.<br><br><strong>3. Larm & API:</strong> Varnar vid inloggningar på alla listor. Har inbyggt skydd mot API-blockeringar.",
                 placeholder: "Smeknamn..."
             }
         };
@@ -216,7 +216,10 @@
         let lastSuccessfulFetch = Date.now();
         let errorCount = 0;
         let watchdogCounter = 0;
-        const BASE_INTERVAL = 5000;
+        
+        // ZMIANA: Zwiększono czas do 15 sekund oraz wprowadzono system Cooldown na blokady BM.
+        const BASE_INTERVAL = 15000; 
+        let rateLimitCooldown = 0;
         const systemStartTime = Date.now();
 
         const soundJoin = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
@@ -236,6 +239,12 @@
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
                 const res = await fetch(`https://api.battlemetrics.com/servers/${id}?include=player`, { signal: controller.signal });
                 clearTimeout(timeoutId);
+                
+                // ZMIANA: Obsługa konkretnego błędu 429
+                if (res.status === 429) {
+                    rateLimitCooldown = Date.now() + 60000; // 60 sekund całkowitego wstrzymania zapytań
+                    throw new Error("HTTP 429 - RATE LIMIT ACTIVATED");
+                }
                 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const json = await res.json();
@@ -272,7 +281,8 @@
                 previous[name] = players;
                 cache[name] = { ...attr, list: players.map(n => ({name: n})), ping: Math.floor(Math.random()*15)+5 };
             } catch (err) {
-                logEvent(`${name}: ERR ${err.message}`, "text-red-500");
+                logEvent(`${name}: ${err.message}`, "text-red-500");
+                throw err; // Przekazujemy błąd wyżej, aby przerwać cykl, jeśli to 429
             }
         }
 
@@ -284,31 +294,51 @@
         }
 
         async function updateAll() {
-            const delay = errorCount > 3 ? 10000 : BASE_INTERVAL;
-            await Promise.all([fetchServer("EU1", SERVERS.EU1), fetchServer("EU2", SERVERS.EU2), fetchServer("EU3", SERVERS.EU3)]);
-            
-            let totalPlayers = 0; let totalMax = 0; let anySuccess = false;
-            ["EU1", "EU2", "EU3"].forEach(n => {
-                const c = cache[n]; if (!c) return;
-                anySuccess = true;
-                totalPlayers += c.players || 0; totalMax += c.maxPlayers || 0;
-                const perc = Math.round((c.players / c.maxPlayers) * 100);
-                document.getElementById(`perc${n}`).innerText = `${perc}%`;
-                document.getElementById(`bar${n}`).style.width = `${perc}%`;
-                document.getElementById(`full${n}`).style.display = perc >= 100 ? "block" : "none";
-            });
+            // ZMIANA: Sprawdzamy, czy nie jesteśmy na przymusowej pauzie za spamowanie (Błąd 429)
+            if (Date.now() < rateLimitCooldown) {
+                const timeLeft = Math.ceil((rateLimitCooldown - Date.now()) / 1000);
+                logEvent(`[SYSTEM] API COOLDOWN: ${timeLeft}s LEFT`, "text-yellow-500 font-bold animate-pulse");
+                setTimeout(updateAll, 5000);
+                return;
+            }
 
-            if (anySuccess) {
-                errorCount = 0;
-                document.getElementById("totalStat").innerText = totalPlayers;
-                document.getElementById(`percTOTAL`).innerText = `${totalMax > 0 ? Math.round((totalPlayers / totalMax) * 100) : 0}%`;
-                document.getElementById(`barTOTAL`).style.width = `${totalMax > 0 ? Math.round((totalPlayers / totalMax) * 100) : 0}%`;
-                
-                const timeLabel = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                historyData.push(totalPlayers); historyLabels.push(timeLabel);
-                if (historyData.length > 60) { historyData.shift(); historyLabels.shift(); }
-                chart.data.labels = historyLabels; chart.data.datasets[0].data = historyData; chart.update('none');
-            } else { errorCount++; }
+            const delay = errorCount > 3 ? 20000 : BASE_INTERVAL;
+
+            try {
+                // ZMIANA: Sekwencyjne zapytania zapobiegające blokadom "Burst Rate"
+                await fetchServer("EU1", SERVERS.EU1);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Pół sekundy oddechu dla API
+                await fetchServer("EU2", SERVERS.EU2);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                await fetchServer("EU3", SERVERS.EU3);
+
+                let totalPlayers = 0; let totalMax = 0; let anySuccess = false;
+                ["EU1", "EU2", "EU3"].forEach(n => {
+                    const c = cache[n]; if (!c) return;
+                    anySuccess = true;
+                    totalPlayers += c.players || 0; totalMax += c.maxPlayers || 0;
+                    const perc = Math.round((c.players / c.maxPlayers) * 100);
+                    document.getElementById(`perc${n}`).innerText = `${perc}%`;
+                    document.getElementById(`bar${n}`).style.width = `${perc}%`;
+                    document.getElementById(`full${n}`).style.display = perc >= 100 ? "block" : "none";
+                });
+
+                if (anySuccess) {
+                    errorCount = 0;
+                    document.getElementById("totalStat").innerText = totalPlayers;
+                    document.getElementById(`percTOTAL`).innerText = `${totalMax > 0 ? Math.round((totalPlayers / totalMax) * 100) : 0}%`;
+                    document.getElementById(`barTOTAL`).style.width = `${totalMax > 0 ? Math.round((totalPlayers / totalMax) * 100) : 0}%`;
+                    
+                    const timeLabel = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                    historyData.push(totalPlayers); historyLabels.push(timeLabel);
+                    if (historyData.length > 60) { historyData.shift(); historyLabels.shift(); }
+                    chart.data.labels = historyLabels; chart.data.datasets[0].data = historyData; chart.update('none');
+                } else { 
+                    errorCount++; 
+                }
+            } catch (error) {
+                errorCount++;
+            }
 
             isFirstLoad = false;
             setTimeout(updateAll, delay);
@@ -339,8 +369,10 @@
         }
 
         function runWatchdog() {
+            if (Date.now() < rateLimitCooldown) return; // Ukryj ostrzeżenia Watchdoga w czasie celowego Cooldownu
+            
             const timeSinceLastData = Math.floor((Date.now() - lastSuccessfulFetch) / 1000);
-            const status = timeSinceLastData > 20 ? "CRITICAL" : "STABLE";
+            const status = timeSinceLastData > 40 ? "CRITICAL" : "STABLE";
             if (status === "CRITICAL" || ++watchdogCounter % 3 === 0) {
                 logEvent(`[WD] STATUS: ${status} | LATENCY: ${timeSinceLastData}s`, status === "CRITICAL" ? "text-red-500" : "text-blue-400");
             }
@@ -390,7 +422,7 @@
         function clearAllAlerts() { document.getElementById("alertBox").innerHTML = ""; }
         function updateClock() { document.getElementById('currentTime').innerText = new Date().toLocaleTimeString(); document.getElementById('currentDate').innerText = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); }
         function toggleHelp() { const m = document.getElementById('helpModal'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-        document.addEventListener("visibilitychange", () => { if (!document.hidden) { logEvent("SYNCING DATA...", "text-blue-400"); updateAll(); } });
+        document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() > rateLimitCooldown) { logEvent("SYNCING DATA...", "text-blue-400"); updateAll(); } });
 
         let chart;
         function initChart() {
@@ -403,10 +435,10 @@
 
         (async function init() {
             updateLangUI(); switchSquad(currentSquadIdx); initChart(); updateMuteUI(); updateVolumeUI(); setInterval(updateClock, 1000);
-            logEvent("S.A.M. SYSTEM ONLINE [5S INT]", "text-blue-400 font-bold");
+            logEvent("S.A.M. SYSTEM ONLINE [15S INT]", "text-blue-400 font-bold");
             updateAll();
             setInterval(renderUI, 1000);
-            setInterval(runWatchdog, 20000);
+            setInterval(runWatchdog, 30000); // Watchdog lekko zwolniony żeby dopasować do 15s interwału
         })();
     </script>
 </body>
