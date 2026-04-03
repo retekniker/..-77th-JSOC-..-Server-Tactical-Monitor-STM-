@@ -60,9 +60,12 @@
         .alert-btn-top { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
         .alert-btn-top:hover { opacity: 1; }
         
-        /* Dodatkowe style dla płynności */
         .chart-container { position: relative; width: 100%; height: 180px; }
         canvas { width: 100% !important; height: 100% !important; }
+
+        /* PULSE BORDER DLA SERVER FULL */
+        @keyframes pulse-border-red { 0%, 100% { box-shadow: 0 0 20px rgba(255,77,77,0.8); border-color: #ff4d4d; } 50% { box-shadow: 0 0 5px rgba(255,77,77,0.2); border-color: rgba(255,77,77,0.5); } }
+        .soc-border-pulse { border: 3px solid #ff4d4d; animation: pulse-border-red 1s infinite; transition: all 0.3s ease; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -303,9 +306,13 @@
                 ["EU1", "EU2", "EU3"].forEach(n => {
                     const c = cache[n]; if (!c) return;
                     totalPlayers += c.players; totalMax += c.maxPlayers;
-                    const perc = Math.round((c.players / c.maxPlayers) * 100);
+                    const perc = c.maxPlayers > 0 ? Math.round((c.players / c.maxPlayers) * 100) : 0;
                     document.getElementById(`perc${n}`).innerText = `${perc}%`;
-                    document.getElementById(`bar${n}`).style.width = `${perc}%`;
+                    
+                    const bar = document.getElementById(`bar${n}`);
+                    bar.className = "cap-bar-fill " + (perc >= 100 ? "bg-red-500" : perc >= 86 ? "bg-yellow-500" : "bg-green-500");
+                    bar.style.width = `${perc}%`;
+                    
                     document.getElementById(`full${n}`).style.display = perc >= 100 ? "block" : "none";
                 });
                 document.getElementById("totalStat").innerText = totalPlayers;
@@ -324,8 +331,28 @@
             ["EU1", "EU2", "EU3"].forEach(name => {
                 const c = cache[name]; if (!c) return;
                 const sEl = document.getElementById(`status${name}`);
-                sEl.innerText = c.status === 'online' ? (c.players >= c.maxPlayers ? "FULL" : "ONLINE") : "OFFLINE";
-                sEl.className = `text-[10px] px-2 py-0.5 rounded border border-${c.status === 'online' ? 'green' : 'red'}-500 text-right w-full`;
+                const container = document.getElementById(`container${name}`);
+                const isFull = c.players >= c.maxPlayers && c.maxPlayers > 0;
+                
+                if (c.status === 'online') {
+                    if (isFull) {
+                        sEl.innerText = "SERVER FULL";
+                        sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full text-red-500 full-text-blink font-bold uppercase";
+                        container.classList.remove('soc-border');
+                        container.classList.add('soc-border-pulse');
+                    } else {
+                        sEl.innerText = "ONLINE";
+                        sEl.className = "text-[10px] px-2 py-0.5 rounded border border-green-500 text-right w-full uppercase text-green-500";
+                        container.classList.add('soc-border');
+                        container.classList.remove('soc-border-pulse');
+                    }
+                } else {
+                    sEl.innerText = "OFFLINE";
+                    sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full uppercase opacity-50";
+                    container.classList.add('soc-border');
+                    container.classList.remove('soc-border-pulse');
+                }
+                
                 document.getElementById(`players${name}`).innerText = `${c.players}/${c.maxPlayers}`;
                 document.getElementById(`map${name}`).innerText = c.details?.map || "Altis";
                 document.getElementById(`ping${name}`).innerText = `${c.ping}ms`;
@@ -411,10 +438,7 @@
                 }
             });
 
-            // AUTOMATYCZNE PRZERYCOWANIE PRZY ZMIANIE ROZMIARU OKNA
-            const resizeObserver = new ResizeObserver(() => {
-                chart.resize();
-            });
+            const resizeObserver = new ResizeObserver(() => { chart.resize(); });
             resizeObserver.observe(document.getElementById('chartParent'));
         }
 
