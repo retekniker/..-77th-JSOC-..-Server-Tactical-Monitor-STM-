@@ -35,15 +35,10 @@
         @keyframes row-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         .btn-clear-all-green { border: 1px solid #00ff9c; color: #00ff9c; background: rgba(0, 255, 156, 0.05); font-size: 8px; padding: 4px 10px; font-weight: bold; text-transform: uppercase; transition: all 0.2s; cursor: pointer; }
         .btn-clear-all-green:hover { background: #00ff9c; color: #0b0f14; box-shadow: 0 0 15px #00ff9c; }
-        
-        /* POPRAWKA: ADD ALL button hover */
         .btn-add-all { border: 2px solid #00ff9c; background: rgba(0, 255, 156, 0.1); color: #00ff9c; font-size: 9px; font-weight: 900; padding: 3px 8px; text-transform: uppercase; transition: all 0.2s; cursor: pointer; margin-left: auto; }
         .btn-add-all:hover { background: #00ff9c; color: #0b0f14; box-shadow: 0 0 15px #00ff9c; }
-        
-        /* POPRAWKA: Notifications Clear All hover */
         .alert-btn-top { border: 1px solid #ff4d4d; color: #ff4d4d; font-size: 8px; padding: 2px 8px; font-weight: bold; text-transform: uppercase; transition: all 0.2s; cursor: pointer; background: transparent; }
         .alert-btn-top:hover { background: #ff4d4d; color: white; box-shadow: 0 0 15px #ff4d4d; }
-
         .volume-wrapper { position: relative; display: flex; align-items: center; gap: 8px; padding: 4px 8px; border: 1px solid rgba(0, 255, 156, 0.2); background: rgba(0, 255, 156, 0.02); }
         .volume-panel { display: flex; align-items: center; gap: 3px; transition: all 0.3s ease; }
         .vol-level { height: 16px; width: 6px; border-radius: 1px; transition: all 0.1s; }
@@ -205,7 +200,7 @@
                 refresh: "Systemåterställning", manual: "SYSTEMHANDBOK [?]", totalPop: "Total Population", watchlist: "GRUPPHANTERING", notifications: "Meddelanden", 
                 trend: "Populationstrend", syslog: "Systemlogg", add: "LÄGG TILL", clear: "Rensa", players: "Spelare:", map: "Karta:", ping: "Ping:",
                 modalTitle: "S.A.M. OPERATIV GUIDE", modalClose: "STÄNG GRÄNSSNITT",
-                modalContent: "<strong>1. Övervakning:</strong> Spårning i realtid. Dubbelklicka på ett namn för att lägga till.<br><br><strong>2. Grupper:</strong> 8 listor. Alfa-Golf (max 11), FAV (max 210). Endast AKTIVA gruppmedlemmar markeras na listan.<br><br><strong>3. Larm & API:</strong> Varnar vid inloggningar på alla listor. Har inbyggt skydd mot API-blockeringar.",
+                modalContent: "<strong>1. Övervakning:</strong> Spårning i realtid. Dubbelklicka na ett namn för att lägga till.<br><br><strong>2. Grupper:</strong> 8 listor. Alfa-Golf (max 11), FAV (max 210). Endast AKTIVA gruppmedlemmar markeras na listan.<br><br><strong>3. Larm & API:</strong> Varnar vid inloggningar på alla listor. Har inbyggt skydd mot API-blockeringar.",
                 placeholder: "Smeknamn..."
             }
         };
@@ -224,7 +219,7 @@
         let errorCount = 0;
         let watchdogCounter = 0;
         
-        const BASE_INTERVAL = 15000; 
+        const BASE_INTERVAL = 8000; // Updated to 8s
         let rateLimitCooldown = 0;
 
         const soundJoin = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
@@ -364,7 +359,7 @@
         function runWatchdog() {
             if (Date.now() < rateLimitCooldown) return;
             const timeSinceLastData = Math.floor((Date.now() - lastSuccessfulFetch) / 1000);
-            const status = timeSinceLastData > 40 ? "CRITICAL" : "STABLE";
+            const status = timeSinceLastData > (BASE_INTERVAL * 4 / 1000) ? "CRITICAL" : "STABLE";
             if (status === "CRITICAL" || ++watchdogCounter % 3 === 0) {
                 logEvent(`[WD] STATUS: ${status} | LATENCY: ${timeSinceLastData}s`, status === "CRITICAL" ? "text-red-500" : "text-blue-400");
             }
@@ -382,7 +377,6 @@
         function removeWatch(n) { ALL_SQUADS[currentSquadIdx] = ALL_SQUADS[currentSquadIdx].filter(x => x !== n); renderWatchList(); renderUI(); }
         function clearAllWatch() { ALL_SQUADS[currentSquadIdx] = []; renderWatchList(); renderUI(); }
         function addAllToWatch(sName) { const data = cache[sName]; const maxLimit = (currentSquadIdx === 8) ? 210 : 11; if (data && data.list) { data.list.forEach(p => { if (ALL_SQUADS[currentSquadIdx].length < maxLimit && !ALL_SQUADS[currentSquadIdx].includes(p.name)) ALL_SQUADS[currentSquadIdx].push(p.name); }); renderWatchList(); renderUI(); } }
-        
         function updateLangUI() { 
             const l = LANGS[currentLang]; 
             document.getElementById('btnRefresh').innerText = l.refresh; document.getElementById('manualBtn').innerText = l.manual; 
@@ -397,7 +391,6 @@
             document.querySelectorAll('.lang-label-ping').forEach(el => el.innerText = l.ping);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id.split('-').pop() === currentLang)); 
         }
-        
         function changeLang(lang) { currentLang = lang; localStorage.setItem('jsoc_lang', lang); updateLangUI(); }
         function setVolume(v) { currentVolume = v; localStorage.setItem('jsoc_volume', v); updateVolumeUI(); playAlert(soundJoin); }
         function updateVolumeUI() { document.querySelectorAll('.vol-level').forEach(el => el.style.backgroundColor = parseFloat(el.dataset.vol) <= currentVolume ? "#00ff9c" : "rgba(0,255,156,0.1)"); }
@@ -419,7 +412,7 @@
 
         (async function init() {
             updateLangUI(); switchSquad(currentSquadIdx); initChart(); updateMuteUI(); updateVolumeUI(); setInterval(updateClock, 1000);
-            logEvent("S.A.M. SYSTEM ONLINE [15S INT]", "text-blue-400 font-bold");
+            logEvent("S.A.M. SYSTEM ONLINE [8S INT]", "text-blue-400 font-bold");
             updateAll();
             setInterval(renderUI, 1000);
             setInterval(runWatchdog, 30000);
