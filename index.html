@@ -26,9 +26,7 @@
         }
         .btn-system-led:hover { background: #00ff9c; color: #0b0f14; box-shadow: 0 0 15px rgba(0, 255, 156, 0.6); }
         .btn-system-led:active { background: rgba(0, 255, 156, 0.2) !important; color: #00ff9c !important; box-shadow: inset 0 0 10px rgba(0, 255, 156, 0.4) !important; }
-        .btn-system-led.active-adv { background: #d946ef; color: white; border-color: #d946ef; box-shadow: 0 0 15px #d946ef; }
 
-        /* SPECJALNY CZERWONY KLAWISZ DLA ADVANCED MODE */
         .btn-system-led-red { 
             font-size: 10px; letter-spacing: 0.15em; padding: 5px 12px; 
             border: 1px solid #ff4d4d; 
@@ -72,20 +70,21 @@
         .led-green-blink { background-color: #00ff9c; box-shadow: 0 0 20px #00ff9c, 0 0 40px rgba(0,255,156,0.8); animation: alert-blink 1s infinite; }
         .led-red-blink { background-color: #ff4d4d; box-shadow: 0 0 20px #ff4d4d, 0 0 40px rgba(255,77,77,0.8); animation: alert-blink 0.4s infinite; }
         .led-green-solid { background-color: #00ff9c; box-shadow: 0 0 15px #00ff9c, 0 0 30px rgba(0,255,156,0.6); }
-
-        .btn-clear-all-green { border: 1px solid #00ff9c; background: transparent; color: #00ff9c; font-size: 10px; padding: 2px 10px; cursor: pointer; text-transform: uppercase; }
-        .alert-btn-top { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
-        .alert-btn-top:hover { opacity: 1; }
         
         .chart-container { position: relative; width: 100%; height: 180px; }
         canvas { width: 100% !important; height: 100% !important; }
 
-        /* WZMOCNIONY EFEKT FULL SERVER (Dodany Inset Box Shadow) */
         @keyframes pulse-border-red { 
             0%, 100% { box-shadow: 0 0 20px rgba(255,77,77,0.8), inset 0 0 15px rgba(255,77,77,0.3); border-color: #ff4d4d; } 
             50% { box-shadow: 0 0 5px rgba(255,77,77,0.2), inset 0 0 5px rgba(255,77,77,0.05); border-color: rgba(255,77,77,0.5); } 
         }
         .soc-border-pulse { border: 3px solid #ff4d4d; animation: pulse-border-red 1s infinite; transition: all 0.3s ease; }
+
+        /* Styl paska przewijania powiadomień */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 255, 156, 0.05); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 156, 0.3); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00ff9c; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -227,10 +226,12 @@
                 </div>
                 <div id="watchList" class="text-xs space-y-2 max-h-40 overflow-y-auto"></div>
             </div>
+            
             <div class="soc-border-red p-4 bg-red-950/10">
                 <div class="flex justify-between items-center mb-3"><h3 id="criticalTitle" class="text-sm font-bold uppercase text-white">Notifications</h3><button onclick="clearAllAlerts()" id="btnClearAlerts" class="btn-system-led" style="padding: 3px 8px; font-size: 9px;">Clear All</button></div>
-                <div id="alertBox" class="text-[11px] space-y-1 h-40 overflow-y-auto"></div>
+                <div id="alertBox" class="text-[11px] h-56 overflow-y-auto custom-scrollbar flex flex-col gap-1 pr-1"></div>
             </div>
+
             <div class="soc-border p-4 bg-black flex-1 min-h-[380px] min-w-0">
                 <h3 id="trendTitle" class="text-sm font-bold uppercase opacity-80 mb-6">Population Trend</h3>
                 <div class="grid grid-cols-4 gap-4 mb-8">
@@ -250,13 +251,14 @@
                         <button onclick="saveLog()" class="btn-system-led">Save (.txt)</button>
                     </div>
                 </div>
-                <div id="logBox" class="text-[11px] h-32 overflow-y-auto font-mono opacity-80 bg-black/20 p-2"></div>
+                <div id="logBox" class="text-[11px] h-32 overflow-y-auto font-mono opacity-80 bg-black/20 p-2 custom-scrollbar"></div>
             </div>
         </div>
     </div>
 
     <script>
         const SERVERS = { EU1: "14808491", EU2: "30137964", EU3: "28825461" };
+        const SQUAD_NAMES = ["", "ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT", "GOLF", "FAV"];
         const LANGS = {
             en: { 
                 refresh: "System Refresh", manual: "SYSTEM MANUAL [?]", totalPop: "Total Population", watchlist: "SQUAD MANAGEMENT", notifications: "Notifications", trend: "Population Trend", syslog: "System Log", add: "ADD", clear: "Clear", players: "Players:", map: "Map:", ping: "Ping:", placeholder: "Nickname...",
@@ -296,7 +298,7 @@
         // ADVANCED MODE PERSISTENCE
         let advMode = localStorage.getItem('jsoc_adv_mode') === 'true';
 
-        // ZAINICJOWANIE EU1 NA 07:31:18 (Zawsze jeśli nie było nadpisane)
+        // ZAINICJOWANIE EU1 NA 07:31:18 
         if (!lastRestartData.EU1) {
             let baseline = new Date();
             baseline.setHours(7, 31, 18, 0);
@@ -315,11 +317,7 @@
         function initAdvButton() {
             const btn = document.getElementById("advToggle");
             btn.innerText = `Advanced: ${advMode ? 'ON' : 'OFF'}`;
-            if(advMode) {
-                btn.classList.add("active-adv");
-            } else {
-                btn.classList.remove("active-adv");
-            }
+            if(advMode) { btn.classList.add("active-adv"); } else { btn.classList.remove("active-adv"); }
         }
 
         function toggleAdvanced() {
@@ -351,6 +349,80 @@
             a.click();
         }
 
+        function getWatchedInfo(name) {
+            for (let i = 1; i <= 8; i++) {
+                if (ALL_SQUADS[i].some(w => w.toLowerCase() === name.toLowerCase())) return SQUAD_NAMES[i];
+            }
+            return null;
+        }
+
+        // --- NOWY SYSTEM NOTYFIKACJI WIZUALNYCH ---
+        function addPlayerAlert(name, server, isJoin, squad) {
+            const b = document.getElementById("alertBox"); 
+            const d = document.createElement("div"); 
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            if (squad) {
+                // GRACZ OBSERWOWANY (Z LISTY)
+                const actionText = isJoin ? "JOINED" : "LEFT";
+                const actionColor = isJoin ? "text-green-500" : "text-red-500";
+                const arrow = isJoin ? "◄◄" : "►►";
+                const bgClass = isJoin ? "bg-green-900/20" : "bg-red-900/20";
+                const borderClass = isJoin ? "border-green-500" : "border-red-500";
+                
+                d.className = `flex justify-between items-center border-l-2 ${borderClass} pl-2 ${bgClass} py-1 transition-all`;
+                d.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="opacity-50 text-[10px] text-white">[${time}]</span>
+                        <span class="text-cyan-400 font-bold text-xs uppercase">[${squad}]</span>
+                        <span class="text-white font-bold text-[13px] tracking-wider">&lt; ${name} &gt;</span>
+                        <span class="${actionColor} font-bold text-xs ml-1">${actionText} ${server}</span>
+                    </div>
+                    <div class="flex items-center gap-3 pr-2">
+                        <span class="${actionColor} font-bold text-sm drop-shadow-md">${arrow}</span>
+                        <span class="cursor-pointer text-white hover:text-red-500 text-xs px-1" onclick="this.parentElement.parentElement.remove()">✖</span>
+                    </div>
+                `;
+            } else {
+                // ZWYKŁY GRACZ
+                const actionText = isJoin ? "joined" : "left";
+                const color = isJoin ? "text-green-500/70" : "text-red-500/70";
+                const arrow = isJoin ? "◄" : "►";
+                
+                d.className = `flex justify-between items-center pl-2 bg-black/40 py-0.5 border-l border-white/5`;
+                d.innerHTML = `
+                    <div class="flex items-center gap-2 opacity-80">
+                        <span class="opacity-40 text-[9px]">[${time}]</span>
+                        <span class="text-gray-400 text-[10px] uppercase">${name}</span>
+                        <span class="text-gray-500 text-[9px] ml-1">${actionText} ${server}</span>
+                    </div>
+                    <div class="flex items-center gap-3 pr-2 opacity-80">
+                        <span class="${color} text-[10px]">${arrow}</span>
+                        <span class="cursor-pointer text-gray-600 hover:text-red-500 text-[10px] px-1" onclick="this.parentElement.parentElement.remove()">✖</span>
+                    </div>
+                `;
+            }
+            b.insertBefore(d, b.firstChild); 
+            if (b.children.length > 80) b.removeChild(b.lastChild); 
+        }
+
+        function addSystemAlert(message) {
+            const b = document.getElementById("alertBox"); 
+            const d = document.createElement("div"); 
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            d.className = `flex justify-between items-center border-l-4 border-red-500 pl-3 bg-red-950/80 py-2 soc-border-pulse`;
+            d.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <span class="opacity-70 text-[10px] text-white">[${time}]</span>
+                    <span class="text-yellow-400 font-black text-xs md:text-sm tracking-widest uppercase text-shadow-sm">⚠️ ${message} ⚠️</span>
+                </div>
+                <span class="cursor-pointer text-white hover:text-red-500 px-2 text-lg" onclick="this.parentElement.remove()">✖</span>
+            `;
+            b.insertBefore(d, b.firstChild); 
+            if (b.children.length > 80) b.removeChild(b.lastChild); 
+        }
+
         async function fetchServer(name, id) {
             const start = performance.now();
             try {
@@ -371,14 +443,14 @@
 
                 if (advMode) logEvent(`[ADV] ${name} SYNC OK | LAT: ${lat}MS | UP: ${currentUptime}S`, "text-gray-500", true);
 
-                // --- SMART WATCHDOG CORE (TYLKO DLA EU1) ---
+                // --- SMART WATCHDOG CORE ---
                 if (name === "EU1") {
                     if (!isFirstLoad && prevUptime[name] !== -1) {
                         if (currentPlayers === 0 && currentUptime < prevUptime[name] && currentUptime < 300) {
                             if (!isBooting[name]) {
                                 isBooting[name] = true;
                                 logEvent(`[WD] CRITICAL: ${name} NEW RESTART DETECTED`, "text-red-500 font-bold");
-                                addAlert(`<span class="text-yellow-500">RESTART INITIATED: ${name}</span>`, name, false);
+                                addSystemAlert(`CRITICAL: ${name} SERVER DOWN / RESTARTING`);
                                 playAlert(soundRestart);
                             }
                         }
@@ -391,6 +463,7 @@
                         localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
                         
                         logEvent(`[WD] CONFIRMED: ${name} BOOT COMPLETE. CYCLE LOCKED.`, "text-cyan-400 font-bold");
+                        addSystemAlert(`${name} SYSTEM ONLINE. CYCLE LOCKED.`);
                         alert15Triggers[name] = false;
                     }
                 }
@@ -401,18 +474,20 @@
                 if (!isFirstLoad) {
                     players.forEach(pName => {
                         if (!previous[name].includes(pName)) {
-                            const isWatched = isPlayerGlobalWatched(pName);
-                            if (isWatched) { playAlert(soundJoin); addAlert(`${pName}`, name, true); }
-                            logEvent(`${pName} JOINED ${name}`, isWatched ? "text-red-500 font-bold" : "text-gray-400");
+                            const squad = getWatchedInfo(pName);
+                            if (squad) { playAlert(soundJoin); }
+                            addPlayerAlert(pName, name, true, squad);
+                            logEvent(`${pName} JOINED ${name}`, squad ? "text-red-500 font-bold" : "text-gray-400");
                         }
                     });
                     
                     if (name !== "EU1" || !isBooting[name]) {
                         previous[name].forEach(pName => {
                             if (!players.includes(pName)) {
-                                const isWatched = isPlayerGlobalWatched(pName);
-                                if (isWatched) { playAlert(soundLeave); addAlert(`${pName}`, name, false); }
-                                logEvent(`${pName} LEFT ${name}`, isWatched ? "text-red-500 font-bold" : "text-gray-600");
+                                const squad = getWatchedInfo(pName);
+                                if (squad) { playAlert(soundLeave); }
+                                addPlayerAlert(pName, name, false, squad);
+                                logEvent(`${pName} LEFT ${name}`, squad ? "text-red-500 font-bold" : "text-gray-600");
                             }
                         });
                     }
@@ -461,7 +536,6 @@
             }
             isFirstLoad = false;
             
-            // DYNAMICZNY INTERWAŁ TYLKO DLA EU1
             const dynamicInterval = (isBooting.EU1) ? 3000 : 10000;
             setTimeout(updateAll, dynamicInterval);
         }
@@ -490,7 +564,7 @@
                 document.getElementById(`players${name}`).innerText = `${c.players}/${c.maxPlayers}`;
                 document.getElementById(`map${name}`).innerText = c.details?.map || "Altis";
                 document.getElementById(`ping${name}`).innerText = `${c.ping}ms`;
-                document.getElementById(`alert${name}`).style.display = c.list?.some(p => isPlayerGlobalWatched(p.name)) ? 'block' : 'none';
+                document.getElementById(`alert${name}`).style.display = c.list?.some(p => getWatchedInfo(p.name)) ? 'block' : 'none';
                 const listEl = document.getElementById(`list${name}`); listEl.innerHTML = "";
                 c.list?.forEach((p, i) => {
                     const isWatched = ALL_SQUADS[currentSquadIdx].some(w => w.toLowerCase() === p.name.toLowerCase());
@@ -550,6 +624,7 @@
                 } else if (remain <= 15 * 60 * 1000) {
                     if (!alert15Triggers[n]) {
                         logEvent(`[WD] WARNING: ${n} RESTART IN 15 MINUTES`, "text-cyan-400 font-bold");
+                        addSystemAlert(`WARNING: ${n} REBOOT IN 15 MIN`);
                         playAlert(soundRestart);
                         alert15Triggers[n] = true;
                     }
@@ -562,17 +637,8 @@
             });
         }
 
-        function addAlert(name, server, isJoin) { 
-            const b = document.getElementById("alertBox"); const d = document.createElement("div"); 
-            const color = isJoin ? "text-green-400" : "text-red-500";
-            const arrow = isJoin ? ">>" : "<<";
-            d.className = `flex justify-between items-center mb-1 border-l-2 ${isJoin ? 'border-green-500' : 'border-red-500'} pl-2 bg-black/20 ${color} font-bold uppercase`; 
-            d.innerHTML = `<div><span class="opacity-50 font-normal">[${new Date().toLocaleTimeString()}]</span> ${arrow} ${name} (${server})</div><span class="cursor-pointer text-white hover:text-red-500 px-2" onclick="this.parentElement.remove()">✖</span>`; 
-            b.insertBefore(d, b.firstChild); 
-        }
-
         function switchSquad(idx) { currentSquadIdx = idx; localStorage.setItem('jsoc_sq_idx', idx); document.querySelectorAll('.squad-btn').forEach(b => b.classList.toggle('active', parseInt(b.id.split('-').pop()) === idx)); renderWatchList(); renderUI(); }
-        function isPlayerGlobalWatched(name) { for (let i = 1; i <= 8; i++) { if (ALL_SQUADS[i].some(w => w.toLowerCase() === name.toLowerCase())) return true; } return false; }
+        function isPlayerGlobalWatched(name) { return getWatchedInfo(name) !== null; }
         function renderWatchList() { const list = ALL_SQUADS[currentSquadIdx]; const div = document.getElementById("watchList"); const max = currentSquadIdx === 8 ? 210 : 11; div.innerHTML = ""; list.forEach(n => { const item = document.createElement("div"); item.className = "flex justify-between items-center bg-green-900/20 p-1 px-2 rounded"; item.innerHTML = `<span>${n}</span><span class="cursor-pointer hover:text-white" onclick="removeWatch('${n}')">✖</span>`; div.appendChild(item); }); document.getElementById("squadCounter").innerText = `${list.length}/${max}`; localStorage.setItem('jsoc_all_squads', JSON.stringify(ALL_SQUADS)); }
         function addWatch(val) { const input = document.getElementById("watchInput"); const nick = (val || input.value).trim(); if (nick && ALL_SQUADS[currentSquadIdx].length < (currentSquadIdx === 8 ? 210 : 11)) { if (!ALL_SQUADS[currentSquadIdx].includes(nick)) { ALL_SQUADS[currentSquadIdx].push(nick); renderWatchList(); renderUI(); } } input.value = ""; }
         function removeWatch(n) { ALL_SQUADS[currentSquadIdx] = ALL_SQUADS[currentSquadIdx].filter(x => x !== n); renderWatchList(); renderUI(); }
