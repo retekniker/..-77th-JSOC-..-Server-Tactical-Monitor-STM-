@@ -48,13 +48,8 @@
         @keyframes alert-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
         .full-text-blink { font-size: 10px; font-weight: 900; color: #ff4d4d; text-shadow: 0 0 8px #ff4d4d; animation: alert-blink 0.5s infinite; }
         .blink-text { animation: alert-blink 1s infinite; }
+        .alert-icon { display: none; width: 18px; height: 18px; background-color: #ff4d4d; color: white; border-radius: 50%; text-align: center; line-height: 18px; font-weight: bold; font-size: 10px; margin-left: 8px; animation: alert-blink 0.8s infinite; box-shadow: 0 0 10px #ff4d4d; }
         
-        .alert-icon { 
-            width: 16px; height: 16px; border-radius: 50%; text-align: center; 
-            line-height: 16px; font-weight: bold; font-size: 10px; 
-            animation: alert-blink 0.8s infinite; color: #0b0f14; display: inline-block;
-        }
-
         #helpModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #0b0f14; border: 4px solid #00ff9c; box-shadow: 0 0 40px rgba(0, 255, 156, 0.4); max-width: 800px; width: 95%; padding: 3rem; max-height: 85vh; overflow-y: auto; }
         
@@ -79,8 +74,16 @@
         .sq-color-7 { color: #f97316; border: 1px solid rgba(249, 115, 22, 0.4); } .sq-color-7:hover, .sq-color-7.active { background: #f97316; color: #0b0f14; border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.6); }
         .sq-color-8 { color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.4); } .sq-color-8:hover, .sq-color-8.active { background: #9ca3af; color: #0b0f14; border-color: #9ca3af; box-shadow: 0 0 15px rgba(156, 163, 175, 0.6); }
 
-        @keyframes row-alert-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
-        .active-squad-member { animation: row-alert-blink 1.1s infinite; font-weight: 900 !important; border-left-width: 4px !important; }
+        /* SKOPIOWANE Z DIODY EU1: 3 sekundy, miękkie przejście opacity od 1 do 0.6 */
+        @keyframes active-squad-led-pulse { 
+            0%, 100% { opacity: 1; box-shadow: inset 0 0 15px currentColor; } 
+            50% { opacity: 0.6; box-shadow: inset 0 0 5px currentColor; } 
+        }
+        .active-squad-member { 
+            animation: active-squad-led-pulse 3s ease-in-out infinite; 
+            font-weight: 900 !important; 
+            border-left-width: 4px !important; 
+        }
 
         .clock-wait { opacity: 0.3; }
         .led-indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 10px; vertical-align: middle; border: 2px solid rgba(255,255,255,0.4); }
@@ -187,7 +190,7 @@
                             <h2 class="font-bold text-lg">EU-1</h2>
                             <div id="alertsEU1" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU1')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                        <button onclick="addAllToWatch('EU1')" id="btnAddAllEU1" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU1" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU1" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU1" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU1" class="text-right font-bold">-ms</div></div>
@@ -200,7 +203,7 @@
                             <h2 class="font-bold text-lg">EU-2</h2>
                             <div id="alertsEU2" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU2')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                        <button onclick="addAllToWatch('EU2')" id="btnAddAllEU2" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU2" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU2" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU2" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU2" class="text-right font-bold">-ms</div></div>
@@ -213,7 +216,7 @@
                             <h2 class="font-bold text-lg">EU-3</h2>
                             <div id="alertsEU3" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU3')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                        <button onclick="addAllToWatch('EU3')" id="btnAddAllEU3" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU3" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU3" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU3" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU3" class="text-right font-bold">-ms</div></div>
@@ -308,7 +311,7 @@
             <div class="soc-border p-4 bg-black/40 relative z-10">
                 <div class="flex justify-between items-center mb-2 relative z-20">
                     <h3 class="text-sm font-bold uppercase opacity-80">SYS-LOG</h3>
-                    <div class="flex gap-2"><button id="advToggle" onclick="toggleAdvanced()" class="btn-system-led-red">Advanced: OFF</button><button onclick="copyLog()" class="btn-system-led">COPY</button><button onclick="saveLog()" class="btn-system-led">SAVE</button></div>
+                    <div class="flex gap-2"><button id="advToggle" onclick="toggleAdvanced()" class="btn-system-led-red">Advanced: OFF</button><button class="btn-system-led" onclick="copyLog()">COPY</button><button class="btn-system-led" onclick="saveLog()">SAVE</button></div>
                 </div>
                 <div id="logBox" class="text-[11px] h-32 overflow-y-auto font-mono opacity-80 bg-black/20 p-2 custom-scrollbar relative z-20"></div>
             </div>
@@ -433,12 +436,12 @@
 
         function initAdvButton() { const btn = document.getElementById("advToggle"); btn.innerText = `Advanced: ${advMode ? 'ON' : 'OFF'}`; if(advMode) { btn.classList.add("active-adv"); } else { btn.classList.remove("active-adv"); } }
         function toggleAdvanced() { advMode = !advMode; localStorage.setItem('jsoc_adv_mode', advMode); initAdvButton(); logEvent(`Advanced logging ${advMode ? 'ENABLED' : 'DISABLED'}`, advMode ? "text-red-400" : "text-gray-500"); }
-        function logEvent(text, color = "text-green-500", isAdvanced = false) { if (isAdvanced && !advMode) return; const log = document.getElementById("logBox"); if (!log) return; const entry = document.createElement("div"); entry.className = `${color} py-0.5 border-b border-white/5 uppercase`; entry.innerHTML = `<span class="opacity-40">[${new Date().toLocaleTimeString()}]</span> ${text}`; log.insertBefore(entry, log.firstChild); if (log.children.length > 100) log.removeChild(log.lastChild); }
+        function logEvent(text, color = "text-green-500", isAdvanced = false) { if (isAdvanced && !advMode) return; const log = document.getElementById("logBox"); if (!log) return; const entry = document.createElement("div"); entry.className = `${color} py-0.5 border-b border-white/5 uppercase`; entry.innerHTML = `<span class="opacity-40">[${new Date().toLocaleTimeString('en-US', { hour12: false })}]</span> ${text}`; log.insertBefore(entry, log.firstChild); if (log.children.length > 100) log.removeChild(log.lastChild); }
         function copyLog() { const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n'); navigator.clipboard.writeText(text).then(() => logEvent("Log copied", "text-cyan-400")); }
         function saveLog() { const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n'); const blob = new Blob([text], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sam_log_${new Date().getTime()}.txt`; a.click(); }
 
         function addPlayerAlert(name, server, isJoin, squadDetails, joinedAt = null) {
-            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
             
             let sessionTimeStr = "";
             if (!isJoin && joinedAt) {
@@ -459,7 +462,7 @@
         }
 
         function addSystemAlert(message) {
-            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
             d.className = `flex justify-between items-center border-l-4 border-red-500 pl-3 bg-red-950/80 py-2 soc-border-pulse mb-1`;
             d.innerHTML = `<div class="flex items-center gap-3"><span class="opacity-70 text-[10px] text-white">[${time}]</span><span class="text-yellow-400 font-black text-xs md:text-sm tracking-widest uppercase text-shadow-sm">⚠️ ${message} ⚠️</span></div><span class="cursor-pointer text-white hover:text-red-500 px-2 text-lg" onclick="this.parentElement.remove()">✖</span>`;
             b.insertBefore(d, b.firstChild); if (b.children.length > 80) b.removeChild(b.lastChild); 
