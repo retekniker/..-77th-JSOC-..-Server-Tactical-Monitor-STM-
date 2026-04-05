@@ -218,6 +218,8 @@
 </head>
 <body class="p-4 md:p-6 relative" onclick="unlockAudioFallback()">
 
+    <div id="stickyAlerts" class="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 w-full max-w-2xl px-4 pointer-events-none"></div>
+
     <div id="helpModal">
         <div class="modal-content custom-scrollbar">
             <div class="flex justify-between items-center border-b border-green-900 pb-4 mb-6">
@@ -246,7 +248,7 @@
                 <span class="text-xs font-light opacity-80 tracking-[0.2em] m-0 leading-none">
                     <span class="sam-highlight glow-text">S</span>.A.M. <span class="sam-rest glow-text ml-1">TACTICAL MONITOR</span>
                 </span>
-                <span class="by-komputer ml-2">by Komputer v4.8.7</span>
+                <span class="by-komputer ml-2">by Komputer v4.9.0</span>
             </div>
         </div>
 
@@ -552,7 +554,7 @@
         let audioQueue = []; 
         let isPlayingQueue = false; 
         let currentAudioObj = null;
-        let ttsUtterances = []; // Globalny bufor ratujący Chrome TTS przed usunięciem z RAM
+        let ttsUtterances = []; 
 
         let forceSeed = new Date();
         forceSeed.setHours(23, 32, 0, 0);
@@ -560,6 +562,31 @@
         if (!lastRestartData.EU1 || Math.abs(lastRestartData.EU1 - forceSeed.getTime()) > 600000) {
             lastRestartData.EU1 = forceSeed.getTime();
             localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+        }
+
+        // -------------------------------------------------------------
+        // FUNKCJA: STICKY ALERTS & BROWSER NATIVE NOTIFICATIONS
+        // -------------------------------------------------------------
+        function showStickyAlert(title, message) {
+            // HTML Sticky Alert (Zostaje na ekranie dopóki nie zamkniesz)
+            const container = document.getElementById('stickyAlerts');
+            const div = document.createElement('div');
+            div.className = "pointer-events-auto border-2 border-red-500 bg-red-950/95 text-white p-4 rounded shadow-[0_0_30px_rgba(255,0,0,0.8)] flex justify-between items-center backdrop-blur-md mb-2";
+            div.innerHTML = `
+                <div class="flex flex-col">
+                    <span class="text-red-500 font-black text-lg md:text-xl tracking-widest uppercase text-shadow-sm flex items-center gap-2">
+                        <span class="animate-ping">🔴</span> ${title}
+                    </span>
+                    <span class="text-sm font-bold mt-1 text-gray-200">${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="bg-red-500/20 hover:bg-red-500 border border-red-500 text-white font-bold py-2 px-4 ml-4 transition-colors tracking-widest text-xs uppercase shrink-0">DISMISS</button>
+            `;
+            container.appendChild(div);
+            
+            // Wysłanie natywnego powiadomienia do Windows/Mac (Zostaje na ekranie dopóki nie zamkniesz)
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: message, requireInteraction: true, icon: "https://cdn-icons-png.flaticon.com/512/559/559343.png" });
+            }
         }
 
         function setWdState(server, state) {
@@ -659,7 +686,7 @@
             if (item.type === 'speech') {
                 if(window.speechSynthesis) {
                     let msg = new SpeechSynthesisUtterance(item.text); 
-                    ttsUtterances.push(msg); // Zapobiega usuwaniu z RAM w trakcie mówienia (Chrome Bug)
+                    ttsUtterances.push(msg); 
                     if (ttsVoice) { msg.voice = ttsVoice; }
                     msg.volume = currentVolume; msg.lang = 'en-US'; msg.rate = 0.9; msg.pitch = 0.85;
                     msg.onend = () => { 
@@ -719,6 +746,11 @@
                     a.remove();
                 }
             });
+
+            // Prośba o uprawnienia do powiadomień Windows/Mac
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
 
             if (!audioUnlocked) {
                 audioUnlocked = true; voiceEnabled = true; initVoice(); 
@@ -873,9 +905,13 @@
                             if (currentUptime > 0) { lastRestartData[name] = Date.now() - (currentUptime * 1000); } else { lastRestartData[name] = Date.now(); }
                             localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
                             
+                            // WYZWALACZ STICKY ALERTS
                             if (state === 'ON') {
                                 logEvent(`[WD] CRITICAL: ${name} SERVER DOWN`, "text-red-500 font-bold"); 
                                 addSystemAlert(`CRITICAL: ${name} SERVER DOWN`); 
+                                
+                                showStickyAlert(`CRITICAL: ${name} DOWN`, `System detected a potential crash or restart on ${name}.`);
+                                
                                 queueSound(SOUND_SQUAD, currentVolume * 0.3);
                                 if(audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`Critical alert. ${name.replace('EU1', 'EU One')} server down.`); }
                             } else if (state === 'AUTO') {
@@ -899,7 +935,6 @@
                 
                 prevUptime[name] = currentUptime;
 
-                // TWARDA HISTEREZA (ZABEZPIECZENIE PRZED SKAKANIEM 99/100 I SPAMOWANIEM ALARMU)
                 if (maxPlayers > 0 && currentPlayers >= maxPlayers) {
                     if (!isServerFullAlerted[name]) {
                         isServerFullAlerted[name] = true; 
@@ -909,7 +944,6 @@
                         else { queueSound(SOUND_SQUAD, currentVolume * 0.2); }
                     }
                 } else if (currentPlayers <= maxPlayers - 2) {
-                    // Serwer musi stracić przynajmniej 2 graczy, żeby alarm uzbroił się ponownie
                     isServerFullAlerted[name] = false; 
                 }
 
@@ -917,7 +951,6 @@
                     players.forEach(pName => { if (!playerSessions[pName]) playerSessions[pName] = Date.now(); });
                 } else {
                     
-                    // ZABEZPIECZENIE PRZED "API DROP" (MASOWE ROZŁĄCZENIA)
                     let joinedPlayers = [];
                     let leftPlayers = [];
 
@@ -933,7 +966,6 @@
                         }
                     }
 
-                    // Jeśli ponad 10 osób dołączy lub wyjdzie w jednym skanie (10 sekund), to anomalia. Wyciągamy wtyczkę audio.
                     let isMassEvent = (joinedPlayers.length > 10 || leftPlayers.length > 10);
 
                     joinedPlayers.forEach(pName => {
@@ -955,7 +987,7 @@
 
                     if (isMassEvent && !isMuted) {
                         logEvent(`[SYS] MASS DATA SHIFT: ${joinedPlayers.length} IN, ${leftPlayers.length} OUT. AUDIO THROTTLED.`, "text-yellow-500 font-bold");
-                        queueSound(SOUND_SQUAD, currentVolume * 0.3); // Jedno, pojedyncze piknięcie zamiast setek.
+                        queueSound(SOUND_SQUAD, currentVolume * 0.3);
                     }
                 }
                 previous[name] = players;
@@ -1164,6 +1196,7 @@
                     } else if (remain <= 15 * 60 * 1000 && state === 'ON') {
                         if (!alert15Triggers[n]) { 
                             logEvent(`[WD] WARNING: ${n} RESTART IN 15 MINUTES`, "text-cyan-400 font-bold"); addSystemAlert(`WARNING: ${n} REBOOT IN 15 MIN`); 
+                            showStickyAlert(`WARNING: ${n} REBOOT IN 15 MIN`, `Scheduled restart on ${n} is approaching.`);
                             if(audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`Warning. 15 minutes to scheduled restart on ${n.replace('EU1', 'EU One')}`); } 
                             alert15Triggers[n] = true; 
                         }
