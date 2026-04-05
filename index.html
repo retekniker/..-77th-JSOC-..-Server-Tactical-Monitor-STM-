@@ -79,12 +79,19 @@
         @keyframes alert-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
         .full-text-blink { font-size: 10px; font-weight: 900; color: #ff4d4d; text-shadow: 0 0 8px #ff4d4d; animation: alert-blink 0.5s infinite; }
         .blink-text { animation: alert-blink 1s infinite; }
-        .alert-icon { display: none; width: 18px; height: 18px; background-color: #ff4d4d; color: white; border-radius: 50%; text-align: center; line-height: 18px; font-weight: bold; font-size: 10px; margin-left: 8px; animation: alert-blink 0.8s infinite; box-shadow: 0 0 10px #ff4d4d; }
+        
+        /* DYNAMICZNE WYKRZYKNIKI ODDZIAŁÓW */
+        .alert-icon { 
+            width: 16px; height: 16px; border-radius: 50%; text-align: center; 
+            line-height: 16px; font-weight: bold; font-size: 10px; 
+            animation: alert-blink 0.8s infinite; color: #0b0f14; display: inline-block;
+        }
+
         .lang-btn { border: 1px solid #00ff9c; background: rgba(0, 255, 156, 0.1); color: #00ff9c; font-size: 10px; padding: 2px 8px; transition: all 0.2s; cursor: pointer; }
         .lang-btn:hover, .lang-btn.active { background: #00ff9c; color: #0b0f14; box-shadow: 0 0 10px #00ff9c; }
         
         #helpModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #0b0f14; border: 4px solid #00ff9c; box-shadow: 0 0 40px rgba(0, 255, 156, 0.4); max-width: 800px; width: 95%; padding: 2.5rem; max-height: 85vh; overflow-y: auto; }
+        .modal-content { background: #0b0f14; border: 4px solid #00ff9c; box-shadow: 0 0 40px rgba(0, 255, 156, 0.4); max-width: 800px; width: 95%; padding: 3rem; max-height: 85vh; overflow-y: auto; }
         
         .player-row { font-size: 0.875rem; font-weight: 500; transition: all 0.2s; border-left: 2px solid transparent; }
         .player-row:hover { background: rgba(255, 255, 255, 0.05); cursor: cell; }
@@ -100,37 +107,22 @@
         .squad-btn { font-size: 10px; font-weight: 700; padding: 5px 12px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; background: transparent; }
         
         /* INDIVIDUAL SQUAD COLORS */
-        .sq-color-1 { color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
-        .sq-color-1:hover, .sq-color-1.active { background: #ef4444; color: #0b0f14; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
-        
-        .sq-color-2 { color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); }
-        .sq-color-2:hover, .sq-color-2.active { background: #3b82f6; color: #0b0f14; border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+        .sq-color-1 { color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); } .sq-color-1:hover, .sq-color-1.active { background: #ef4444; color: #0b0f14; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+        .sq-color-2 { color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); } .sq-color-2:hover, .sq-color-2.active { background: #3b82f6; color: #0b0f14; border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+        .sq-color-3 { color: #eab308; border: 1px solid rgba(234, 179, 8, 0.4); } .sq-color-3:hover, .sq-color-3.active { background: #eab308; color: #0b0f14; border-color: #eab308; box-shadow: 0 0 15px rgba(234, 179, 8, 0.6); }
+        .sq-color-4 { color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.4); } .sq-color-4:hover, .sq-color-4.active { background: #a855f7; color: #0b0f14; border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); }
+        .sq-color-5 { color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.4); } .sq-color-5:hover, .sq-color-5.active { background: #06b6d4; color: #0b0f14; border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.6); }
+        .sq-color-6 { color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.4); } .sq-color-6:hover, .sq-color-6.active { background: #ec4899; color: #0b0f14; border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.6); }
+        .sq-color-7 { color: #f97316; border: 1px solid rgba(249, 115, 22, 0.4); } .sq-color-7:hover, .sq-color-7.active { background: #f97316; color: #0b0f14; border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.6); }
+        .sq-color-8 { color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.4); } .sq-color-8:hover, .sq-color-8.active { background: #9ca3af; color: #0b0f14; border-color: #9ca3af; box-shadow: 0 0 15px rgba(156, 163, 175, 0.6); }
 
-        .sq-color-3 { color: #eab308; border: 1px solid rgba(234, 179, 8, 0.4); }
-        .sq-color-3:hover, .sq-color-3.active { background: #eab308; color: #0b0f14; border-color: #eab308; box-shadow: 0 0 15px rgba(234, 179, 8, 0.6); }
-
-        .sq-color-4 { color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.4); }
-        .sq-color-4:hover, .sq-color-4.active { background: #a855f7; color: #0b0f14; border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); }
-
-        .sq-color-5 { color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.4); }
-        .sq-color-5:hover, .sq-color-5.active { background: #06b6d4; color: #0b0f14; border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.6); }
-
-        .sq-color-6 { color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.4); }
-        .sq-color-6:hover, .sq-color-6.active { background: #ec4899; color: #0b0f14; border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.6); }
-
-        .sq-color-7 { color: #f97316; border: 1px solid rgba(249, 115, 22, 0.4); }
-        .sq-color-7:hover, .sq-color-7.active { background: #f97316; color: #0b0f14; border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.6); }
-
-        .sq-color-8 { color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.4); }
-        .sq-color-8:hover, .sq-color-8.active { background: #9ca3af; color: #0b0f14; border-color: #9ca3af; box-shadow: 0 0 15px rgba(156, 163, 175, 0.6); }
-
-        /* IDEALNA SINUSOIDA: 2 sekundy w górę (do 1.8x jasności), 2 sekundy w dół (do 0.5x jasności) */
-        @keyframes active-squad-pulse { 
-            0%, 100% { filter: brightness(0.5); box-shadow: inset 0 0 0 transparent; } 
-            50% { filter: brightness(1.8); box-shadow: inset 0 0 12px currentColor; } 
+        /* MIGANIE WYBRANEGO ODDZIAŁU: JAK WYKRZYKNIK, ALE 30% WOLNIEJ I CZYTELNIE */
+        @keyframes row-alert-blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.25; } 
         }
         .active-squad-member { 
-            animation: active-squad-pulse 4s ease-in-out infinite; 
+            animation: row-alert-blink 1.1s infinite; 
             font-weight: 900 !important; 
             border-left-width: 4px !important; 
         }
@@ -140,29 +132,14 @@
         
         @keyframes pulse-green-soft { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #00ff9c, 0 0 30px rgba(0,255,156,0.6); } 50% { opacity: 0.6; box-shadow: 0 0 5px #00ff9c, 0 0 10px rgba(0,255,156,0.3); } }
         .led-green-pulse { background-color: #00ff9c; animation: pulse-green-soft 3s infinite ease-in-out; }
-        
         .led-green-blink { background-color: #00ff9c; box-shadow: 0 0 20px #00ff9c, 0 0 40px rgba(0,255,156,0.8); animation: alert-blink 1s infinite; }
         .led-red-blink { background-color: #ff4d4d; box-shadow: 0 0 20px #ff4d4d, 0 0 40px rgba(255,77,77,0.8); animation: alert-blink 0.4s infinite; }
-        .led-green-solid { background-color: #00ff9c; box-shadow: 0 0 15px #00ff9c, 0 0 30px rgba(0,255,156,0.6); }
 
-        .btn-clear-all-green { border: 1px solid #00ff9c; background: transparent; color: #00ff9c; font-size: 10px; padding: 2px 10px; cursor: pointer; text-transform: uppercase; }
-        
-        .chart-container { position: relative; width: 100%; height: 180px; }
-        canvas { width: 100% !important; height: 100% !important; }
+        .chart-container { position: relative; width: 100%; height: 180px; } canvas { width: 100% !important; height: 100% !important; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 255, 156, 0.05); border-radius: 3px; } .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 156, 0.3); border-radius: 3px; } .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00ff9c; }
+        .placeholder-red-500::placeholder { color: #ef4444; font-weight: bold; animation: alert-blink 1s infinite; } .placeholder-yellow-500::placeholder { color: #eab308; font-weight: bold; animation: alert-blink 1s infinite; }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 255, 156, 0.05); border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 156, 0.3); border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00ff9c; }
-        
-        .placeholder-red-500::placeholder { color: #ef4444; font-weight: bold; animation: alert-blink 1s infinite; }
-        .placeholder-yellow-500::placeholder { color: #eab308; font-weight: bold; animation: alert-blink 1s infinite; }
-
-        /* WIZUALNE KLASY DLA LIST SERWERÓW */
-        @keyframes clan-pulse {
-            0%, 100% { text-shadow: 0 0 5px #00ff9c, 0 0 10px #00ff9c; color: #00ff9c; }
-            50% { text-shadow: 0 0 15px #00ff9c, 0 0 25px rgba(0,255,156,0.8); color: #ffffff; }
-        }
+        @keyframes clan-pulse { 0%, 100% { text-shadow: 0 0 5px #00ff9c, 0 0 10px #00ff9c; color: #00ff9c; } 50% { text-shadow: 0 0 15px #00ff9c, 0 0 25px rgba(0,255,156,0.8); color: #ffffff; } }
         .clan-member { animation: clan-pulse 2s infinite; font-weight: 900 !important; letter-spacing: 0.02em; }
         .unassigned-player { color: #00ff9c; opacity: 0.85; font-weight: 500; }
     </style>
@@ -172,18 +149,18 @@
     <div id="helpModal">
         <div class="modal-content custom-scrollbar">
             <div class="flex justify-between items-center border-b border-green-900 pb-4 mb-6">
-                <h2 id="modalTitle" class="text-xl md:text-2xl font-bold glow-text uppercase tracking-tighter">S.A.M. OPERATIONAL GUIDE</h2>
-                <button onclick="toggleHelp()" class="text-green-500 hover:text-white text-3xl">&times;</button>
+                <h2 id="modalTitle" class="text-2xl md:text-3xl font-black glow-text uppercase tracking-tighter">S.A.M. OPERATIONAL GUIDE</h2>
+                <button onclick="toggleHelp()" class="text-green-500 hover:text-white text-4xl">&times;</button>
             </div>
-            <div id="modalBody" class="space-y-6 text-sm leading-relaxed text-green-100"></div>
-            <button onclick="toggleHelp()" id="closeModalBtn" class="mt-8 w-full py-3 bg-green-900/20 border border-green-500 hover:bg-green-500 hover:text-black transition-all font-bold uppercase text-xs tracking-widest">CLOSE INTERFACE</button>
+            <div id="modalBody" class="space-y-8 text-base md:text-lg leading-loose text-green-300"></div>
+            <button onclick="toggleHelp()" id="closeModalBtn" class="mt-10 w-full py-4 bg-green-900/20 border border-green-500 hover:bg-green-500 hover:text-black transition-all font-bold uppercase text-sm tracking-widest">CLOSE INTERFACE</button>
         </div>
     </div>
 
     <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 border-b border-green-900 pb-6 gap-6 relative z-10">
         <div class="flex flex-col md:flex-row items-center gap-6">
             <div class="flex flex-col items-center md:items-start">
-                <button onclick="location.reload()" id="btnRefresh" class="btn-system-led mb-2">System Refresh</button>
+                <button onclick="location.reload()" id="btnRefresh" class="btn-system-led mb-2">SYNC UPLINK</button>
                 <div class="flex items-center gap-3">
                     <div id="currentTime" class="text-xl font-bold opacity-90 tracking-wider text-green-400"></div>
                     <div class="volume-wrapper">
@@ -226,7 +203,7 @@
 
         <div class="text-center md:text-right">
             <div class="flex flex-col md:flex-row items-center justify-end gap-3 md:gap-5 mb-2">
-                <button onclick="toggleHelp()" id="manualBtn" class="btn-system-led order-2 md:order-1">SYSTEM MANUAL [?]</button>
+                <button onclick="toggleHelp()" id="manualBtn" class="btn-system-led order-2 md:order-1">OP-GUIDE [?]</button>
                 <h1 class="text-3xl md:text-4xl font-bold glow-text tracking-tighter uppercase mb-0 leading-none order-1 md:order-2">77th JSOC</h1>
             </div>
             <div class="flex flex-col items-center md:items-end">
@@ -235,7 +212,7 @@
                     <span class="sam-highlight glow-text">A</span><span class="sam-rest glow-text">CTIVITY</span>
                     <span class="sam-highlight glow-text">M</span><span class="sam-rest glow-text">ONITOR</span>
                 </p>
-                <div class="by-komputer">by Komputer</div>
+                <div class="by-komputer">by Komputer <span class="opacity-50 ml-2">v4.3.0</span></div>
             </div>
         </div>
     </div>
@@ -243,7 +220,6 @@
     <div class="flex flex-col lg:flex-row gap-6 items-start w-full relative z-10">
         
         <div class="flex flex-col gap-6 w-full lg:w-[42%] xl:w-[44%] shrink-0 relative">
-            
             <div class="flex flex-col md:flex-row gap-4 w-full relative z-10">
                 <div class="hidden md:block cyber-cable w-[4px] h-[12px] -bottom-[12px] left-[16.6%] delay-1"></div>
                 <div class="hidden md:block cyber-cable w-[4px] h-[12px] -bottom-[12px] left-[50%] delay-2"></div>
@@ -252,23 +228,41 @@
                 <div class="hidden md:block cyber-cable w-[8px] h-[12px] -bottom-[24px] left-[50%] -translate-x-1/2"></div>
 
                 <div id="containerEU1" class="server-box soc-border p-4 bg-black/40 w-full md:flex-1 shrink-0 relative z-20">
-                    <div class="flex items-center justify-between mb-3"><h2 class="font-bold text-lg">EU-1</h2><div id="alertEU1" class="alert-icon">!</div><button onclick="addAllToWatch('EU1')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button></div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-bold text-lg">EU-1</h2>
+                            <div id="alertsEU1" class="flex gap-1 items-center"></div>
+                        </div>
+                        <button onclick="addAllToWatch('EU1')" id="btnAddAllEU1" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                    </div>
                     <div id="statusEU1" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">Players:</div> <div id="playersEU1" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">Map:</div> <div id="mapEU1" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">Ping:</div> <div id="pingEU1" class="text-right font-bold">-ms</div></div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">OPR:</div> <div id="playersEU1" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">AO:</div> <div id="mapEU1" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">LAT:</div> <div id="pingEU1" class="text-right font-bold">-ms</div></div>
                     <div id="listEU1" class="h-[400px] md:h-[500px] overflow-y-auto text-xs space-y-1 custom-scrollbar pr-1"></div>
                 </div>
                 
                 <div id="containerEU2" class="server-box soc-border p-4 bg-black/40 w-full md:flex-1 shrink-0 relative z-20">
-                    <div class="flex items-center justify-between mb-3"><h2 class="font-bold text-lg">EU-2</h2><div id="alertEU2" class="alert-icon">!</div><button onclick="addAllToWatch('EU2')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button></div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-bold text-lg">EU-2</h2>
+                            <div id="alertsEU2" class="flex gap-1 items-center"></div>
+                        </div>
+                        <button onclick="addAllToWatch('EU2')" id="btnAddAllEU2" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                    </div>
                     <div id="statusEU2" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">Players:</div> <div id="playersEU2" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">Map:</div> <div id="mapEU2" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">Ping:</div> <div id="pingEU2" class="text-right font-bold">-ms</div></div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">OPR:</div> <div id="playersEU2" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">AO:</div> <div id="mapEU2" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">LAT:</div> <div id="pingEU2" class="text-right font-bold">-ms</div></div>
                     <div id="listEU2" class="h-[400px] md:h-[500px] overflow-y-auto text-xs space-y-1 custom-scrollbar pr-1"></div>
                 </div>
                 
                 <div id="containerEU3" class="server-box soc-border p-4 bg-black/40 w-full md:flex-1 shrink-0 relative z-20">
-                    <div class="flex items-center justify-between mb-3"><h2 class="font-bold text-lg">EU-3</h2><div id="alertEU3" class="alert-icon">!</div><button onclick="addAllToWatch('EU3')" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button></div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-bold text-lg">EU-3</h2>
+                            <div id="alertsEU3" class="flex gap-1 items-center"></div>
+                        </div>
+                        <button onclick="addAllToWatch('EU3')" id="btnAddAllEU3" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
+                    </div>
                     <div id="statusEU3" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">Players:</div> <div id="playersEU3" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">Map:</div> <div id="mapEU3" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">Ping:</div> <div id="pingEU3" class="text-right font-bold">-ms</div></div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="lang-label-players opacity-70">OPR:</div> <div id="playersEU3" class="text-right players-count-glow">-/-</div><div class="lang-label-map opacity-70">AO:</div> <div id="mapEU3" class="text-right truncate text-[11px]">-</div><div class="lang-label-ping opacity-70">LAT:</div> <div id="pingEU3" class="text-right font-bold">-ms</div></div>
                     <div id="listEU3" class="h-[400px] md:h-[500px] overflow-y-auto text-xs space-y-1 custom-scrollbar pr-1"></div>
                 </div>
             </div>
@@ -294,7 +288,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col items-center justify-center flex-1 w-[55%] border-l border-green-900/40 pl-4 md:pl-8 relative z-20">
-                    <div id="totalLabel" class="text-sm md:text-base font-bold glow-text uppercase tracking-[0.2em] md:tracking-[0.3em] mb-3 text-center text-green-400">Total Population</div>
+                    <div id="totalLabel" class="text-sm md:text-base font-bold glow-text uppercase tracking-[0.2em] md:tracking-[0.3em] mb-3 text-center text-green-400">ACTIVE PERSONNEL</div>
                     <div class="text-6xl md:text-8xl xl:text-8xl font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] leading-none" id="totalStat">0</div>
                     
                     <div class="mt-4 border border-green-500/20 bg-green-900/10 p-2 rounded w-full max-w-[200px] text-center" onclick="event.stopPropagation()">
@@ -316,7 +310,7 @@
                 <div class="hidden md:block cyber-cable w-[4px] h-[24px] -bottom-[24px] right-[10%] delay-1"></div>
 
                 <div class="flex justify-between items-center mb-4 relative z-20">
-                    <h3 id="watchlistTitle" class="text-sm font-bold uppercase opacity-80">SQUAD MANAGEMENT</h3>
+                    <h3 id="watchlistTitle" class="text-sm font-bold uppercase opacity-80">SQUAD ROSTER</h3>
                     <div id="squadCounter" class="squad-count">0/11</div>
                 </div>
                 <div class="grid grid-cols-4 gap-1.5 mb-4 relative z-20">
@@ -330,7 +324,7 @@
                     <button onclick="switchSquad(8)" id="sq-btn-8" class="squad-btn sq-color-8">FAV</button>
                 </div>
                 <div class="flex gap-2 mb-4 relative z-20">
-                    <input id="watchInput" type="text" placeholder="Nickname..." class="bg-black border border-green-900 text-xs p-2 flex-1 outline-none transition-all" onkeypress="if(event.key === 'Enter') addWatch()">
+                    <input id="watchInput" type="text" placeholder="Callsign..." class="bg-black border border-green-900 text-xs p-2 flex-1 outline-none transition-all" onkeypress="if(event.key === 'Enter') addWatch()">
                     <button onclick="addWatch()" id="btnAddWatch" class="btn-system-led">ADD</button>
                     <button onclick="addAllToWatchCurrent()" id="btnSyncWatch" class="btn-system-led">SYNC</button>
                     <button onclick="clearAllWatch()" id="btnClearWatch" class="btn-system-led">Clear</button>
@@ -341,16 +335,14 @@
             <div class="soc-border-red p-4 bg-red-950/10 relative z-10">
                 <div class="hidden md:block cyber-cable cyber-cable-red w-[4px] h-[24px] -bottom-[24px] left-[10%] delay-3"></div>
                 <div class="hidden md:block cyber-cable cyber-cable-red w-[4px] h-[24px] -bottom-[24px] right-[10%] delay-2"></div>
-
-                <div class="flex justify-between items-center mb-3 relative z-20"><h3 id="criticalTitle" class="text-sm font-bold uppercase text-white">Notifications</h3><button onclick="clearAllAlerts()" id="btnClearAlerts" class="btn-system-led" style="padding: 3px 8px; font-size: 9px;">Clear All</button></div>
+                <div class="flex justify-between items-center mb-3 relative z-20"><h3 id="criticalTitle" class="text-sm font-bold uppercase text-white">ACTIVITY FEED</h3><button onclick="clearAllAlerts()" id="btnClearAlerts" class="btn-system-led" style="padding: 3px 8px; font-size: 9px;">Clear All</button></div>
                 <div id="alertBox" class="text-[11px] h-56 overflow-y-auto custom-scrollbar flex flex-col gap-0.5 pr-1 relative z-20"></div>
             </div>
 
             <div class="soc-border p-4 bg-black flex-1 min-h-[380px] min-w-0 relative z-10">
                 <div class="hidden md:block cyber-cable w-[4px] h-[24px] -bottom-[24px] left-[10%] delay-1"></div>
                 <div class="hidden md:block cyber-cable w-[4px] h-[24px] -bottom-[24px] right-[10%] delay-3"></div>
-
-                <h3 id="trendTitle" class="text-sm font-bold uppercase opacity-80 mb-6 relative z-20">Population Trend</h3>
+                <h3 id="trendTitle" class="text-sm font-bold uppercase opacity-80 mb-6 relative z-20">ASSET SATURATION</h3>
                 <div class="grid grid-cols-4 gap-4 mb-8 relative z-20">
                     <div class="text-center"><span class="cap-label-name text-green-400">EU1</span><br><span id="percEU1" class="cap-label-perc glow-text">0%</span><div class="cap-bar-bg"><div id="barEU1" class="cap-bar-fill bg-green-500" style="width: 0%"></div></div><span id="fullEU1" class="full-text-blink mt-1" style="display:none">SERVER FULL</span></div>
                     <div class="text-center"><span class="cap-label-name text-green-400">EU2</span><br><span id="percEU2" class="cap-label-perc glow-text">0%</span><div class="cap-bar-bg"><div id="barEU2" class="cap-bar-fill bg-green-500" style="width: 0%"></div></div><span id="fullEU2" class="full-text-blink mt-1" style="display:none">SERVER FULL</span></div>
@@ -361,12 +353,8 @@
             </div>
             <div class="soc-border p-4 bg-black/40 relative z-10">
                 <div class="flex justify-between items-center mb-2 relative z-20">
-                    <h3 id="syslogTitle" class="text-sm font-bold uppercase opacity-80">System Log</h3>
-                    <div class="flex gap-2">
-                        <button id="advToggle" onclick="toggleAdvanced()" class="btn-system-led-red">Advanced: OFF</button>
-                        <button onclick="copyLog()" class="btn-system-led">Copy</button>
-                        <button onclick="saveLog()" class="btn-system-led">Save (.txt)</button>
-                    </div>
+                    <h3 id="syslogTitle" class="text-sm font-bold uppercase opacity-80">SYS-LOG</h3>
+                    <div class="flex gap-2"><button id="advToggle" onclick="toggleAdvanced()" class="btn-system-led-red">Advanced: OFF</button><button id="btnCopyLog" onclick="copyLog()" class="btn-system-led">Copy</button><button id="btnSaveLog" onclick="saveLog()" class="btn-system-led">Save</button></div>
                 </div>
                 <div id="logBox" class="text-[11px] h-32 overflow-y-auto font-mono opacity-80 bg-black/20 p-2 custom-scrollbar relative z-20"></div>
             </div>
@@ -377,41 +365,28 @@
         const SERVERS = { EU1: "14808491", EU2: "30137964", EU3: "28825461" };
         const SQUAD_NAMES = ["", "ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT", "GOLF", "FAV"];
         
-        // NOWE AUDIO (Czyste dźwięki taktyczne)
         const SOUND_LEAVE = "https://actions.google.com/sounds/v1/cartoon/pop.ogg";
         const SOUND_SQUAD = "https://actions.google.com/sounds/v1/alarms/beep_short.ogg";
         const SOUND_FAV = "https://actions.google.com/sounds/v1/alarms/dosimeter_alarm.ogg";
         const SOUND_UNASSIGNED = "https://actions.google.com/sounds/v1/water/water_drop.ogg";
 
         const SQUAD_COLORS = {
-            1: { text: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)', border: '#ef4444' },
-            2: { text: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)', border: '#3b82f6' },
-            3: { text: '#eab308', bg: 'rgba(234, 179, 8, 0.1)', border: '#eab308' },
-            4: { text: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)', border: '#a855f7' },
-            5: { text: '#06b6d4', bg: 'rgba(6, 182, 212, 0.1)', border: '#06b6d4' },
-            6: { text: '#ec4899', bg: 'rgba(236, 72, 153, 0.1)', border: '#ec4899' },
-            7: { text: '#f97316', bg: 'rgba(249, 115, 22, 0.1)', border: '#f97316' },
-            8: { text: '#9ca3af', bg: 'rgba(156, 163, 175, 0.1)', border: '#9ca3af' }
+            1: { text: '#ef4444', bg: 'rgba(239, 68, 68, 0.1)', border: '#ef4444' }, 2: { text: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)', border: '#3b82f6' }, 3: { text: '#eab308', bg: 'rgba(234, 179, 8, 0.1)', border: '#eab308' }, 4: { text: '#a855f7', bg: 'rgba(168, 85, 247, 0.1)', border: '#a855f7' },
+            5: { text: '#06b6d4', bg: 'rgba(6, 182, 212, 0.1)', border: '#06b6d4' }, 6: { text: '#ec4899', bg: 'rgba(236, 72, 153, 0.1)', border: '#ec4899' }, 7: { text: '#f97316', bg: 'rgba(249, 115, 22, 0.1)', border: '#f97316' }, 8: { text: '#9ca3af', bg: 'rgba(156, 163, 175, 0.1)', border: '#9ca3af' }
         };
 
         let isServerFullAlerted = { EU1: false, EU2: false, EU3: false }; 
 
+        // TAKTYCZNE SŁOWNIKI
         const LANGS = {
-            en: { 
-                refresh: "System Refresh", manual: "SYSTEM MANUAL [?]", totalPop: "Total Population", watchlist: "SQUAD MANAGEMENT", notifications: "Notifications", trend: "Population Trend", syslog: "System Log", add: "ADD UNASSIGNED", clear: "Clear", players: "Players:", map: "Map:", ping: "Ping:", placeholder: "Nickname...", squadFull: "SQUAD FULL!",
-                modalTitle: "S.A.M. OPERATIONAL GUIDE", modalClose: "CLOSE INTERFACE",
-                modalContent: "<strong>1. TACTICAL VOICE ENGINE:</strong> Click [INIT COMM] to activate. Click again to toggle voice ON/OFF. When OFF, standard beep/pop sounds apply. GVoice active only in EN mode.<br><br><strong>2. SQUAD MANAGEMENT:</strong> Color-coded unique identification. Players cannot be in multiple squads.<br><br><strong>3. NOTIFICATIONS:</strong> Tracks JOIN/LEAVE events. Displays active Session Time [Xm].<br><br><strong>4. REBOOT CLOCKS:</strong> Simple 6h countdown activated on server down."
-            },
-            pl: { 
-                refresh: "Odśwież System", manual: "INSTRUKCJA SYSTEMU [?]", totalPop: "Populacja Ogólna", watchlist: "ZARZĄDZANIE ODDZIAŁAMI", notifications: "Powiadomienia", trend: "Trend Populacji", syslog: "Log Systemowy", add: "DODAJ WOLNYCH", clear: "Wyczyść", players: "Graczy:", map: "Mapa:", ping: "Ping:", placeholder: "Pseudonim...", squadFull: "ODDZIAŁ PEŁNY!",
-                modalTitle: "INSTRUKCJA OPERACYJNA S.A.M.", modalClose: "ZAMKNIJ INTERFEJS",
-                modalContent: "<strong>1. SILNIK GŁOSOWY:</strong> Kliknij [INIT COMM], aby aktywować system audio. Głos AI aktywny wyłącznie w wersji EN.<br><br><strong>2. ZARZĄDZANIE ODDZIAŁAMI:</strong> Unikalne kolory oddziałów. Gracz może być tylko w jednym oddziale na raz.<br><br><strong>3. ZEGARY REBOOTU:</strong> Twarde odliczanie 6h po wykryciu awarii API/Serwera."
-            },
-            se: { 
-                refresh: "Systemåterställning", manual: "SYSTEMHANDBOK [?]", totalPop: "Total Population", watchlist: "GRUPPHANTERING", notifications: "Meddelanden", trend: "Populationstrend", syslog: "Systemlogg", add: "LÄGG TILL", clear: "Rensa", players: "Spelare:", map: "Karta:", ping: "Ping:", placeholder: "Smeknamn...", squadFull: "TRUPP FULL!",
-                modalTitle: "S.A.M. OPERATIV GUIDE", modalClose: "STÄNG GRÄNSSNITT",
-                modalContent: "<strong>1. ÖVERVAKNING:</strong> Klicka på [INIT COMM] för att aktivera ljud. Klicka igen för att stänga av rösten.<br><br><strong>2. GRUPPHANTERING:</strong> Färgkodad unik identifiering.<br><br><strong>3. REBOOT-KLOCKOR:</strong> Enkel 6h nedräkning vid krasch."
-            }
+            en: { refresh: "SYNC UPLINK", manual: "OP-GUIDE [?]", totalPop: "ACTIVE PERSONNEL", watchlist: "SQUAD ROSTER", notifications: "ACTIVITY FEED", trend: "ASSET SATURATION", syslog: "SYS-LOG", add: "DRAFT UNLINKED", clear: "PURGE ROSTER", players: "OPR:", map: "AO:", ping: "LAT:", placeholder: "Callsign...", squadFull: "ROSTER AT MAX CAPACITY!", modalTitle: "S.A.M. OPERATIONAL GUIDE", modalClose: "CLOSE INTERFACE", 
+                modalContent: "<strong>1. VOICE COMMS:</strong> Click [INIT COMM] to activate the module.<br><br><strong>2. SQUAD TRACKING:</strong> Operators are color-coded by squad. The [DRAFT UNLINKED] function targets and assigns only unlinked players.<br><br><strong>3. SERVER WATCHDOG:</strong> A system driven by a Watchdog module and logic analyzing the 6-hour server restart cycles." },
+            
+            pl: { refresh: "SYNCHRONIZUJ ŁĄCZE", manual: "INSTRUKCJA OP. [?]", totalPop: "AKTYWNY PERSONEL", watchlist: "ZARZĄDZANIE ROSTEREM", notifications: "DZIENNIK OPERACYJNY", trend: "NASYCENIE REJONU", syslog: "LOGI SYSTEMOWE", add: "WERBUJ WOLNYCH", clear: "CZYŚĆ ROSTER", players: "OPR:", map: "AO:", ping: "LAT:", placeholder: "Kryptonim...", squadFull: "ROSTER PEŁNY!", modalTitle: "INSTRUKCJA OPERACYJNA S.A.M.", modalClose: "ZAMKNIJ INTERFEJS", 
+                modalContent: "<strong>1. KOMUNIKATY GŁOSOWE:</strong> Kliknij [INIT COMM], aby uruchomić moduł.<br><br><strong>2. ŚLEDZENIE ODDZIAŁÓW:</strong> Operatorzy są oznaczani kolorami. Funkcja [WERBUJ WOLNYCH] namierza i przydziela tylko wolnych strzelców.<br><br><strong>3. STRAŻNIK SERWERA (WATCHDOG):</strong> System oparty na module Watchdog i logice analizującej 6-godzinne cykle restartów serwera." },
+            
+            se: { refresh: "SYNKRONISERA LÄNK", manual: "OP-GUIDE [?]", totalPop: "AKTIV PERSONAL", watchlist: "ROSTER KONTROLL", notifications: "OPERATIONS LOGG", trend: "OMRÅDESMÄTTNAD", syslog: "SYS-LOGG", add: "VÄRVA OLÄNKADE", clear: "RENSA ROSTER", players: "OPR:", map: "AO:", ping: "LAT:", placeholder: "Anropssignal...", squadFull: "ROSTER FULLT!", modalTitle: "S.A.M. OPERATIV GUIDE", modalClose: "STÄNG GRÄNSSNITT", 
+                modalContent: "<strong>1. RÖSTKOMMUNIKATION:</strong> Klicka på [INIT COMM] för att aktivera modulen.<br><br><strong>2. TRUPPSPÅRNING:</strong> Operatörer är färgkodade efter trupp. Funktionen [VÄRVA OLÄNKADE] riktar in sig på och tilldelar endast olänkade spelare.<br><br><strong>3. SERVER WATCHDOG:</strong> Ett system som drivs av en Watchdog-modul och logik som analyserar de 6-timmars serveromstartscyklerna." }
         };
 
         let currentSquadIdx = parseInt(localStorage.getItem('jsoc_sq_idx')) || 1;
@@ -421,8 +396,7 @@
         let prevUptime = { EU1: -1, EU2: -1, EU3: -1 }; 
         let cache = {}; let historyData = []; let historyLabels = []; 
         let isFirstLoad = true;
-        
-        let playerSessions = {}; // Słownik do liczenia czasu sesji
+        let playerSessions = {}; 
         
         let isMuted = localStorage.getItem('jsoc_muted') === 'true';
         let storedVol = localStorage.getItem('jsoc_volume');
@@ -430,18 +404,20 @@
         let currentLang = localStorage.getItem('jsoc_lang') || 'en';
         
         let lastRestartData = JSON.parse(localStorage.getItem('jsoc_last_restarts')) || { EU1: null, EU2: null, EU3: null };
+        
+        if (localStorage.getItem('jsoc_fix_false_starts') !== 'true') {
+            lastRestartData.EU2 = null; lastRestartData.EU3 = null;
+            localStorage.setItem('jsoc_fix_false_starts', 'true');
+            localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+        }
+
         let isBooting = { EU1: false, EU2: false, EU3: false };
         let alert15Triggers = { EU1: false, EU2: false, EU3: false };
 
         let advMode = localStorage.getItem('jsoc_adv_mode') === 'true';
-        let audioUnlocked = false;
-        let voiceEnabled = false;
-        let ttsVoice = null;
+        let audioUnlocked = false; let voiceEnabled = false; let ttsVoice = null;
+        let audioQueue = []; let isPlayingQueue = false;
 
-        let audioQueue = [];
-        let isPlayingQueue = false;
-
-        // KALIBRACJA EU1: Wymuszony start od 23:32 wczoraj
         let forceSeed = new Date();
         forceSeed.setHours(23, 32, 0, 0);
         if (forceSeed.getTime() > Date.now()) forceSeed.setDate(forceSeed.getDate() - 1);
@@ -450,231 +426,82 @@
             localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
         }
 
-        function getTacticalPhonetics(text) {
-            return text
-                .replace(/Charlie/gi, "Czarli")
-                .replace(/Bravo/gi, "Brawo")
-                .replace(/Echo/gi, "Eko")
-                .replace(/Foxtrot/gi, "Fokstrot")
-                .replace(/\b1\b|One/gi, "łan")
-                .replace(/\b2\b|Two/gi, "tu")
-                .replace(/\b3\b|Three/gi, "frii")
-                .replace(/\b4\b|Four/gi, "for")
-                .replace(/\b5\b|Five/gi, "fajf")
-                .replace(/\b6\b|Six/gi, "siks")
-                .replace(/\b7\b|Seven/gi, "sełen")
-                .replace(/\b8\b|Eight/gi, "ejt")
-                .replace(/\b9\b|Nine/gi, "najn")
-                .replace(/\b10\b|Ten/gi, "ten")
-                .replace(/\b11\b|Eleven/gi, "ilełen")
-                .replace(/connected/gi, "konekted")
-                .replace(/disconnected/gi, "diskonekted")
-                .replace(/Audio check/gi, "Odio czek")
-                .replace(/Warning/gi, "Łorning")
-                .replace(/minutes to scheduled restart on/gi, "minyts tu skedżuld ristart on")
-                .replace(/Critical/gi, "Kritikal")
-                .replace(/server/gi, "serłer")
-                .replace(/down/gi, "dałn")
-                .replace(/or/gi, "or")
-                .replace(/restarting/gi, "ristarting")
-                .replace(/System/gi, "Sistem")
-                .replace(/online/gi, "onlajn")
-                .replace(/cycle/gi, "sajkl")
-                .replace(/locked/gi, "lokt")
-                .replace(/EU/gi, "I JU")
-                .replace(/is full/gi, "iz ful");
-        }
-
+        function getTacticalPhonetics(text) { return text.replace(/Charlie/gi, "Czarli").replace(/Bravo/gi, "Brawo").replace(/Echo/gi, "Eko").replace(/Foxtrot/gi, "Fokstrot").replace(/\b1\b|One/gi, "łan").replace(/\b2\b|Two/gi, "tu").replace(/\b3\b|Three/gi, "frii").replace(/\b4\b|Four/gi, "for").replace(/\b5\b|Five/gi, "fajf").replace(/\b6\b|Six/gi, "siks").replace(/\b7\b|Seven/gi, "sełen").replace(/\b8\b|Eight/gi, "ejt").replace(/\b9\b|Nine/gi, "najn").replace(/\b10\b|Ten/gi, "ten").replace(/\b11\b|Eleven/gi, "ilełen").replace(/connected/gi, "konekted").replace(/disconnected/gi, "diskonekted").replace(/Audio check/gi, "Odio czek").replace(/Warning/gi, "Łorning").replace(/minutes to scheduled restart on/gi, "minyts tu skedżuld ristart on").replace(/Critical/gi, "Kritikal").replace(/server/gi, "serłer").replace(/down/gi, "dałn").replace(/or/gi, "or").replace(/restarting/gi, "ristarting").replace(/System/gi, "Sistem").replace(/online/gi, "onlajn").replace(/cycle/gi, "sajkl").replace(/locked/gi, "lokt").replace(/EU/gi, "I JU").replace(/is full/gi, "iz ful"); }
         function processAudioQueue() {
-            if (audioQueue.length === 0) {
-                isPlayingQueue = false;
-                return;
-            }
-            isPlayingQueue = true;
-            let item = audioQueue.shift();
-
+            if (audioQueue.length === 0) { isPlayingQueue = false; return; }
+            isPlayingQueue = true; let item = audioQueue.shift();
             if (item.type === 'speech') {
-                let textToSpeak = item.text;
-                let forcePhonetics = false;
-                if (!ttsVoice || ttsVoice.lang.startsWith('pl')) {
-                    forcePhonetics = true;
-                    textToSpeak = getTacticalPhonetics(textToSpeak);
-                }
-
-                let msg = new SpeechSynthesisUtterance(textToSpeak);
-                if (ttsVoice) msg.voice = ttsVoice;
-                msg.volume = currentVolume;
-                msg.lang = forcePhonetics ? 'pl-PL' : 'en-US';
-                msg.rate = 0.9;
-                msg.pitch = 0.85;
-                msg.onend = () => { setTimeout(processAudioQueue, 300); };
-                msg.onerror = () => { setTimeout(processAudioQueue, 300); };
+                let textToSpeak = item.text; let forcePhonetics = false;
+                if (!ttsVoice || ttsVoice.lang.startsWith('pl')) { forcePhonetics = true; textToSpeak = getTacticalPhonetics(textToSpeak); }
+                let msg = new SpeechSynthesisUtterance(textToSpeak); if (ttsVoice) msg.voice = ttsVoice;
+                msg.volume = currentVolume; msg.lang = forcePhonetics ? 'pl-PL' : 'en-US'; msg.rate = 0.9; msg.pitch = 0.85;
+                msg.onend = () => { setTimeout(processAudioQueue, 300); }; msg.onerror = () => { setTimeout(processAudioQueue, 300); };
                 window.speechSynthesis.speak(msg);
             } else if (item.type === 'sound') {
-                let a = new Audio(item.url);
-                a.volume = item.volume !== undefined ? item.volume : currentVolume * 0.15;
-                a.onended = () => { processAudioQueue(); };
-                a.onerror = () => { processAudioQueue(); };
-                a.play().catch(() => { processAudioQueue(); });
+                let a = new Audio(item.url); a.volume = item.volume !== undefined ? item.volume : currentVolume * 0.15;
+                a.onended = () => { processAudioQueue(); }; a.onerror = () => { processAudioQueue(); }; a.play().catch(() => { processAudioQueue(); });
             }
         }
+        function queueSpeech(text) { if (isMuted || !voiceEnabled) return; audioQueue.push({ type: 'speech', text: text }); if (!isPlayingQueue) processAudioQueue(); }
+        function queueSound(url, vol) { if (isMuted) return; audioQueue.push({ type: 'sound', url: url, volume: vol }); if (!isPlayingQueue) processAudioQueue(); }
 
-        function queueSpeech(text) {
-            if (isMuted || !voiceEnabled) return;
-            audioQueue.push({ type: 'speech', text: text });
-            if (!isPlayingQueue) processAudioQueue();
-        }
-
-        function queueSound(url, vol) {
-            if (isMuted) return;
-            audioQueue.push({ type: 'sound', url: url, volume: vol });
-            if (!isPlayingQueue) processAudioQueue();
-        }
-
-        let wdLogCounter = 0;
-        let rateLimitCooldown = 0;
-
-        function initVoice() {
-            if (!window.speechSynthesis) return;
-            const voices = window.speechSynthesis.getVoices();
-            ttsVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) ||
-                       voices.find(v => v.lang.includes('en-') && (v.name.includes('Zira') || v.name.includes('David') || v.name.includes('Mark'))) ||
-                       voices.find(v => v.lang === 'en-US') ||
-                       voices.find(v => v.lang.startsWith('en'));
-        }
+        function initVoice() { if (!window.speechSynthesis) return; const voices = window.speechSynthesis.getVoices(); ttsVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) || voices.find(v => v.lang.includes('en-') && (v.name.includes('Zira') || v.name.includes('David') || v.name.includes('Mark'))) || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en')); }
         if (window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = initVoice; }
-
-        function unlockAudioFallback() {
-            if (!audioUnlocked) toggleVoice();
-        }
+        function unlockAudioFallback() { if (!audioUnlocked) toggleVoice(); }
 
         function toggleVoice() {
-            const btnInit = document.getElementById("btnInitAudio");
-            const statusEl = document.getElementById("audioStatus");
-
+            const btnInit = document.getElementById("btnInitAudio"); const statusEl = document.getElementById("audioStatus");
             if (!audioUnlocked) {
-                audioUnlocked = true;
-                voiceEnabled = true;
-                initVoice();
-                
-                const msg = new SpeechSynthesisUtterance("");
-                window.speechSynthesis.speak(msg);
-                
-                btnInit.innerText = "VOICE: ON";
-                btnInit.classList.remove("border-gray-500", "text-gray-500");
-                btnInit.classList.add("border-green-500", "text-green-500");
-                
-                statusEl.innerText = "COMM-LINK ACTIVE";
-                statusEl.classList.remove("text-red-500", "blink-text");
-                statusEl.classList.add("text-green-400");
-
-                queueSound(SOUND_SQUAD, currentVolume * 0.15);
-                logEvent("COMM-LINK INITIALIZED", "text-cyan-400 font-bold");
+                audioUnlocked = true; voiceEnabled = true; initVoice(); const msg = new SpeechSynthesisUtterance(""); window.speechSynthesis.speak(msg);
+                btnInit.innerText = "VOICE: ON"; btnInit.classList.remove("border-gray-500", "text-gray-500"); btnInit.classList.add("border-green-500", "text-green-500");
+                statusEl.innerText = "COMM-LINK ACTIVE"; statusEl.classList.remove("text-red-500", "blink-text"); statusEl.classList.add("text-green-400");
+                queueSound(SOUND_SQUAD, currentVolume * 0.15); logEvent("COMM-LINK INITIALIZED", "text-cyan-400 font-bold");
             } else {
                 voiceEnabled = !voiceEnabled;
-                if (voiceEnabled) {
-                    btnInit.innerText = "VOICE: ON";
-                    btnInit.classList.remove("border-gray-500", "text-gray-500");
-                    btnInit.classList.add("border-green-500", "text-green-500");
-                    logEvent("VOICE ENGINE: ENABLED", "text-green-400");
-                } else {
-                    btnInit.innerText = "VOICE: OFF";
-                    btnInit.classList.remove("border-green-500", "text-green-500");
-                    btnInit.classList.add("border-gray-500", "text-gray-500");
-                    logEvent("VOICE ENGINE: DISABLED (BEEP MODE)", "text-gray-400");
-                }
+                if (voiceEnabled) { btnInit.innerText = "VOICE: ON"; btnInit.classList.remove("border-gray-500", "text-gray-500"); btnInit.classList.add("border-green-500", "text-green-500"); logEvent("VOICE ENGINE: ENABLED", "text-green-400"); } 
+                else { btnInit.innerText = "VOICE: OFF"; btnInit.classList.remove("border-green-500", "text-green-500"); btnInit.classList.add("border-gray-500", "text-gray-500"); logEvent("VOICE ENGINE: DISABLED (BEEP MODE)", "text-gray-400"); }
             }
         }
 
         function getWatchedSquadDetails(name) {
             for (let i = 1; i <= 8; i++) {
-                let indexInSquad = ALL_SQUADS[i].findIndex(w => w.toLowerCase() === name.toLowerCase());
-                if (indexInSquad !== -1) {
-                    return { squadIdx: i, squadName: SQUAD_NAMES[i], playerNumber: indexInSquad + 1 };
-                }
+                let idx = ALL_SQUADS[i].findIndex(w => w.toLowerCase() === name.toLowerCase());
+                if (idx !== -1) return { squadIdx: i, squadName: SQUAD_NAMES[i], playerNumber: idx + 1 };
             }
             return null;
         }
 
         function announceAction(squadDetails, serverName, isJoin) {
             if (!audioUnlocked || isMuted) return;
-
             const actionText = isJoin ? "connected" : "disconnected";
 
-            // Wyjście to zawsze ciche pyknięcie
             if (!isJoin) {
                 queueSound(SOUND_LEAVE, currentVolume * 0.15);
             } else {
-                // Logika wejścia na serwer
-                if (!squadDetails) {
-                    queueSound(SOUND_UNASSIGNED, currentVolume * 0.2);
-                } else if (squadDetails.squadName === "FAV") {
-                    queueSound(SOUND_FAV, currentVolume * 0.4);
-                } else {
-                    queueSound(SOUND_SQUAD, currentVolume * 0.15);
-                }
+                if (!squadDetails) { queueSound(SOUND_UNASSIGNED, currentVolume * 0.2); } 
+                else if (squadDetails.squadName === "FAV") { queueSound(SOUND_FAV, currentVolume * 0.4); } 
+                else { queueSound(SOUND_SQUAD, currentVolume * 0.15); }
             }
-
-            if (voiceEnabled && currentLang === 'en' && squadDetails) {
-                queueSpeech(`${squadDetails.squadName} ${squadDetails.playerNumber} ${actionText}`);
-            }
+            if (voiceEnabled && currentLang === 'en' && squadDetails) queueSpeech(`${squadDetails.squadName} ${squadDetails.playerNumber} ${actionText}`);
         }
 
         function testAudio() {
             if (!audioUnlocked) toggleVoice();
             logEvent("DIAGNOSTIC: AUDIO TEST...", "text-yellow-400 font-bold");
-            
-            if (currentLang === 'en' && voiceEnabled) {
-                queueSpeech("Audio check. Charlie 2 connected.");
-                queueSpeech("Critical alert. EU One server down or restarting.");
-            } else {
-                queueSound(SOUND_SQUAD, currentVolume * 0.15);
-            }
-            // Zwykłe pikanie dla testu awarii, brak syreny
-            queueSound(SOUND_SQUAD, currentVolume * 0.3);
+            if (currentLang === 'en' && voiceEnabled) { queueSpeech("Audio check. Charlie 2 connected."); queueSpeech("Critical alert. EU One server down or restarting."); } 
+            else { queueSound(SOUND_SQUAD, currentVolume * 0.15); }
+            queueSound(SOUND_SQUAD, currentVolume * 0.3); // BEZ SYRENY
         }
 
-        function initAdvButton() {
-            const btn = document.getElementById("advToggle");
-            btn.innerText = `Advanced: ${advMode ? 'ON' : 'OFF'}`;
-            if(advMode) { btn.classList.add("active-adv"); } else { btn.classList.remove("active-adv"); }
-        }
-
-        function toggleAdvanced() {
-            advMode = !advMode;
-            localStorage.setItem('jsoc_adv_mode', advMode);
-            initAdvButton();
-            logEvent(`Advanced logging ${advMode ? 'ENABLED' : 'DISABLED'}`, advMode ? "text-red-400" : "text-gray-500");
-        }
-
-        function logEvent(text, color = "text-green-500", isAdvanced = false) {
-            if (isAdvanced && !advMode) return;
-            const log = document.getElementById("logBox"); if (!log) return;
-            const entry = document.createElement("div"); entry.className = `${color} py-0.5 border-b border-white/5 uppercase`;
-            entry.innerHTML = `<span class="opacity-40">[${new Date().toLocaleTimeString()}]</span> ${text}`;
-            log.insertBefore(entry, log.firstChild); if (log.children.length > 100) log.removeChild(log.lastChild);
-        }
-
-        function copyLog() {
-            const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n');
-            navigator.clipboard.writeText(text).then(() => logEvent("Log copied to clipboard", "text-cyan-400"));
-        }
-
-        function saveLog() {
-            const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n');
-            const blob = new Blob([text], {type: 'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `sam_log_${new Date().getTime()}.txt`;
-            a.click();
-        }
+        function initAdvButton() { const btn = document.getElementById("advToggle"); btn.innerText = `Advanced: ${advMode ? 'ON' : 'OFF'}`; if(advMode) { btn.classList.add("active-adv"); } else { btn.classList.remove("active-adv"); } }
+        function toggleAdvanced() { advMode = !advMode; localStorage.setItem('jsoc_adv_mode', advMode); initAdvButton(); logEvent(`Advanced logging ${advMode ? 'ENABLED' : 'DISABLED'}`, advMode ? "text-red-400" : "text-gray-500"); }
+        function logEvent(text, color = "text-green-500", isAdvanced = false) { if (isAdvanced && !advMode) return; const log = document.getElementById("logBox"); if (!log) return; const entry = document.createElement("div"); entry.className = `${color} py-0.5 border-b border-white/5 uppercase`; entry.innerHTML = `<span class="opacity-40">[${new Date().toLocaleTimeString()}]</span> ${text}`; log.insertBefore(entry, log.firstChild); if (log.children.length > 100) log.removeChild(log.lastChild); }
+        function copyLog() { const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n'); navigator.clipboard.writeText(text).then(() => logEvent("Log copied", "text-cyan-400")); }
+        function saveLog() { const text = Array.from(document.getElementById("logBox").children).map(el => el.innerText).join('\n'); const blob = new Blob([text], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sam_log_${new Date().getTime()}.txt`; a.click(); }
 
         function addPlayerAlert(name, server, isJoin, squadDetails, joinedAt = null) {
-            const b = document.getElementById("alertBox"); 
-            const d = document.createElement("div"); 
-            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             
-            // Obliczanie czasu sesji w momencie wyjścia
             let sessionTimeStr = "";
             if (!isJoin && joinedAt) {
                 let sessionMin = Math.floor((Date.now() - joinedAt) / 60000);
@@ -682,68 +509,25 @@
             }
 
             if (squadDetails) {
-                const actionText = isJoin ? "JOINED" : "LEFT";
-                const actionColor = isJoin ? "text-green-500" : "text-red-500";
-                const arrow = isJoin ? "◄◄◄◄" : "►►►►";
-                const bgClass = isJoin ? "bg-green-900/20" : "bg-red-900/20";
-                const borderClass = isJoin ? "border-green-500" : "border-red-500";
-                
-                const squadTag = `${squadDetails.squadName}-${squadDetails.playerNumber}`;
-                const sqColor = SQUAD_COLORS[squadDetails.squadIdx].text;
-                
+                const actionText = isJoin ? "JOINED" : "LEFT"; const actionColor = isJoin ? "text-green-500" : "text-red-500"; const arrow = isJoin ? "◄◄◄◄" : "►►►►"; const bgClass = isJoin ? "bg-green-900/20" : "bg-red-900/20"; const borderClass = isJoin ? "border-green-500" : "border-red-500"; const squadTag = `${squadDetails.squadName}-${squadDetails.playerNumber}`; const sqColor = SQUAD_COLORS[squadDetails.squadIdx].text;
                 d.className = `flex justify-between items-center border-l-2 ${borderClass} pl-2 ${bgClass} py-1.5 transition-all mb-0.5`;
-                d.innerHTML = `
-                    <div class="flex items-center gap-2 flex-wrap flex-1">
-                        <span class="opacity-60 text-xs text-white">[${time}]</span>
-                        <span class="font-bold text-sm uppercase" style="color: ${sqColor}; text-shadow: 0 0 5px ${sqColor};">[${squadTag}]</span>
-                        <span class="text-white font-black text-lg tracking-wider">&lt; ${name} &gt;</span>
-                        <span class="${actionColor} font-bold text-sm ml-1">${actionText} ${server}</span>
-                        ${sessionTimeStr}
-                        <span class="${actionColor} font-black text-xl ml-2 tracking-[-0.15em] drop-shadow-md">${arrow}</span>
-                    </div>
-                    <div class="flex items-center pr-2">
-                        <span class="cursor-pointer text-white hover:text-red-500 text-sm px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span>
-                    </div>
-                `;
+                d.innerHTML = `<div class="flex items-center gap-2 flex-wrap flex-1"><span class="opacity-60 text-xs text-white">[${time}]</span><span class="font-bold text-sm uppercase" style="color: ${sqColor}; text-shadow: 0 0 5px ${sqColor};">[${squadTag}]</span><span class="text-white font-black text-lg tracking-wider">&lt; ${name} &gt;</span><span class="${actionColor} font-bold text-sm ml-1">${actionText} ${server}</span>${sessionTimeStr}<span class="${actionColor} font-black text-xl ml-2 tracking-[-0.15em] drop-shadow-md">${arrow}</span></div><div class="flex items-center pr-2"><span class="cursor-pointer text-white hover:text-red-500 text-sm px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span></div>`;
             } else {
-                const actionText = isJoin ? "JOINED" : "LEFT";
-                const color = isJoin ? "text-green-500" : "text-red-500";
-                const arrow = isJoin ? "◄◄" : "►►";
-                
+                const actionText = isJoin ? "JOINED" : "LEFT"; const color = isJoin ? "text-green-500" : "text-red-500"; const arrow = isJoin ? "◄◄" : "►►";
                 d.className = `flex justify-between items-center pl-2 bg-black/40 py-1 border-l border-white/10 mb-0.5`;
-                d.innerHTML = `
-                    <div class="flex items-center gap-2 opacity-90 flex-1">
-                        <span class="opacity-50 text-[11px] text-white">[${time}]</span>
-                        <span class="text-gray-300 text-sm font-bold uppercase">${name}</span>
-                        <span class="text-gray-500 text-xs ml-1">${actionText} ${server}</span>
-                        ${sessionTimeStr}
-                        <span class="${color} font-bold text-base ml-1 tracking-tighter drop-shadow-sm">${arrow}</span>
-                    </div>
-                    <div class="flex items-center pr-2 opacity-80">
-                        <span class="cursor-pointer text-gray-500 hover:text-red-500 text-xs px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span>
-                    </div>
-                `;
+                d.innerHTML = `<div class="flex items-center gap-2 opacity-90 flex-1"><span class="opacity-50 text-[11px] text-white">[${time}]</span><span class="text-gray-300 text-sm font-bold uppercase">${name}</span><span class="text-gray-500 text-xs ml-1">${actionText} ${server}</span>${sessionTimeStr}<span class="${color} font-bold text-base ml-1 tracking-tighter drop-shadow-sm">${arrow}</span></div><div class="flex items-center pr-2 opacity-80"><span class="cursor-pointer text-gray-500 hover:text-red-500 text-xs px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span></div>`;
             }
-            b.insertBefore(d, b.firstChild); 
-            if (b.children.length > 80) b.removeChild(b.lastChild); 
+            b.insertBefore(d, b.firstChild); if (b.children.length > 80) b.removeChild(b.lastChild); 
         }
 
         function addSystemAlert(message) {
-            const b = document.getElementById("alertBox"); 
-            const d = document.createElement("div"); 
-            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
+            const b = document.getElementById("alertBox"); const d = document.createElement("div"); const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             d.className = `flex justify-between items-center border-l-4 border-red-500 pl-3 bg-red-950/80 py-2 soc-border-pulse mb-1`;
-            d.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <span class="opacity-70 text-[10px] text-white">[${time}]</span>
-                    <span class="text-yellow-400 font-black text-xs md:text-sm tracking-widest uppercase text-shadow-sm">⚠️ ${message} ⚠️</span>
-                </div>
-                <span class="cursor-pointer text-white hover:text-red-500 px-2 text-lg" onclick="this.parentElement.remove()">✖</span>
-            `;
-            b.insertBefore(d, b.firstChild); 
-            if (b.children.length > 80) b.removeChild(b.lastChild); 
+            d.innerHTML = `<div class="flex items-center gap-3"><span class="opacity-70 text-[10px] text-white">[${time}]</span><span class="text-yellow-400 font-black text-xs md:text-sm tracking-widest uppercase text-shadow-sm">⚠️ ${message} ⚠️</span></div><span class="cursor-pointer text-white hover:text-red-500 px-2 text-lg" onclick="this.parentElement.remove()">✖</span>`;
+            b.insertBefore(d, b.firstChild); if (b.children.length > 80) b.removeChild(b.lastChild); 
         }
+
+        let rateLimitCooldown = 0; let wdLogCounter = 0;
 
         async function fetchServer(name, id) {
             const start = performance.now();
@@ -752,14 +536,10 @@
                 const lat = Math.round(performance.now() - start);
                 
                 if (res.status === 429) { 
-                    rateLimitCooldown = Date.now() + 60000; 
-                    logEvent(`[WD] API LIMIT: 60S COOLDOWN`, "text-red-500 font-bold"); 
-                    throw new Error("429"); 
+                    rateLimitCooldown = Date.now() + 60000; logEvent(`[WD] API LIMIT: 60S COOLDOWN`, "text-red-500 font-bold"); throw new Error("429"); 
                 }
 
                 const json = await res.json();
-                
-                // OCHRONA PRZED NaN Z BATTLEMETRICS
                 const attr = json.data ? json.data.attributes : {};
                 const players = (json.included || []).filter(x => x.type === "player").map(p => p.attributes.name);
                 const currentPlayers = attr.players || 0;
@@ -769,109 +549,61 @@
 
                 if (!isFirstLoad) {
                     let isCrash = false;
-                    
-                    // PROSTY WATCHDOG Z DETEKCJI STATUSU API
-                    if (attr.status === 'dead' || attr.status === 'offline') {
-                        isCrash = true;
-                    }
+                    if (attr.status === 'dead' || attr.status === 'offline') { isCrash = true; }
 
-                    if (isCrash && !isBooting[name]) {
-                        isBooting[name] = true;
-                        logEvent(`[WD] CRITICAL: ${name} SERVER DOWN`, "text-red-500 font-bold");
-                        addSystemAlert(`CRITICAL: ${name} SERVER DOWN`);
-                        queueSound(SOUND_SQUAD, currentVolume * 0.3); // PIKNIĘCIE ZAMIAST SYRENY
-                        
-                        if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) {
-                            queueSpeech(`Critical alert. ${name.replace('EU1', 'EU One').replace('EU2', 'EU Two').replace('EU3', 'EU Three')} server down.`);
+                    if (isCrash) {
+                        if (!isBooting[name]) {
+                            isBooting[name] = true;
+                            lastRestartData[name] = Date.now(); localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                            logEvent(`[WD] CRITICAL: ${name} SERVER DOWN`, "text-red-500 font-bold"); addSystemAlert(`CRITICAL: ${name} SERVER DOWN`); queueSound(SOUND_SQUAD, currentVolume * 0.3);
+                            if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`Critical alert. ${name.replace('EU1', 'EU One')} server down.`); }
                         }
                     } else if (attr.status === 'online' && isBooting[name]) {
-                        // Kiedy serwer wstaje, resetuj zegar
                         isBooting[name] = false;
-                        lastRestartData[name] = Date.now();
-                        localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
-                        
-                        logEvent(`[WD] CONFIRMED: ${name} ONLINE. CYCLE LOCKED.`, "text-cyan-400 font-bold");
-                        addSystemAlert(`${name} SYSTEM ONLINE. CYCLE LOCKED.`);
-                        
-                        if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) {
-                            queueSpeech(`System online. ${name.replace('EU1', 'EU One').replace('EU2', 'EU Two').replace('EU3', 'EU Three')} cycle locked.`);
-                        }
+                        lastRestartData[name] = Date.now(); localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                        logEvent(`[WD] CONFIRMED: ${name} ONLINE. CYCLE LOCKED.`, "text-cyan-400 font-bold"); addSystemAlert(`${name} SYSTEM ONLINE. CYCLE LOCKED.`);
+                        if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`System online. ${name.replace('EU1', 'EU One')} cycle locked.`); }
                     }
                 }
 
-                if (maxPlayers > 0) {
-                    if (currentPlayers >= maxPlayers) {
-                        if (!isServerFullAlerted[name]) {
-                            isServerFullAlerted[name] = true;
-                            logEvent(`[ALERT] ${name} IS FULL`, "text-yellow-400 font-bold");
-                            addSystemAlert(`${name} SERVER FULL`);
-                            
-                            if (voiceEnabled && currentLang === 'en') {
-                                queueSpeech(`Warning. ${name.replace('EU1', 'EU One').replace('EU2', 'EU Two').replace('EU3', 'EU Three')} is full.`);
-                            } else {
-                                queueSound(SOUND_SQUAD, currentVolume * 0.2);
-                            }
-                        }
-                    } else {
-                        isServerFullAlerted[name] = false;
+                if (maxPlayers > 0 && currentPlayers >= maxPlayers) {
+                    if (!isServerFullAlerted[name]) {
+                        isServerFullAlerted[name] = true; logEvent(`[ALERT] ${name} IS FULL`, "text-yellow-400 font-bold"); addSystemAlert(`${name} SERVER FULL`);
+                        if (voiceEnabled && currentLang === 'en') { queueSpeech(`Warning. ${name.replace('EU1', 'EU One')} is full.`); } else { queueSound(SOUND_SQUAD, currentVolume * 0.2); }
                     }
-                }
+                } else { isServerFullAlerted[name] = false; }
 
-                // CZAS SESJI LOKALNYCH
                 if (isFirstLoad) {
-                    players.forEach(pName => {
-                        if (!playerSessions[pName]) playerSessions[pName] = Date.now();
-                    });
+                    players.forEach(pName => { if (!playerSessions[pName]) playerSessions[pName] = Date.now(); });
                 } else {
                     players.forEach(pName => {
                         if (!previous[name].includes(pName)) {
-                            playerSessions[pName] = Date.now(); // Zapisz czas wejścia
+                            playerSessions[pName] = Date.now(); 
                             const squadDetails = getWatchedSquadDetails(pName);
                             if (squadDetails) { announceAction(squadDetails, name, true); }
-                            addPlayerAlert(pName, name, true, squadDetails);
-                            logEvent(`${pName} JOINED ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-400");
+                            addPlayerAlert(pName, name, true, squadDetails); logEvent(`${pName} JOINED ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-400");
                         }
                     });
-                    
                     if (name !== "EU1" || !isBooting[name]) {
                         previous[name].forEach(pName => {
                             if (!players.includes(pName)) {
                                 const squadDetails = getWatchedSquadDetails(pName);
                                 if (squadDetails) { announceAction(squadDetails, name, false); }
-                                
-                                // Pobierz czas dla logów i skasuj
                                 let joinedAt = playerSessions[pName];
                                 addPlayerAlert(pName, name, false, squadDetails, joinedAt);
                                 delete playerSessions[pName];
-                                
                                 logEvent(`${pName} LEFT ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-600");
                             }
                         });
                     }
                 }
-                
                 previous[name] = players;
-                
-                // Zabezpieczony wpis do cache'u
-                cache[name] = { 
-                    status: attr.status || 'offline', 
-                    players: currentPlayers, 
-                    maxPlayers: maxPlayers, 
-                    details: attr.details || {}, 
-                    list: players.map(n => ({name: n})), 
-                    ping: lat 
-                };
+                cache[name] = { status: attr.status || 'offline', players: currentPlayers, maxPlayers: maxPlayers, details: attr.details || {}, list: players.map(n => ({name: n})), ping: lat };
 
             } catch (err) {
                 if (advMode && err.message !== "429") logEvent(`[ADV] ${name} FETCH FAILED`, "text-red-900", true);
-                // Nie dotykamy zegara. Pozwalamy serwerowi wisieć na starych danych lub wymuszamy offline z zerem.
-                if (!cache[name]) {
-                    cache[name] = { status: 'offline', players: 0, maxPlayers: 0, details: {}, list: [], ping: 0 };
-                } else {
-                    cache[name].status = 'offline';
-                    cache[name].players = 0;
-                    cache[name].list = [];
-                }
+                if (!cache[name]) { cache[name] = { status: 'offline', players: 0, maxPlayers: 0, details: {}, list: [], ping: 0 }; } 
+                else { cache[name].status = 'offline'; cache[name].players = 0; cache[name].list = []; }
             }
         }
 
@@ -888,17 +620,12 @@
                 let totalPlayers = 0; let totalMax = 0;
                 ["EU1", "EU2", "EU3"].forEach(n => {
                     const c = cache[n]; if (!c) return;
-                    totalPlayers += (c.players || 0); // Wymuszenie 0 w razie bledu
-                    totalMax += (c.maxPlayers || 0);
+                    totalPlayers += (c.players || 0); totalMax += (c.maxPlayers || 0);
                     const perc = c.maxPlayers > 0 ? Math.round((c.players / c.maxPlayers) * 100) : 0;
                     document.getElementById(`perc${n}`).innerText = `${perc}%`;
                     const bar = document.getElementById(`bar${n}`);
-                    if(bar) {
-                        bar.className = "cap-bar-fill " + (perc >= 100 ? "bg-red-500" : perc >= 86 ? "bg-yellow-500" : "bg-green-500");
-                        bar.style.width = `${perc}%`;
-                    }
-                    const fullText = document.getElementById(`full${n}`);
-                    if(fullText) fullText.style.display = perc >= 100 ? "block" : "none";
+                    if(bar) { bar.className = "cap-bar-fill " + (perc >= 100 ? "bg-red-500" : perc >= 86 ? "bg-yellow-500" : "bg-green-500"); bar.style.width = `${perc}%`; }
+                    const fullText = document.getElementById(`full${n}`); if(fullText) fullText.style.display = perc >= 100 ? "block" : "none";
                 });
                 
                 document.getElementById("totalStat").innerText = totalPlayers;
@@ -909,13 +636,8 @@
                 historyData.push(totalPlayers); historyLabels.push(timeLabel);
                 if (historyData.length > 60) { historyData.shift(); historyLabels.shift(); }
                 if(chart) chart.update('none');
-            } catch (e) {
-                console.error(e);
-            }
-            isFirstLoad = false;
-            
-            const dynamicInterval = (isBooting.EU1 || isBooting.EU2 || isBooting.EU3) ? 3000 : 10000;
-            setTimeout(updateAll, dynamicInterval);
+            } catch (e) { console.error(e); }
+            isFirstLoad = false; setTimeout(updateAll, (isBooting.EU1 || isBooting.EU2 || isBooting.EU3) ? 3000 : 10000);
         }
 
         function renderUI() {
@@ -923,60 +645,40 @@
                 const c = cache[name]; if (!c) return;
                 const sEl = document.getElementById(`status${name}`);
                 const container = document.getElementById(`container${name}`);
+                const alertsContainer = document.getElementById(`alerts${name}`);
                 const isFull = c.players >= c.maxPlayers && c.maxPlayers > 0;
                 
                 if (c.status === 'online') {
-                    if (c.players > 0 && c.details?.time === 0) {
-                        sEl.innerText = "INITIALIZING / LOBBY";
-                        sEl.className = "text-[10px] px-2 py-0.5 rounded border border-yellow-500 text-right w-full uppercase text-yellow-500 font-bold";
-                    } else if (isFull) {
-                        sEl.innerText = "SERVER FULL";
-                        sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full text-red-500 full-text-blink font-bold uppercase";
-                        container.classList.remove('soc-border'); container.classList.add('soc-border-pulse');
-                    } else {
-                        sEl.innerText = "ONLINE";
-                        sEl.className = "text-[10px] px-2 py-0.5 rounded border border-green-500 text-right w-full uppercase text-green-500";
-                        container.classList.add('soc-border'); container.classList.remove('soc-border-pulse');
-                    }
+                    if (c.players > 0 && c.details?.time === 0) { sEl.innerText = "INITIALIZING / LOBBY"; sEl.className = "text-[10px] px-2 py-0.5 rounded border border-yellow-500 text-right w-full uppercase text-yellow-500 font-bold"; } 
+                    else if (isFull) { sEl.innerText = "SERVER FULL"; sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full text-red-500 full-text-blink font-bold uppercase"; container.classList.remove('soc-border'); container.classList.add('soc-border-pulse'); } 
+                    else { sEl.innerText = "ONLINE"; sEl.className = "text-[10px] px-2 py-0.5 rounded border border-green-500 text-right w-full uppercase text-green-500"; container.classList.add('soc-border'); container.classList.remove('soc-border-pulse'); }
                 } else {
-                    sEl.innerText = "OFFLINE";
-                    sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full uppercase opacity-50";
-                    container.classList.add('soc-border'); container.classList.remove('soc-border-pulse');
+                    sEl.innerText = "OFFLINE"; sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full uppercase opacity-50"; container.classList.add('soc-border'); container.classList.remove('soc-border-pulse');
                 }
                 
                 document.getElementById(`players${name}`).innerText = `${c.players || 0}/${c.maxPlayers || 0}`;
                 document.getElementById(`map${name}`).innerText = c.details?.map || "-";
-                document.getElementById(`ping${name}`).innerText = `${c.ping}ms`;
-                document.getElementById(`alert${name}`).style.display = c.list?.some(p => getWatchedSquadDetails(p.name)) ? 'block' : 'none';
+                document.getElementById(`ping${name}`).innerText = `${c.ping || 0}ms`;
                 
-                const listEl = document.getElementById(`list${name}`); 
-                listEl.innerHTML = "";
+                alertsContainer.innerHTML = "";
+                let presentSquads = new Set();
+                
+                const listEl = document.getElementById(`list${name}`); listEl.innerHTML = "";
                 
                 c.list?.forEach((p, i) => {
                     const squadDetails = getWatchedSquadDetails(p.name);
                     const isClan = p.name.includes('77th') || p.name.toUpperCase().includes('JSOC');
                     
-                    const row = document.createElement("div"); 
-                    let rClass = `player-row py-0.5 px-1 flex items-center transition-all`;
+                    if (squadDetails) { presentSquads.add(squadDetails.squadIdx); }
+
+                    const row = document.createElement("div"); let rClass = `player-row py-0.5 px-1 flex items-center transition-all`;
                     
                     if (squadDetails) {
                         const colors = SQUAD_COLORS[squadDetails.squadIdx];
-                        row.style.backgroundColor = colors.bg;
-                        row.style.borderLeft = `2px solid ${colors.border}`;
-                        row.style.color = colors.text;
-                        row.style.fontWeight = 'bold';
-                        
-                        if (squadDetails.squadIdx === currentSquadIdx) {
-                            rClass += " active-squad-member";
-                        } else if (isClan) {
-                            rClass += " clan-member";
-                        }
+                        row.style.backgroundColor = colors.bg; row.style.borderLeft = `2px solid ${colors.border}`; row.style.color = colors.text; row.style.fontWeight = 'bold';
+                        if (squadDetails.squadIdx === currentSquadIdx) { rClass += " active-squad-member"; } else if (isClan) { rClass += " clan-member"; }
                     } else {
-                        if (isClan) {
-                            rClass += " clan-member";
-                        } else {
-                            rClass += " unassigned-player";
-                        }
+                        if (isClan) { rClass += " clan-member"; } else { rClass += " unassigned-player"; }
                     }
 
                     row.className = rClass;
@@ -984,266 +686,102 @@
                     row.ondblclick = () => addWatch(p.name); 
                     listEl.appendChild(row);
                 });
+
+                Array.from(presentSquads).sort().forEach(idx => {
+                    const sqColor = SQUAD_COLORS[idx].text;
+                    const icon = document.createElement("div");
+                    icon.className = "alert-icon";
+                    icon.style.backgroundColor = sqColor;
+                    icon.style.boxShadow = `0 0 8px ${sqColor}`;
+                    icon.innerText = "!";
+                    alertsContainer.appendChild(icon);
+                });
+
             });
             renderWatchList();
         }
         
         function updateClock() { 
-            const now = new Date();
-            document.getElementById('currentTime').innerText = now.toLocaleTimeString(); 
-            document.getElementById('currentDate').innerText = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
-            
+            const now = new Date(); document.getElementById('currentTime').innerText = now.toLocaleTimeString(); document.getElementById('currentDate').innerText = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
             const CYCLE = 6 * 60 * 60 * 1000;
             
             ["EU1", "EU2", "EU3"].forEach(n => {
-                const els = [document.getElementById(`clock-${n}`), document.getElementById(`clock-${n}-side`)];
-                const etas = [document.getElementById(`eta-${n}`), document.getElementById(`eta-${n}-side`)];
-                const leds = [document.getElementById(`led-${n}`), document.getElementById(`led-${n}-side`)];
+                const els = [document.getElementById(`clock-${n}`), document.getElementById(`clock-${n}-side`)]; const etas = [document.getElementById(`eta-${n}`), document.getElementById(`eta-${n}-side`)]; const leds = [document.getElementById(`led-${n}`), document.getElementById(`led-${n}-side`)];
+                const setLedsClass = (cls) => leds.forEach(l => { if(l) l.className = cls; }); const setElsClass = (action, cls) => els.forEach(e => { if(e) e.classList[action](cls); }); const setElsText = (txt) => els.forEach(e => { if(e) e.innerText = txt; });
 
-                const setLedsClass = (cls) => leds.forEach(l => { if(l) l.className = cls; });
-                const setElsClass = (action, cls) => els.forEach(e => { if(e) e.classList[action](cls); });
-                const setElsText = (txt) => els.forEach(e => { if(e) e.innerText = txt; });
+                if (isBooting[n]) { setLedsClass("led-indicator led-red-blink"); setElsClass('add', 'clock-wait'); setElsText("BOOTING"); etas.forEach(t=>{if(t) t.innerText = `AWAITING...`;}); return; }
+                if (!lastRestartData[n]) { setLedsClass("led-indicator led-green-blink"); setElsClass('add', 'clock-wait'); setElsText("--:--:--"); etas.forEach(t=>{if(t) t.innerText = `NEXT: --:--:--`;}); return; }
 
-                if (isBooting[n]) {
-                    setLedsClass("led-indicator led-red-blink");
-                    setElsClass('add', 'clock-wait');
-                    setElsText("BOOTING");
-                    return;
-                }
+                setLedsClass("led-indicator led-green-pulse"); setElsClass('remove', 'clock-wait');
+                let elapsed = Date.now() - lastRestartData[n]; let remain = CYCLE - elapsed; let next = lastRestartData[n] + CYCLE;
 
-                if (!lastRestartData[n]) {
-                    setLedsClass("led-indicator led-green-blink");
-                    setElsClass('add', 'clock-wait');
-                    setElsText("--:--:--");
-                    return;
-                }
-
-                setLedsClass("led-indicator led-green-pulse"); 
-                setElsClass('remove', 'clock-wait');
-
-                let elapsed = Date.now() - lastRestartData[n];
-                let remain = CYCLE - elapsed;
-                let next = lastRestartData[n] + CYCLE;
-
-                if (remain <= 0) {
-                    remain = 0; 
-                    setLedsClass("led-indicator led-red-blink");
-                } else if (remain <= 15 * 60 * 1000) {
-                    if (!alert15Triggers[n]) {
-                        logEvent(`[WD] WARNING: ${n} RESTART IN 15 MINUTES`, "text-cyan-400 font-bold");
-                        addSystemAlert(`WARNING: ${n} REBOOT IN 15 MIN`);
-                        
-                        if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) {
-                            queueSpeech(`Warning. 15 minutes to scheduled restart on ${n.replace('EU1', 'EU One').replace('EU2', 'EU Two').replace('EU3', 'EU Three')}`);
-                        }
-                        
-                        alert15Triggers[n] = true;
-                    }
-                } else {
-                    alert15Triggers[n] = false;
-                }
+                if (remain <= 0) { remain = 0; setLedsClass("led-indicator led-red-blink"); } 
+                else if (remain <= 15 * 60 * 1000) {
+                    if (!alert15Triggers[n]) { logEvent(`[WD] WARNING: ${n} RESTART IN 15 MINUTES`, "text-cyan-400 font-bold"); addSystemAlert(`WARNING: ${n} REBOOT IN 15 MIN`); if(currentLang === 'en' && audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`Warning. 15 minutes to scheduled restart on ${n.replace('EU1', 'EU One')}`); } alert15Triggers[n] = true; }
+                } else { alert15Triggers[n] = false; }
 
                 const h = Math.floor(remain / 3600000), m = Math.floor((remain % 3600000) / 60000), s = Math.floor((remain % 60000) / 1000);
                 setElsText(`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`);
-                
-                const nextStr = new Date(next).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                etas.forEach(t=>{if(t) t.innerText = `NEXT: ${nextStr}`;});
+                const nextStr = new Date(next).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); etas.forEach(t=>{if(t) t.innerText = `NEXT: ${nextStr}`;});
             });
         }
 
         function switchSquad(idx) { 
-            currentSquadIdx = idx; 
-            localStorage.setItem('jsoc_sq_idx', idx); 
-            
+            currentSquadIdx = idx; localStorage.setItem('jsoc_sq_idx', idx); 
             document.querySelectorAll('.squad-btn').forEach((b, i) => {
-                const btnIdx = i + 1;
-                const colors = SQUAD_COLORS[btnIdx];
-                if (btnIdx === idx) {
-                    b.classList.add('active');
-                    b.style.backgroundColor = colors.text;
-                    b.style.color = '#0b0f14';
-                    b.style.borderColor = colors.text;
-                    b.style.boxShadow = `0 0 15px ${colors.text}80`;
-                } else {
-                    b.classList.remove('active');
-                    b.style.backgroundColor = 'transparent';
-                    b.style.color = colors.text;
-                    b.style.borderColor = `${colors.text}60`;
-                    b.style.boxShadow = 'none';
-                }
+                const btnIdx = i + 1; const colors = SQUAD_COLORS[btnIdx];
+                if (btnIdx === idx) { b.classList.add('active'); b.style.backgroundColor = colors.text; b.style.color = '#0b0f14'; b.style.borderColor = colors.text; b.style.boxShadow = `0 0 15px ${colors.text}80`; } 
+                else { b.classList.remove('active'); b.style.backgroundColor = 'transparent'; b.style.color = colors.text; b.style.borderColor = `${colors.text}60`; b.style.boxShadow = 'none'; }
             }); 
-            renderWatchList(); 
-            renderUI(); 
+            renderWatchList(); renderUI(); 
         }
         
         function renderWatchList() { 
-            const list = ALL_SQUADS[currentSquadIdx]; 
-            const div = document.getElementById("watchList"); 
-            const max = currentSquadIdx === 8 ? 210 : 11; 
-            
-            const scrollPos = div.scrollTop;
-            div.innerHTML = ""; 
-            
-            const colors = SQUAD_COLORS[currentSquadIdx];
+            const list = ALL_SQUADS[currentSquadIdx]; const div = document.getElementById("watchList"); const max = currentSquadIdx === 8 ? 210 : 11; 
+            const scrollPos = div.scrollTop; div.innerHTML = ""; const colors = SQUAD_COLORS[currentSquadIdx];
 
             list.forEach((n, i) => { 
-                let isOnline = false;
-                ['EU1', 'EU2', 'EU3'].forEach(server => {
-                    if (cache[server] && cache[server].list && cache[server].list.some(p => p.name.toLowerCase() === n.toLowerCase())) {
-                        isOnline = true;
-                    }
-                });
-
-                const arrowStr = isOnline ? "◄◄◄◄" : "►►►►";
-                const arrowColor = isOnline ? "text-green-500" : "text-red-500";
-                const statusLabel = isOnline ? "ONLINE" : "OFFLINE";
-                
-                // OBLICZANIE CZASU SESJI DO WATCHLISTY
+                let isOnline = false; ['EU1', 'EU2', 'EU3'].forEach(server => { if (cache[server] && cache[server].list && cache[server].list.some(p => p.name.toLowerCase() === n.toLowerCase())) { isOnline = true; } });
+                const arrowStr = isOnline ? "◄◄◄◄" : "►►►►"; const arrowColor = isOnline ? "text-green-500" : "text-red-500"; const statusLabel = isOnline ? "ONLINE" : "OFFLINE";
                 let sessionTimeStr = "";
-                if (isOnline && playerSessions[n]) {
-                    let sessionMin = Math.floor((Date.now() - playerSessions[n]) / 60000);
-                    sessionTimeStr = `<span class="opacity-50 text-[10px] ml-2 tracking-widest">[${sessionMin}m]</span>`;
-                }
+                if (isOnline && playerSessions[n]) { let sessionMin = Math.floor((Date.now() - playerSessions[n]) / 60000); sessionTimeStr = `<span class="opacity-50 text-[10px] ml-2 tracking-widest">[${sessionMin}m]</span>`; }
 
-                const item = document.createElement("div"); 
-                item.className = "flex justify-between items-center p-2 px-3 mb-1 rounded text-base font-bold tracking-wide border-l-2 transition-colors"; 
-                item.style.backgroundColor = colors.bg;
-                item.style.borderColor = colors.border;
-
-                item.innerHTML = `
-                    <div class="flex items-center flex-1 min-w-0">
-                        <span class="opacity-50 text-xs mr-3 w-5 text-right shrink-0" style="color: ${colors.text}">${i + 1}.</span>
-                        <span class="text-white truncate block">${n}</span>
-                        ${sessionTimeStr}
-                    </div>
-                    <div class="flex items-center shrink-0 ml-2">
-                        <span class="${arrowColor} font-black text-sm mr-3 tracking-[-0.15em] drop-shadow-md" title="${statusLabel}">${arrowStr}</span>
-                        <span class="cursor-pointer hover:text-red-500 px-2 text-lg" style="color: ${colors.text}" onclick="removeWatch('${n}')">✖</span>
-                    </div>
-                `; 
+                const item = document.createElement("div"); item.className = "flex justify-between items-center p-2 px-3 mb-1 rounded text-base font-bold tracking-wide border-l-2 transition-colors"; item.style.backgroundColor = colors.bg; item.style.borderColor = colors.border;
+                item.innerHTML = `<div class="flex items-center flex-1 min-w-0"><span class="opacity-50 text-xs mr-3 w-5 text-right shrink-0" style="color: ${colors.text}">${i + 1}.</span><span class="text-white truncate block">${n}</span>${sessionTimeStr}</div><div class="flex items-center shrink-0 ml-2"><span class="${arrowColor} font-black text-sm mr-3 tracking-[-0.15em] drop-shadow-md" title="${statusLabel}">${arrowStr}</span><span class="cursor-pointer hover:text-red-500 px-2 text-lg" style="color: ${colors.text}" onclick="removeWatch('${n}')">✖</span></div>`; 
                 div.appendChild(item); 
             }); 
-            
-            document.getElementById("squadCounter").innerText = `${list.length}/${max}`; 
-            localStorage.setItem('jsoc_all_squads', JSON.stringify(ALL_SQUADS)); 
-            
-            div.scrollTop = scrollPos;
+            document.getElementById("squadCounter").innerText = `${list.length}/${max}`; localStorage.setItem('jsoc_all_squads', JSON.stringify(ALL_SQUADS)); div.scrollTop = scrollPos;
         }
         
         function addWatch(val) { 
-            const input = document.getElementById("watchInput"); 
-            const nick = (val || input.value).trim(); 
-            const max = currentSquadIdx === 8 ? 210 : 11;
-            
+            const input = document.getElementById("watchInput"); const nick = (val || input.value).trim(); const max = currentSquadIdx === 8 ? 210 : 11;
             if (nick) {
-                let existingSquad = null;
-                for (let i = 1; i <= 8; i++) {
-                    if (ALL_SQUADS[i].some(w => w.toLowerCase() === nick.toLowerCase())) {
-                        existingSquad = SQUAD_NAMES[i];
-                        break;
-                    }
-                }
-
+                let existingSquad = null; for (let i = 1; i <= 8; i++) { if (ALL_SQUADS[i].some(w => w.toLowerCase() === nick.toLowerCase())) { existingSquad = SQUAD_NAMES[i]; break; } }
                 if (existingSquad) {
-                    input.value = "";
-                    const ogPlaceholder = input.placeholder;
-                    input.placeholder = `IN ${existingSquad}!`;
-                    input.classList.remove("border-green-900");
-                    input.classList.add("border-yellow-500", "placeholder-yellow-500");
-                    queueSound(SOUND_SQUAD, currentVolume * 0.2);
-                    logEvent(`ADD FAILED: ALREADY IN ${existingSquad}`, "text-yellow-500");
-                    
-                    setTimeout(() => {
-                        input.placeholder = ogPlaceholder;
-                        input.classList.remove("border-yellow-500", "placeholder-yellow-500");
-                        input.classList.add("border-green-900");
-                    }, 2000);
-                    return;
+                    input.value = ""; const ogPlaceholder = input.placeholder; input.placeholder = `IN ${existingSquad}!`; input.classList.remove("border-green-900"); input.classList.add("border-yellow-500", "placeholder-yellow-500"); queueSound(SOUND_SQUAD, currentVolume * 0.2); logEvent(`ADD FAILED: ALREADY IN ${existingSquad}`, "text-yellow-500");
+                    setTimeout(() => { input.placeholder = ogPlaceholder; input.classList.remove("border-yellow-500", "placeholder-yellow-500"); input.classList.add("border-green-900"); }, 2000); return;
                 }
-
-                if (ALL_SQUADS[currentSquadIdx].length < max) {
-                    ALL_SQUADS[currentSquadIdx].push(nick); 
-                    renderWatchList(); 
-                    renderUI(); 
-                    input.value = ""; 
-                } else {
-                    input.value = "";
-                    const ogPlaceholder = input.placeholder;
-                    input.placeholder = LANGS[currentLang].squadFull || "SQUAD FULL!";
-                    input.classList.remove("border-green-900");
-                    input.classList.add("border-red-500", "placeholder-red-500");
-                    queueSound(SOUND_SQUAD, currentVolume * 0.2);
-                    logEvent("SQUAD ADD FAILED: CAPACITY REACHED", "text-red-500");
-                    
-                    setTimeout(() => {
-                        input.placeholder = ogPlaceholder;
-                        input.classList.remove("border-red-500", "placeholder-red-500");
-                        input.classList.add("border-green-900");
-                    }, 2000);
+                if (ALL_SQUADS[currentSquadIdx].length < max) { ALL_SQUADS[currentSquadIdx].push(nick); renderWatchList(); renderUI(); input.value = ""; } 
+                else {
+                    input.value = ""; const ogPlaceholder = input.placeholder; input.placeholder = LANGS[currentLang].squadFull || "SQUAD FULL!"; input.classList.remove("border-green-900"); input.classList.add("border-red-500", "placeholder-red-500"); queueSound(SOUND_SQUAD, currentVolume * 0.2); logEvent("SQUAD ADD FAILED: CAPACITY REACHED", "text-red-500");
+                    setTimeout(() => { input.placeholder = ogPlaceholder; input.classList.remove("border-red-500", "placeholder-red-500"); input.classList.add("border-green-900"); }, 2000);
                 }
             } 
         }
 
-        function removeWatch(n) { 
-            for (let i = 1; i <= 8; i++) {
-                ALL_SQUADS[i] = ALL_SQUADS[i].filter(x => x !== n);
-            }
-            renderWatchList(); 
-            renderUI(); 
-        }
-
+        function removeWatch(n) { for (let i = 1; i <= 8; i++) { ALL_SQUADS[i] = ALL_SQUADS[i].filter(x => x !== n); } renderWatchList(); renderUI(); }
         function clearAllWatch() { ALL_SQUADS[currentSquadIdx] = []; renderWatchList(); renderUI(); }
-        
         function addAllToWatchCurrent() {
-            let activePlayers = [];
-            ['EU1', 'EU2', 'EU3'].forEach(server => {
-                if (cache[server] && cache[server].list) {
-                    cache[server].list.forEach(p => {
-                        if (!activePlayers.includes(p.name)) {
-                            activePlayers.push(p.name);
-                        }
-                    });
-                }
-            });
-
-            const max = currentSquadIdx === 8 ? 210 : 11;
-            let addedCount = 0;
-
+            let activePlayers = []; ['EU1', 'EU2', 'EU3'].forEach(server => { if (cache[server] && cache[server].list) { cache[server].list.forEach(p => { if (!activePlayers.includes(p.name)) { activePlayers.push(p.name); } }); } });
+            const max = currentSquadIdx === 8 ? 210 : 11; let addedCount = 0;
             for (let i = 0; i < activePlayers.length; i++) {
-                const nick = activePlayers[i];
-                
-                let isAnywhere = false;
-                for (let s = 1; s <= 8; s++) {
-                    if (ALL_SQUADS[s].some(w => w.toLowerCase() === nick.toLowerCase())) {
-                        isAnywhere = true;
-                        break;
-                    }
-                }
-
-                if (!isAnywhere) {
-                    if (ALL_SQUADS[currentSquadIdx].length < max) {
-                        ALL_SQUADS[currentSquadIdx].push(nick);
-                        addedCount++;
-                    } else {
-                        logEvent(`SQUAD FULL: ADDED ${addedCount} PLAYERS`, "text-yellow-400");
-                        break;
-                    }
-                }
+                const nick = activePlayers[i]; let isAnywhere = false; for (let s = 1; s <= 8; s++) { if (ALL_SQUADS[s].some(w => w.toLowerCase() === nick.toLowerCase())) { isAnywhere = true; break; } }
+                if (!isAnywhere) { if (ALL_SQUADS[currentSquadIdx].length < max) { ALL_SQUADS[currentSquadIdx].push(nick); addedCount++; } else { logEvent(`SQUAD FULL: ADDED ${addedCount} PLAYERS`, "text-yellow-400"); break; } }
             }
-
-            if (addedCount > 0) {
-                renderWatchList();
-                renderUI();
-                logEvent(`SYNCED ${addedCount} ACTIVE UNASSIGNED PLAYERS TO SQUAD`, "text-green-400");
-            } else {
-                logEvent("SYNC FAILED: NO UNASSIGNED ACTIVE PLAYERS OR SQUAD FULL", "text-gray-500");
-            }
+            if (addedCount > 0) { renderWatchList(); renderUI(); logEvent(`SYNCED ${addedCount} ACTIVE UNASSIGNED PLAYERS TO SQUAD`, "text-green-400"); } else { logEvent("SYNC FAILED: NO UNASSIGNED ACTIVE PLAYERS OR SQUAD FULL", "text-gray-500"); }
         }
         
-        function updateLangUI() { 
-            const l = LANGS[currentLang]; document.getElementById('btnRefresh').innerText = l.refresh; document.getElementById('manualBtn').innerText = l.manual; document.getElementById('totalLabel').innerText = l.totalPop; document.getElementById('watchlistTitle').innerText = l.watchlist; document.getElementById('criticalTitle').innerText = l.notifications; document.getElementById('trendTitle').innerText = l.trend; document.getElementById('syslogTitle').innerText = l.syslog; document.getElementById('btnSyncWatch').innerText = l.add; document.getElementById('btnClearWatch').innerText = l.clear; document.getElementById('watchInput').placeholder = l.placeholder; document.getElementById('modalTitle').innerText = l.modalTitle; document.getElementById('modalBody').innerHTML = l.modalContent; document.getElementById('closeModalBtn').innerText = l.modalClose; document.querySelectorAll('.lang-label-players').forEach(el => el.innerText = l.players); document.querySelectorAll('.lang-label-map').forEach(el => el.innerText = l.map); document.querySelectorAll('.lang-label-ping').forEach(el => el.innerText = l.ping); document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id.split('-').pop() === currentLang)); 
-        }
-
+        function updateLangUI() { const l = LANGS[currentLang]; document.getElementById('btnRefresh').innerText = l.refresh; document.getElementById('manualBtn').innerText = l.manual; document.getElementById('totalLabel').innerText = l.totalPop; document.getElementById('watchlistTitle').innerText = l.watchlist; document.getElementById('criticalTitle').innerText = l.notifications; document.getElementById('trendTitle').innerText = l.trend; document.getElementById('syslogTitle').innerText = l.syslog; document.getElementById('btnSyncWatch').innerText = l.add; document.getElementById('btnClearWatch').innerText = l.clear; document.getElementById('watchInput').placeholder = l.placeholder; document.getElementById('modalTitle').innerText = l.modalTitle; document.getElementById('modalBody').innerHTML = l.modalContent; document.getElementById('closeModalBtn').innerText = l.modalClose; document.querySelectorAll('.lang-label-players').forEach(el => el.innerText = l.players); document.querySelectorAll('.lang-label-map').forEach(el => el.innerText = l.map); document.querySelectorAll('.lang-label-ping').forEach(el => el.innerText = l.ping); document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id.split('-').pop() === currentLang)); document.getElementById('btnCopyLog').innerText = l.copy || "COPY"; document.getElementById('btnSaveLog').innerText = l.save || "SAVE"; }
         function changeLang(lang) { currentLang = lang; localStorage.setItem('jsoc_lang', lang); updateLangUI(); }
         function setVolume(v) { currentVolume = v; localStorage.setItem('jsoc_volume', v); updateVolumeUI(); queueSound(SOUND_SQUAD, currentVolume * 0.15); }
         function updateVolumeUI() { document.querySelectorAll('.vol-level').forEach(el => { const val = parseFloat(el.dataset.vol); el.style.background = val <= currentVolume ? "#00ff9c" : "rgba(0, 255, 156, 0.1)"; el.style.boxShadow = val <= currentVolume ? "0 0 8px #00ff9c" : "none"; }); }
