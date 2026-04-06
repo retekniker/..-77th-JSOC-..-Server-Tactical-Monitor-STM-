@@ -164,20 +164,18 @@
         .dmd-container { background: #030504; border: 2px solid #1a1a1a; height: 60px; display: flex; align-items: center; position: relative; overflow: hidden; box-shadow: inset 0 0 25px #000; font-family: 'VT323', monospace; }
         .dmd-pixel-overlay { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.4) 1px, transparent 1px); background-size: 3px 3px; z-index: 10; pointer-events: none; }
         
-        .retek-skeleton { width: 100px; height: 40px; padding-left: 15px; flex-shrink: 0; z-index: 11; }
-        .retek-svg-wire { stroke: #ffb000; stroke-width: 1.5; fill: none; filter: drop-shadow(0 0 5px #ffb000); }
+        .dmd-branding-zone { padding: 0 20px; font-size: 1.4rem; letter-spacing: 1px; white-space: pre; border-left: 1px solid rgba(255,176,0,0.2); flex: 1; color: #ffb000; text-shadow: 0 0 10px #ffb000; z-index: 11; overflow: hidden; text-overflow: ellipsis; }
         
-        .dmd-branding-zone { padding: 0 20px; font-size: 1.4rem; letter-spacing: 1px; white-space: nowrap; border-left: 1px solid rgba(255,176,0,0.2); flex: 1; color: #ffb000; text-shadow: 0 0 10px #ffb000; z-index: 11; }
-        .jsoc-tag { opacity: 0.9; }
-        .stm-sub { font-size: 0.9rem; opacity: 0.6; margin-left: 10px; }
-        
+        @keyframes cursor-blink-anim { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+        .cursor-blink { animation: cursor-blink-anim 1s infinite; font-weight: 900; }
+
         .dmd-reticle { position: relative; padding: 0 30px; display: flex; align-items: center; justify-content: center; border-left: 1px solid rgba(255,176,0,0.2); color: #ffb000; text-shadow: 0 0 10px #ffb000; z-index: 11; height: 100%; }
         .dmd-reticle::before, .dmd-reticle::after { content: ''; position: absolute; width: 10px; height: 10px; border-color: #ffb000; border-style: solid; }
         .dmd-reticle::before { top: 10px; left: 15px; border-width: 2px 0 0 2px; }
         .dmd-reticle::after { bottom: 10px; right: 15px; border-width: 0 2px 2px 0; }
         .dmd-time-val { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; }
         
-        .dmd-heat-zone { padding: 0 20px; border-left: 1px solid rgba(255,176,0,0.2); min-width: 140px; color: #ffb000; text-shadow: 0 0 10px #ffb000; display: flex; flex-direction: column; justify-content: center; z-index: 11; height: 100%;}
+        .dmd-heat-zone { padding: 0 20px; border-left: 1px solid rgba(255,176,0,0.2); min-width: 140px; display: flex; flex-direction: column; justify-content: center; z-index: 11; height: 100%; transition: color 0.3s, text-shadow 0.3s; }
         .heat-bar { font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; }
 
     </style>
@@ -211,26 +209,17 @@
         <div class="flex-1 dmd-container w-full min-w-0" id="dmd-main-node">
             <div class="dmd-pixel-overlay"></div>
             
-            <div class="retek-skeleton hidden sm:block">
-                <svg viewBox="0 0 120 40" class="retek-svg-wire">
-                    <path d="M5,10 L25,10 M5,20 L20,20 M5,30 L15,30" />
-                    <path d="M35,10 L55,10 L55,25 L35,25 L35,40 M55,25 L45,40" /> 
-                    <path d="M65,15 L85,15 L85,40 M65,27 L80,27" /> 
-                    <path d="M95,10 L115,10 M105,10 L105,40" />
-                </svg>
-            </div>
-
-            <div class="dmd-branding-zone" id="dmd-text-stream">
-                Re-Tek corp. <span class="jsoc-tag">..::77th JSOC::..</span> 
-                <span class="stm-sub hidden md:inline">S.T.M V4.14.0 // SYSTEM READY</span>
-            </div>
+            <div class="dmd-branding-zone" id="dmd-text-stream">Re-Tek corp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..::77th JSOC::.. Server Tactical Monitor v4.14//........SYSTEM READY<span class="cursor-blink">!█</span></div>
 
             <div class="dmd-reticle hidden sm:flex">
                 <div id="dmd-time" class="dmd-time-val">00:00:00</div>
             </div>
 
-            <div class="dmd-heat-zone hidden md:flex">
-                <div class="text-[9px] opacity-60 uppercase mb-1">API_HEAT_SYNC</div>
+            <div class="dmd-heat-zone hidden md:flex text-[#00ff9c]" style="text-shadow: 0 0 10px #00ff9c;" id="heat-zone-container">
+                <div class="flex justify-between w-full mb-1 items-end">
+                    <div class="text-[9px] opacity-60 uppercase leading-none">API_HEAT_SYNC</div>
+                    <div id="heat-text-val" class="text-xs font-bold leading-none ml-2">00/60</div>
+                </div>
                 <div id="heat-visual" class="heat-bar">[..........]</div>
             </div>
         </div>
@@ -425,6 +414,8 @@
                         </div>
                         <div id="audioStatus" class="text-[9px] text-red-500 mt-2 font-bold uppercase blink-text tracking-widest">AUDIO LOCKED</div>
                     </div>
+
+                    <img src="Adobe Express - file.png" alt="77th JSOC Logo" class="bottom-logo mt-4 max-w-[100px] md:max-w-[140px]">
                 </div>
             </div>
         </div>
@@ -564,7 +555,7 @@
         let audioQueue = []; let isPlayingQueue = false; let currentAudioObj = null; let ttsUtterances = []; 
 
         /* =========================================================
-           KROK 2: LOGIKA ZASILANIA DMD (HEAT BAR)
+           KROK 2: LOGIKA ZASILANIA DMD (HEAT BAR) Z KOLORAMI
            ========================================================= */
         function updateApiHeatUI() {
             let log = JSON.parse(localStorage.getItem('jsoc_api_heat')) || [];
@@ -573,14 +564,24 @@
             localStorage.setItem('jsoc_api_heat', JSON.stringify(log));
 
             const heatVisual = document.getElementById('heat-visual');
-            if (heatVisual) {
+            const heatText = document.getElementById('heat-text-val');
+            const heatContainer = document.getElementById('heat-zone-container');
+
+            if (heatVisual && heatText && heatContainer) {
                 let count = log.length;
                 let bars = Math.min(10, Math.floor(count / 6));
                 heatVisual.innerText = "[" + "|".repeat(bars) + ".".repeat(10 - bars) + "]";
+                heatText.innerText = `${count.toString().padStart(2, '0')}/60`;
+                
                 if (count >= 50) {
-                    heatVisual.style.color = "#ff4d4d"; heatVisual.style.textShadow = "0 0 10px #ff4d4d";
+                    heatContainer.style.color = "#ff4d4d"; 
+                    heatContainer.style.textShadow = "0 0 10px #ff4d4d";
+                } else if (count >= 35) {
+                    heatContainer.style.color = "#eab308"; 
+                    heatContainer.style.textShadow = "0 0 10px #eab308";
                 } else {
-                    heatVisual.style.color = "#ffb000"; heatVisual.style.textShadow = "0 0 10px #ffb000";
+                    heatContainer.style.color = "#00ff9c"; 
+                    heatContainer.style.textShadow = "0 0 10px #00ff9c";
                 }
             }
             return log.length;
