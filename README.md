@@ -14,4 +14,3 @@ Advanced, real-time uplink and tactical dashboard for monitoring 77th JSOC EU-1,
 * ⚠️ **DMD Override Alarms:** Visual VFD/DMD screen with priority alerts for critical server events (Full Server, Telemetry Lost, Rebooting).
 * 🔍 **Quick Intel:** Double-click any operator's name to immediately add them to the HVT Watchlist.
 
-¤¤ Live Uplink Link Below.
