@@ -80,8 +80,14 @@
         .sq-color-8 { color: #d4d4d8; border: 1px solid rgba(212, 212, 216, 0.4); } .sq-color-8:hover, .sq-color-8.active { background: #d4d4d8; color: #0b0f14; border-color: #d4d4d8; box-shadow: 0 0 15px rgba(212, 212, 216, 0.6); }
 
         @keyframes number-glow-pulse { 0%, 100% { filter: brightness(0.8); text-shadow: 0 0 2px currentColor; transform: scale(1); } 50% { filter: brightness(1.5); text-shadow: 0 0 8px currentColor, 0 0 12px currentColor; transform: scale(1.1); } }
-        /* Usunięto sztywne font-size, aby klasa pasowała do każdego kontekstu */
         .squad-number-glow { animation: number-glow-pulse 3s ease-in-out infinite; font-weight: 900; display: inline-block; opacity: 1 !important; }
+
+        /* EFEKT PULSOWANIA DLA OFICJALNYCH CZŁONKÓW JSOC NA LISTACH */
+        @keyframes jsoc-name-pulse {
+            0%, 100% { filter: brightness(1); text-shadow: none; }
+            50% { filter: brightness(1.4); text-shadow: 0 0 8px currentColor, 0 0 15px currentColor; }
+        }
+        .clan-member .truncate { animation: jsoc-name-pulse 3s ease-in-out infinite; font-weight: 900; }
 
         /* 3-WAY RADIO SWITCH CSS */
         .wd-switch-container { display: flex; background: rgba(0,0,0,0.8); border: 1px solid rgba(0, 255, 156, 0.2); border-radius: 2px; overflow: hidden; width: fit-content; box-shadow: inset 0 0 10px rgba(0,0,0,0.9); }
@@ -157,7 +163,7 @@
         .perc-offline { color: #555 !important; text-shadow: none !important; animation: none !important; transform: scale(1) !important; font-size: 1.75rem; font-weight: 900; letter-spacing: 0.1em; }
 
         /* =========================================================
-           KROK 2: NOWY CSS DLA DMD (RE-TEK SENTRY STYLE)
+           NOWY CSS DLA DMD (RE-TEK SENTRY STYLE & KOLEJKA)
            ========================================================= */
         .dmd-container { background: #030504; border: 2px solid #1a1a1a; height: 60px; display: flex; align-items: center; position: relative; overflow: hidden; box-shadow: inset 0 0 25px #000; font-family: 'VT323', monospace; }
         .dmd-pixel-overlay { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.4) 1px, transparent 1px); background-size: 3px 3px; z-index: 10; pointer-events: none; }
@@ -553,7 +559,44 @@
         let audioQueue = []; let isPlayingQueue = false; let currentAudioObj = null; let ttsUtterances = []; 
 
         /* =========================================================
-           KROK 2: LOGIKA ZASILANIA DMD (HEAT BAR) Z KOLORAMI
+           NOWA LOGIKA: KOLEJKA DMD DLA POWITAŃ
+           ========================================================= */
+        let dmdQueue = [];
+        let isDmdProcessing = false;
+        let dmdTimeout = null;
+        const DMD_DEFAULT_TEXT = `Re-Tek corp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..::77th JSOC::.. Server Tactical Monitor v4.14//........SYSTEM READY<span class="cursor-blink">!█</span>`;
+
+        function pushToDMD(msg) {
+            dmdQueue.push(msg);
+            if (!isDmdProcessing) {
+                processDMD();
+            }
+        }
+
+        function processDMD() {
+            const dmdStream = document.getElementById('dmd-text-stream');
+            if (!dmdStream) return;
+
+            if (dmdQueue.length === 0) {
+                isDmdProcessing = false;
+                dmdStream.innerHTML = DMD_DEFAULT_TEXT;
+                return;
+            }
+
+            isDmdProcessing = true;
+            const msg = dmdQueue.shift();
+            
+            // Jeśli ktoś czeka w kolejce - 4 sekundy. Jeśli kolejka pusta - 8 sekund relaksu.
+            const duration = dmdQueue.length > 0 ? 4000 : 8000; 
+
+            dmdStream.innerHTML = `Re-Tek corp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> ${msg}<span class="cursor-blink">█</span>`;
+            
+            if (dmdTimeout) clearTimeout(dmdTimeout);
+            dmdTimeout = setTimeout(processDMD, duration);
+        }
+
+        /* =========================================================
+           LOGIKA ZASILANIA DMD (HEAT BAR) Z KOLORAMI
            ========================================================= */
         function updateApiHeatUI() {
             let log = JSON.parse(localStorage.getItem('jsoc_api_heat')) || [];
@@ -726,7 +769,7 @@
             if (squadDetails) {
                 const actionText = isJoin ? "JOINED" : "LEFT"; const actionColor = isJoin ? "text-green-500" : "text-red-500"; const arrow = isJoin ? "◄◄◄◄" : "►►►►"; const bgClass = isJoin ? "bg-green-900/20" : "bg-red-900/20"; const borderClass = isJoin ? "border-green-500" : "border-red-500"; const squadTag = `${squadDetails.squadName}-${squadDetails.playerNumber}`; const sqColor = SQUAD_COLORS[squadDetails.squadIdx].text;
                 d.className = `flex justify-between items-center border-l-2 ${borderClass} pl-2 ${bgClass} py-1.5 transition-all mb-0.5`;
-                d.innerHTML = `<div class="flex items-center gap-2 flex-wrap flex-1"><span class="opacity-60 text-xs text-white">[${time}]</span><span class="font-bold text-sm uppercase" style="color: ${sqColor}; text-shadow: 0 0 5px ${sqColor};">[${squadTag}]</span><span class="text-white font-black text-lg tracking-wider">&lt; ${name} &gt;</span><span class="${actionColor} font-bold text-sm ml-1">${actionText} ${server}</span>${sessionTimeStr}<span class="${actionColor} font-black text-xl ml-2 tracking-[-0.15em] drop-shadow-md">${arrow}</span></div><div class="flex items-center pr-2"><span class="cursor-white hover:text-red-500 text-sm px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span></div>`;
+                d.innerHTML = `<div class="flex items-center gap-2 flex-wrap flex-1"><span class="opacity-60 text-xs text-white">[${time}]</span><span class="font-bold text-sm uppercase" style="color: ${sqColor}; text-shadow: 0 0 5px ${sqColor};">[${squadTag}]</span><span class="text-white font-black text-lg tracking-wider">&lt; ${name} &gt;</span><span class="${actionColor} font-bold text-sm ml-1">${actionText} ${server}</span>${sessionTimeStr}<span class="${actionColor} font-black text-xl ml-2 tracking-[-0.15em] drop-shadow-md">${arrow}</span></div><div class="flex items-center pr-2"><span class="cursor-pointer text-white hover:text-red-500 text-sm px-2 font-bold" onclick="this.parentElement.parentElement.remove()">✖</span></div>`;
             } else {
                 const actionText = isJoin ? "JOINED" : "LEFT"; const color = isJoin ? "text-green-500" : "text-red-500"; const arrow = isJoin ? "◄◄" : "►►";
                 d.className = `flex justify-between items-center pl-2 bg-black/40 py-1 border-l border-white/10 mb-0.5`;
@@ -763,7 +806,6 @@
                 const players = (json.included || []).filter(x => x.type === "player").map(p => p.attributes.name);
                 const currentPlayers = attr.players || 0; const maxPlayers = attr.maxPlayers || 0; const currentUptime = attr.details?.time || 0;
                 
-                /* KROK 1: FORCE SYNC UPTIME W LOCIE */
                 if (currentUptime > 0 && !lastRestartData[name]) {
                     lastRestartData[name] = Date.now() - (currentUptime * 1000);
                     localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
@@ -828,7 +870,23 @@
                     players.forEach(pName => { if (!previous[name].includes(pName)) joinedPlayers.push(pName); });
                     if (state === 'ON' || state === 'AUTO') { if (name !== "EU1" || !isBooting[name]) { previous[name].forEach(pName => { if (!players.includes(pName)) leftPlayers.push(pName); }); } }
                     let isMassEvent = (joinedPlayers.length > 10 || leftPlayers.length > 10);
-                    joinedPlayers.forEach(pName => { playerSessions[pName] = Date.now(); const squadDetails = getWatchedSquadDetails(pName); if (!isMassEvent) announceAction(squadDetails, name, true); addPlayerAlert(pName, name, true, squadDetails); logEvent(`${pName} JOINED ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-400"); });
+                    
+                    joinedPlayers.forEach(pName => { 
+                        playerSessions[pName] = Date.now(); 
+                        const squadDetails = getWatchedSquadDetails(pName); 
+                        if (!isMassEvent) announceAction(squadDetails, name, true); 
+                        addPlayerAlert(pName, name, true, squadDetails); 
+                        logEvent(`${pName} JOINED ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-400"); 
+
+                        /* KROK 3: POWITANIA DMD DLA CZŁONKÓW KLANU */
+                        const isClan = pName.includes('77th') || pName.toUpperCase().includes('JSOC');
+                        if (isClan && !isMassEvent) {
+                            setTimeout(() => {
+                                pushToDMD(`UPLINK_ESTABLISHED: OPR. ${pName} // WELCOME!`);
+                            }, 3000); // 3 sekundy po dołączeniu
+                        }
+                    });
+                    
                     leftPlayers.forEach(pName => { const squadDetails = getWatchedSquadDetails(pName); if (!isMassEvent) announceAction(squadDetails, name, false); let joinedAt = playerSessions[pName]; addPlayerAlert(pName, name, false, squadDetails, joinedAt); delete playerSessions[pName]; logEvent(`${pName} LEFT ${name}`, squadDetails ? "text-red-500 font-bold" : "text-gray-600"); });
                     if (isMassEvent && !isMuted) { logEvent(`[SYS] MASS DATA SHIFT: ${joinedPlayers.length} IN, ${leftPlayers.length} OUT. AUDIO THROTTLED.`, "text-yellow-500 font-bold"); queueSound(SOUND_SQUAD, currentVolume * 0.3); }
                 }
@@ -917,7 +975,6 @@
                         row.style.color = colors.text; 
                         row.style.fontWeight = 'bold';
                         
-                        /* CHIRURGICZNA ZMIANA: Pulsuje tylko numerek aktywnego w danej chwili gracza */
                         if (squadDetails.squadIdx === currentSquadIdx) { 
                             numClass = "w-5 text-right mr-2 squad-number-glow text-[12px]";
                             numStyle = `color: ${colors.text};`;
@@ -949,7 +1006,6 @@
                 const vfdL1 = document.getElementById(`vfd-${n}-l1`); const vfdL2 = document.getElementById(`vfd-${n}-l2`);
                 const state = wdState[n]; const c = cache[n]; const activeClockColor = WD_COLORS[n]; const activeTitleColor = TITLE_COLORS[n];
 
-                /* KROK 1B: BRUTAL BYPASS ZEGARA DLA EU2 */
                 if (!lastRestartData[n] && state !== 'OFF' && c && c.players > 0) {
                     lastRestartData[n] = Date.now() - (3600 * 1000); 
                     localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
@@ -995,7 +1051,6 @@
 
                 els.forEach(e => { if(e) { e.className = `text-3xl md:text-4xl font-black tracking-widest ${activeClockColor} whitespace-nowrap`; } }); 
                 
-                /* KROK 1A: NAPRAWA MODULO ZEGARA */
                 let elapsed = Date.now() - lastRestartData[n];
                 let remain = CYCLE - (elapsed % CYCLE);
                 let next = Date.now() + remain;
@@ -1043,7 +1098,6 @@
 
                 const item = document.createElement("div"); item.className = "flex justify-between items-center p-2 rounded font-bold tracking-wide border-l-2 transition-colors"; item.style.backgroundColor = colors.bg; item.style.borderColor = colors.border;
                 
-                /* CHIRURGICZNA ZMIANA: Pulsuje tylko numer aktywnego gracza (ONLINE) w liście SQUAD ROSTER na dole */
                 const numClass = isOnline ? "squad-number-glow text-[1.15rem]" : "opacity-50 text-sm font-normal";
                 
                 item.innerHTML = `<div class="flex items-center flex-1 min-w-0"><span class="${numClass} mr-2 w-6 text-right shrink-0" style="color: ${colors.text}">${i + 1}.</span><span class="text-white text-sm md:text-base font-black tracking-wider truncate flex-1">${n}</span>${sessionTimeStr}</div><div class="flex items-center shrink-0 ml-1"><span class="${arrowColor} font-black text-sm mr-2 tracking-[-0.15em] drop-shadow-md" title="${statusLabel}">${arrowStr}</span><span class="cursor-pointer hover:text-red-500 px-2 text-lg" style="color: ${colors.text}" onclick="removeWatch('${n}')">✖</span></div>`; div.appendChild(item); 
