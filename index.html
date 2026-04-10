@@ -233,6 +233,10 @@
                     <li><span class="text-yellow-500 font-bold">AUTO:</span> Stealth telemetry (SILENT HUNTER). Analyzes cycle deltas, veteran disconnects, and auto-exports data logs. 12H quarantine on cold start.</li>
                     <li><span class="text-red-400 font-bold">OFF:</span> System Standby. Reboot tracking disabled. Oscilloscope flatlined.</li>
                 </ul>
+                <br>
+                <strong>4. OVERRIDE MODULE:</strong><br>
+                <span class="text-sm opacity-80">- <b>SINGLE CLICK CLOCK:</b> Toggle between Countdown and Approx Time formats.</span><br>
+                <span class="text-sm opacity-80">- <b>DOUBLE CLICK CLOCK:</b> Manual time injection. Sets state to [APRX] until mathematically verified by the system.</span>
             </div>
             <button onclick="toggleHelp()" class="mt-10 w-full py-4 bg-green-900/20 border border-green-500 hover:bg-green-500 hover:text-black transition-all font-bold uppercase text-sm tracking-widest">CLOSE INTERFACE</button>
         </div>
@@ -355,9 +359,11 @@
                     <div class="server-grid-row border border-white/10 bg-black/20 rounded p-2">
                         <div class="flex flex-col justify-center pr-3 border-r border-white/10">
                             <div class="text-xs md:text-sm uppercase flex items-center mb-1 font-bold tracking-widest drop-shadow-md text-gray-500 whitespace-nowrap" id="title-wrapper-EU1-side">
-                                <span id="led-EU1-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span><span id="title-EU1-side">EU1 REBOOT</span>
+                                <span id="led-EU1-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span>
+                                <span id="title-EU1-side">EU1 REBOOT</span>
+                                <span id="aprx-EU1" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU1-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Double-click to manual override restart time" ondblclick="resetClock('EU1')">--:--:--</div>
+                            <div id="clock-EU1-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle Format | Double-click: Manual Override" onclick="handleClockClick('EU1')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU1-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -384,9 +390,11 @@
                     <div class="server-grid-row border border-white/10 bg-black/20 rounded p-2">
                         <div class="flex flex-col justify-center pr-3 border-r border-white/10">
                             <div class="text-xs md:text-sm uppercase flex items-center mb-1 font-bold tracking-widest drop-shadow-md text-gray-500 whitespace-nowrap" id="title-wrapper-EU2-side">
-                                <span id="led-EU2-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span><span id="title-EU2-side">EU2 REBOOT</span>
+                                <span id="led-EU2-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span>
+                                <span id="title-EU2-side">EU2 REBOOT</span>
+                                <span id="aprx-EU2" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU2-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Double-click to manual override restart time" ondblclick="resetClock('EU2')">--:--:--</div>
+                            <div id="clock-EU2-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle Format | Double-click: Manual Override" onclick="handleClockClick('EU2')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU2-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -413,9 +421,11 @@
                     <div class="server-grid-row border border-white/10 bg-black/20 rounded p-2">
                         <div class="flex flex-col justify-center pr-3 border-r border-white/10">
                             <div class="text-xs md:text-sm uppercase flex items-center mb-1 font-bold tracking-widest drop-shadow-md text-gray-500 whitespace-nowrap" id="title-wrapper-EU3-side">
-                                <span id="led-EU3-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span><span id="title-EU3-side">EU3 REBOOT</span>
+                                <span id="led-EU3-side" class="led-indicator w-3 h-3 md:w-4 md:h-4 mr-2 border-2"></span>
+                                <span id="title-EU3-side">EU3 REBOOT</span>
+                                <span id="aprx-EU3" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU3-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Double-click to manual override restart time" ondblclick="resetClock('EU3')">--:--:--</div>
+                            <div id="clock-EU3-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle Format | Double-click: Manual Override" onclick="handleClockClick('EU3')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU3-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -599,7 +609,10 @@
         let isServerFullAlerted = { EU1: false, EU2: false, EU3: false }; 
         
         let wdState = JSON.parse(localStorage.getItem('jsoc_wd_state')) || { EU1: 'AUTO', EU2: 'AUTO', EU3: 'AUTO' };
-        
+        let isApprox = JSON.parse(localStorage.getItem('jsoc_approx_state')) || { EU1: false, EU2: false, EU3: false };
+        let clockMode = { EU1: 'countdown', EU2: 'countdown', EU3: 'countdown' };
+        let clockClickTimers = { EU1: null, EU2: null, EU3: null };
+
         let radarMode = localStorage.getItem('jsoc_radar_mode') || 'NORM';
         let telemetryLog = JSON.parse(localStorage.getItem('jsoc_telemetry_log')) || { EU1: [], EU2: [], EU3: [] };
         let lastExportTime = parseInt(localStorage.getItem('jsoc_last_export')) || Date.now();
@@ -675,10 +688,23 @@
             }
         };
 
-        // --- V6.0: MANUAL OVERRIDE (Double Click na zegar) ---
+        window.handleClockClick = function(server) {
+            if (clockClickTimers[server]) {
+                clearTimeout(clockClickTimers[server]);
+                clockClickTimers[server] = null;
+                resetClock(server);
+            } else {
+                clockClickTimers[server] = setTimeout(() => {
+                    clockMode[server] = clockMode[server] === 'countdown' ? 'absolute' : 'countdown';
+                    updateClock();
+                    clockClickTimers[server] = null;
+                }, 250);
+            }
+        };
+
         window.resetClock = function(server) {
             const input = prompt(`[MANUAL OVERRIDE]\nPodaj dokładną godzinę ostatniego restartu dla ${server} (format HH:MM):\n\nZostaw puste, aby użyć obecnego czasu (TERAZ).`);
-            if (input === null) return; // Anulowano
+            if (input === null) return; 
 
             let newRestartTime = Date.now();
             
@@ -689,7 +715,6 @@
                     now.setHours(parseInt(match[1], 10), parseInt(match[2], 10), 0, 0);
                     newRestartTime = now.getTime();
                     
-                    // Jeśli wpisana godzina jest z przyszłości, znaczy że restart był wczoraj
                     if (newRestartTime > Date.now()) {
                         newRestartTime -= 24 * 60 * 60 * 1000;
                     }
@@ -702,14 +727,16 @@
             lastRestartData[server] = newRestartTime;
             localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
             
-            // Zdejmujemy kwarantanne i wymuszamy ON
+            isApprox[server] = true;
+            localStorage.setItem('jsoc_approx_state', JSON.stringify(isApprox));
+            
             if (wdState[server] !== 'ON') {
                 setWdState(server, 'ON');
             }
             
             const timeStr = new Date(newRestartTime).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-            logEvent(`[OVERRIDE] ${server} CYCLE SECURED FOR ${timeStr}`, "text-orange-500 font-bold");
-            pushToDMD(`[ ! ] MANUAL OVERRIDE: ${server} SYNCED TO ${timeStr} [ ! ]`, 2, 'dmd-alarm-yellow');
+            logEvent(`[OVERRIDE] ${server} CYCLE SECURED FOR ${timeStr} (APRX)`, "text-orange-500 font-bold");
+            pushToDMD(`[ ! ] MANUAL OVERRIDE: ${server} SYNCED TO ${timeStr} [APRX] [ ! ]`, 2, 'dmd-alarm-yellow');
             updateClock();
         };
 
@@ -1075,12 +1102,13 @@
                 if (!lastRestartData[name]) {
                     lastRestartData[name] = currentUptime > 0 ? Date.now() - (currentUptime * 1000) : Date.now();
                     localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                    isApprox[name] = false;
+                    localStorage.setItem('jsoc_approx_state', JSON.stringify(isApprox));
                     logEvent(`[WD] INITIAL K.M.S. SYNC (${name})`, "text-cyan-400 font-bold");
                 }
 
                 const state = wdState[name];
                 
-                // --- V6.0: PROTOKÓŁ ANTY-ZOMBIE (Weryfikacja Faktów API) ---
                 let finalStatus = attr.status;
                 if ((finalStatus === 'offline' || finalStatus === 'dead' || finalStatus === 'booting')) {
                     if (currentPlayers > 0 && lat > 0 && lat < 500) {
@@ -1089,7 +1117,6 @@
                     }
                 }
                 
-                // Aktualizujemy "Krótką Pamięć" RAM
                 updateServerBuffer(name, lat, finalStatus);
 
                 if (state === 'OFF') { updateMiniChart(name, 0, 0, state); } 
@@ -1107,21 +1134,16 @@
                 let isCrash = (finalStatus === 'dead' || finalStatus === 'offline');
                 let isUptimeReset = (prevUptime[name] > 300 && currentUptime < 120 && currentUptime >= 0); 
                 
-                // KROK 9 (V6.0) HEURYSTYKA:
                 let droppedPlayersCount = leftPlayers.length;
                 let isConfirmedRestart = false;
                 let heuristicReason = "";
 
-                // --- BEZPIECZNIK KWARANTANNY (12H Cold Start) ---
                 let hasPassedQuarantine = (Date.now() - systemStartTime) >= QUARANTINE_MS;
-                // Jeśli serwer ma już w bazie twardy zapis z poprzedniej sesji to pomijamy kwarantanne
                 if(localStorage.getItem('jsoc_last_restarts')) { hasPassedQuarantine = true; }
 
                 if (!isFirstLoad && state !== 'OFF') {
                     
-                    // --- SYGNATURA 1: CZYSTE CIĘCIE (Low-Pop) ---
                     if (currentPlayers <= 1 && droppedPlayersCount > 0) {
-                        // Weryfikacja wsteczna RAM
                         let hasLagOrOfflineInRam = serverBuffers[name].some(entry => entry.ping > 500 || entry.status === 'offline' || entry.status === 'dead');
                         if (hasLagOrOfflineInRam || isCrash) {
                             isConfirmedRestart = true;
@@ -1129,7 +1151,6 @@
                         }
                     }
 
-                    // --- SYGNATURA 2: WSTRZĄS WETERANÓW (High-Pop) ---
                     if (droppedPlayersCount > 15 && !isConfirmedRestart) {
                         let veteranCount = 0;
                         leftPlayers.forEach(pName => {
@@ -1142,11 +1163,13 @@
                         }
                     }
 
-                    // --- UZBROJENIE ZEGARA I RESTART ---
                     if (isConfirmedRestart) {
                         isBooting[name] = true;
                         lastRestartData[name] = Date.now();
                         localStorage.setItem('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                        
+                        isApprox[name] = false;
+                        localStorage.setItem('jsoc_approx_state', JSON.stringify(isApprox));
                         
                         logEvent(`[TELEMETRY] ${name} TRUE RESTART DETECTED (${heuristicReason}).`, "text-red-500 font-bold");
 
@@ -1385,9 +1408,21 @@
             const CYCLE = 6 * 60 * 60 * 1000;
             
             ["EU1", "EU2", "EU3"].forEach(n => {
-                const els = [document.getElementById(`clock-${n}`), document.getElementById(`clock-${n}-side`)]; const etas = [document.getElementById(`eta-${n}`), document.getElementById(`eta-${n}-side`)]; const leds = [document.getElementById(`led-${n}`), document.getElementById(`led-${n}-side`)]; const titles = [document.getElementById(`title-${n}`), document.getElementById(`title-${n}-side`)]; const titleWrappers = [document.getElementById(`title-wrapper-${n}`), document.getElementById(`title-wrapper-${n}-side`)];
+                const els = [document.getElementById(`clock-${n}`), document.getElementById(`clock-${n}-side`)]; 
+                const etas = [document.getElementById(`eta-${n}`), document.getElementById(`eta-${n}-side`)]; 
+                const leds = [document.getElementById(`led-${n}`), document.getElementById(`led-${n}-side`)]; 
+                const titles = [document.getElementById(`title-${n}`), document.getElementById(`title-${n}-side`)]; 
+                const titleWrappers = [document.getElementById(`title-wrapper-${n}`), document.getElementById(`title-wrapper-${n}-side`)];
                 const vfdL1 = document.getElementById(`vfd-${n}-l1`); const vfdL2 = document.getElementById(`vfd-${n}-l2`);
+                const aprxEl = document.getElementById(`aprx-${n}`);
+                
                 const state = wdState[n]; const c = cache[n]; const activeClockColor = WD_COLORS[n]; const activeTitleColor = TITLE_COLORS[n];
+
+                if (isApprox[n]) {
+                    if (aprxEl) aprxEl.classList.remove('hidden');
+                } else {
+                    if (aprxEl) aprxEl.classList.add('hidden');
+                }
 
                 let isCalibrating = (state === 'AUTO' && calibrationData[n] > Date.now());
 
@@ -1422,7 +1457,7 @@
                     leds.forEach(l => { if(l) l.className = "led-indicator led-green-pulse " + (l.id.includes('side') ? "w-3 h-3 md:w-4 md:h-4 mr-2 border-2" : ""); }); 
                     titles.forEach(t=>{if(t) { t.innerText = `${n} REBOOT`; }}); titleWrappers.forEach(tw=>{if(tw) { tw.className = `text-xs uppercase flex items-center mb-1 font-bold tracking-widest drop-shadow-md ${activeTitleColor} whitespace-nowrap`; }});
                     if(vfdL1 && vfdL2) { vfdL1.innerText = `LAT:${latStr}`; vfdL1.className = "vfd-text whitespace-nowrap vfd-ping"; vfdL2.innerText = `OPR:${oprStr}`; vfdL2.className = "vfd-text whitespace-nowrap vfd-opr"; }
-                    els.forEach(e => { if(e) { e.className = `text-3xl md:text-4xl font-black tracking-widest ${activeClockColor} whitespace-nowrap`; } }); 
+                    els.forEach(e => { if(e) { e.className = `text-3xl md:text-4xl font-black tracking-widest ${activeClockColor} whitespace-nowrap cursor-pointer hover:text-white transition-colors`; } }); 
                 }
 
                 
@@ -1441,7 +1476,16 @@
                 } else { alert15Triggers[n] = false; }
 
                 const h = Math.floor(remain / 3600000); const m = Math.floor((remain % 3600000) / 60000); const s = Math.floor((remain % 60000) / 1000);
-                els.forEach(e => { if(e) e.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; });
+                
+                let displayStr = "";
+                if (clockMode[n] === 'countdown') {
+                    displayStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                } else {
+                    const nextDate = new Date(next);
+                    displayStr = "~" + nextDate.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+                }
+
+                els.forEach(e => { if(e) e.innerText = displayStr; });
                 const nextStr = new Date(next).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }); 
                 etas.forEach(t=>{if(t) { t.className = "text-[9px] opacity-60 font-bold tracking-widest mt-1 uppercase text-white whitespace-nowrap"; t.innerText = `NEXT: ${nextStr}`; }}); 
             });
