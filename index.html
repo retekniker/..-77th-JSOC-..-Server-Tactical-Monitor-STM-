@@ -1270,24 +1270,41 @@
 
                 if (!isFirstLoad && state !== 'OFF') {
                     
-                    if (currentPlayers <= 1 && droppedPlayersCount > 0) {
+                    let CYCLE = 6 * 60 * 60 * 1000; 
+                    let elapsedSinceLast = Date.now() - lastRestartData[name]; 
+                    let remainToNext = CYCLE - (elapsedSinceLast % CYCLE); 
+                    // TARCZA CZASOWA: Chroni przed fałszywym alarmem 20 minut przed restartem
+                    let isNearExpectedRestart = (remainToNext <= 20 * 60 * 1000) || (remainToNext >= (CYCLE - 5 * 60 * 1000));
+
+                    // PRIORYTET: Jeśli API mówi DEAD/OFFLINE, to na pewno restart
+                    if (isCrash) {
+                        isConfirmedRestart = true;
+                        heuristicReason = "HARD RESTART (API STATUS DEAD/OFFLINE)";
+                    }
+                    // HEURYSTYKA: Odpala się TYLKO, gdy nie spodziewamy się restartu
+                    else if (!isNearExpectedRestart) {
                         let hasLagOrOfflineInRam = serverBuffers[name].some(entry => entry.ping > 500 || entry.status === 'offline' || entry.status === 'dead');
-                        if (hasLagOrOfflineInRam || isCrash) {
+                        
+                        if (currentPlayers <= 1 && droppedPlayersCount > 0 && hasLagOrOfflineInRam) {
                             isConfirmedRestart = true;
-                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (UNANIMITY RULE)";
+                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (LOW-POP PING SPIKE)";
+                        }
+
+                        if (droppedPlayersCount > 15 && !isConfirmedRestart) {
+                            let veteranCount = 0;
+                            leftPlayers.forEach(pName => {
+                                if (statsData[pName] && statsData[pName].totalTime > 90 * 60 * 1000) veteranCount++;
+                            });
+
+                            if (veteranCount >= 2) {
+                                isConfirmedRestart = true;
+                                heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW (${veteranCount} ELITE OPR. LOST)`;
+                            }
                         }
                     }
-
-                    if (droppedPlayersCount > 15 && !isConfirmedRestart) {
-                        let veteranCount = 0;
-                        leftPlayers.forEach(pName => {
-                            if (statsData[pName] && statsData[pName].totalTime > 90 * 60 * 1000) veteranCount++;
-                        });
-
-                        if (veteranCount >= 2 || isCrash) {
-                            isConfirmedRestart = true;
-                            heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW (${veteranCount} ELITE OPR. LOST)`;
-                        }
+                    // ODBICIE TARCZY: Gracze wychodzą bo jest ostrzeżenie w grze
+                    else if (isNearExpectedRestart && droppedPlayersCount > 0) {
+                        logEvent(`[WD] IGNORING MASS DISCONNECT ON ${name} - SHIELD ACTIVE`, "text-yellow-500");
                     }
 
                     if (isConfirmedRestart) {
