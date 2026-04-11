@@ -635,8 +635,10 @@
         let previous = { EU1: [], EU2: [], EU3: [] };
         
         let prevUptime = { EU1: -1, EU2: -1, EU3: -1 }; 
-        let cache = {}; let historyData = []; let historyLabels = []; 
+        let cache = {}; let historyData = []; let historyLabels = [];
+        let lastRenderedHash = { EU1: '', EU2: '', EU3: '' }; 
         let isFirstLoad = true;
+        let renderDirty = true; // flag: true when data changed, renderUI needed
         let playerSessions = {}; 
         
         let lastRestartData = JSON.parse(localStorage.getItem('jsoc_last_restarts')) || { EU1: null, EU2: null, EU3: null };
@@ -672,6 +674,28 @@
         }
 
 
+
+        // --- MEMORY LEAK FIX: Periodic cleanup of stale playerSessions ---
+        let lastSessionCleanup = Date.now();
+        function cleanupPlayerSessions() {
+            const allOnline = new Set();
+            ['EU1', 'EU2', 'EU3'].forEach(s => {
+                if (cache[s] && cache[s].list) {
+                    cache[s].list.forEach(p => allOnline.add(p.name));
+                }
+            });
+            let cleaned = 0;
+            Object.keys(playerSessions).forEach(name => {
+                if (!allOnline.has(name)) {
+                    delete playerSessions[name];
+                    cleaned++;
+                }
+            });
+            if (cleaned > 0 && advMode) {
+                logEvent(`[GC] CLEANED ${cleaned} STALE SESSION ENTRIES`, "text-gray-500", true);
+            }
+        }
+
         function updateServerBuffer(server, ping, status) {
             serverBuffers[server].push({ ping: ping, status: status, time: Date.now() });
             serverBuffers[server] = serverBuffers[server].filter(entry => Date.now() - entry.time <= 60000);
@@ -681,7 +705,7 @@
             if (e.data === 'tick') {
                 updateClock();
                 updateApiHeatUI();
-                renderUI();
+                if (renderDirty) { renderUI(); renderDirty = false; }
 
                 let now = Date.now();
                 let nextInterval = 8000;
@@ -698,6 +722,12 @@
                     }
                 });
 
+                // GC: cleanup stale playerSessions every 60s
+                if (now - lastSessionCleanup >= 60000) {
+                    lastSessionCleanup = now;
+                    cleanupPlayerSessions();
+                }
+
                 if (autoBackupEnabled && now - lastBackupTime >= 48 * 60 * 60 * 1000) {
                     systemBackup();
                     if (blackBoxLogs.length > 500) {
@@ -712,7 +742,7 @@
                 if (now >= rateLimitCooldown && now - lastFetchTime >= nextInterval && !isFetching) {
                     lastFetchTime = now;
                     isFetching = true;
-                    updateAll().finally(() => { isFetching = false; });
+                    updateAll().finally(() => { isFetching = false; renderDirty = true; });
                 }
             }
         };
@@ -1458,7 +1488,21 @@
                 } else { sEl.innerText = "OFFLINE"; sEl.className = "text-[10px] px-2 py-0.5 rounded border border-red-500 text-right w-full uppercase opacity-50"; container.classList.add('soc-border'); container.classList.remove('soc-border-pulse'); }
                 
                 document.getElementById(`players${name}`).innerText = `${c.players || 0}/${c.maxPlayers || 0}`; document.getElementById(`map${name}`).innerText = c.details?.map || "-"; document.getElementById(`ping${name}`).innerText = `${c.ping || 0}ms`;
-                alertsContainer.innerHTML = ""; let presentSquads = new Set(); const listEl = document.getElementById(`list${name}`); listEl.innerHTML = "";
+                // Hash check: skip full DOM rebuild if player list unchanged
+                const listHash = (c.list || []).map(p => p.name).join('|') + '|' + currentSquadIdx;
+                const listEl = document.getElementById(`list${name}`);
+                
+                if (listHash === lastRenderedHash[name]) {
+                    // Only update squad alert icons (lightweight)
+                    let presentSquads = new Set();
+                    c.list?.forEach(p => { const sd = getWatchedSquadDetails(p.name); if (sd) presentSquads.add(sd.squadIdx); });
+                    alertsContainer.innerHTML = "";
+                    Array.from(presentSquads).sort().forEach(idx => { const sqColor = SQUAD_COLORS[idx].text; const icon = document.createElement("div"); icon.className = "alert-icon"; icon.style.backgroundColor = sqColor; icon.style.boxShadow = `0 0 8px ${sqColor}`; icon.innerText = "!"; alertsContainer.appendChild(icon); });
+                    return;
+                }
+                lastRenderedHash[name] = listHash;
+                
+                alertsContainer.innerHTML = ""; let presentSquads = new Set(); listEl.innerHTML = "";
                 
                 c.list?.forEach((p, i) => {
                     const squadDetails = getWatchedSquadDetails(p.name); const isClan = p.name.includes('77th') || p.name.toUpperCase().includes('JSOC');
