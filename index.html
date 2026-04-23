@@ -1356,6 +1356,7 @@
                 recordApiCall();
                 const res = await abortableFetch(name, `https://api.battlemetrics.com/servers/${id}?include=player`, 8000);
                 const lat = Math.round(performance.now() - start);
+                
                 // WD-v2: ping baseline + spike detection
                 if (res.ok) { updatePingBaseline(name, lat); detectPingSpike(name, lat); }
                 
@@ -1379,6 +1380,7 @@
                 }
 
                 const state = wdState[name];
+                let CYCLE = 8 * 60 * 60 * 1000; // UPDATED TO 8H
                 
                 let finalStatus = attr.status;
                 if ((finalStatus === 'offline' || finalStatus === 'dead' || finalStatus === 'booting')) {
@@ -1414,24 +1416,40 @@
 
                 if (!isFirstLoad && state !== 'OFF') {
                     
-                    if (currentPlayers <= 1 && droppedPlayersCount > 0) {
+                    let elapsedSinceLast = Date.now() - lastRestartData[name]; 
+                    let remainToNext = CYCLE - (elapsedSinceLast % CYCLE); 
+                    // TARCZA CZASOWA: Chroni przed fałszywym alarmem 20 minut przed restartem
+                    let isNearExpectedRestart = (remainToNext <= 20 * 60 * 1000) || (remainToNext >= (CYCLE - 5 * 60 * 1000));
+
+                    // PRIORYTET: Jeśli API mówi DEAD/OFFLINE, to na pewno restart
+                    if (isCrash) {
+                        isConfirmedRestart = true;
+                        heuristicReason = "HARD RESTART (API STATUS DEAD/OFFLINE)";
+                    }
+                    // HEURYSTYKA: Odpala się TYLKO, gdy nie spodziewamy się restartu
+                    else if (!isNearExpectedRestart) {
                         let hasLagOrOfflineInRam = serverBuffers[name].some(entry => entry.ping > 500 || entry.status === 'offline' || entry.status === 'dead');
-                        if (hasLagOrOfflineInRam || isCrash) {
+                        
+                        if (currentPlayers <= 1 && droppedPlayersCount > 0 && hasLagOrOfflineInRam) {
                             isConfirmedRestart = true;
-                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (UNANIMITY RULE)";
+                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (LOW-POP PING SPIKE)";
+                        }
+
+                        if (droppedPlayersCount > 15 && !isConfirmedRestart) {
+                            let veteranCount = 0;
+                            leftPlayers.forEach(pName => {
+                                if (statsData[pName] && statsData[pName].totalTime > 90 * 60 * 1000) veteranCount++;
+                            });
+
+                            if (veteranCount >= 2) {
+                                isConfirmedRestart = true;
+                                heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW (${veteranCount} ELITE OPR. LOST)`;
+                            }
                         }
                     }
-
-                    if (droppedPlayersCount > 15 && !isConfirmedRestart) {
-                        let veteranCount = 0;
-                        leftPlayers.forEach(pName => {
-                            if (statsData[pName] && statsData[pName].totalTime > 90 * 60 * 1000) veteranCount++;
-                        });
-
-                        if (veteranCount >= 2 || isCrash) {
-                            isConfirmedRestart = true;
-                            heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW (${veteranCount} ELITE OPR. LOST)`;
-                        }
+                    // ODBICIE TARCZY: Gracze wychodzą bo jest ostrzeżenie w grze
+                    else if (isNearExpectedRestart && droppedPlayersCount > 0) {
+                        logEvent(`[WD] IGNORING MASS DISCONNECT ON ${name} - SHIELD ACTIVE`, "text-yellow-500");
                     }
 
                     if (isConfirmedRestart) {
@@ -1462,14 +1480,18 @@
                     else if (isUptimeReset && finalStatus === 'online') {
                         logEvent(`[ANOMALY] ${name} SOFT RESTART DETECTED. IGNORING CYCLE RESET.`, "text-yellow-400 font-bold");
                     } 
-                    else if (finalStatus === 'online' && currentUptime > 0) {
+                    // [POPRAWKA BOOT]: Usuwamy blokadę "currentUptime > 0". Ufamy samemu PINGOWI (lat > 0) i graczom.
+                    else if (finalStatus === 'online' && lat > 0) {
                         if (isBooting[name]) {
                             isBooting[name] = false;
-                            lastRestartData[name] = Date.now() - (currentUptime * 1000); 
+                            // Zabezpieczenie przed błędem z brakiem "time" z API Battlemetrics.
+                            let restartOffset = currentUptime > 0 ? (currentUptime * 1000) : 0; 
+                            lastRestartData[name] = Date.now() - restartOffset; 
                             lsSet('jsoc_last_restarts', JSON.stringify(lastRestartData));
                             
                             addSystemAlert(`${name} SYSTEM ONLINE. CYCLE LOCKED.`); 
                             if(audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`System online. ${name.replace('EU1', 'EU One')} cycle locked.`); }
+                            // Dodatkowo wymuszamy wyczyszczenie komunikatu o 15 minutach!
                             clearStickyAlertForServer(name);
                         }
                     }
@@ -1699,7 +1721,7 @@
         function updateClock() { 
             const now = new Date(); 
             const dmdTime = document.getElementById('dmd-time'); if (dmdTime) dmdTime.innerText = now.toLocaleTimeString('en-US', { hour12: false }); 
-            const CYCLE = 6 * 60 * 60 * 1000;
+            const CYCLE = 8 * 60 * 60 * 1000; // UPDATED TO 8H
             
             ["EU1", "EU2", "EU3"].forEach(n => {
                 const els = [document.getElementById(`clock-${n}`), document.getElementById(`clock-${n}-side`)]; 
@@ -1741,6 +1763,10 @@
                     els.forEach(e => { if(e) { e.className = `text-3xl md:text-4xl font-black clock-wait tracking-widest ${activeClockColor} whitespace-nowrap`; e.innerText = "BOOTING"; } }); 
                     etas.forEach(t=>{if(t) { t.className = "text-[9px] font-bold tracking-widest mt-1 text-red-400 uppercase whitespace-nowrap"; t.innerText = `AWAITING...`; }}); 
                     if(vfdL1 && vfdL2) { vfdL1.innerText = "SYS:"; vfdL1.className = "vfd-text whitespace-nowrap vfd-alert"; vfdL2.innerText = "BOOT.."; vfdL2.className = "vfd-text whitespace-nowrap vfd-alert"; }
+                    
+                    // [POPRAWKA]: Zdejmij wiszące czerwone pudło od razu po wejściu w BOOTING
+                    if (alert15Triggers[n]) { clearStickyAlertForServer(n); alert15Triggers[n] = false; }
+                    
                     return; 
                 }
                 
@@ -1766,7 +1792,13 @@
                 let remain = CYCLE - (elapsed % CYCLE);
                 let next = Date.now() + remain;
 
-                if (remain <= 0) { remain = 0; leds.forEach(l => { if(l) l.className = "led-indicator led-red-blink " + (l.id.includes('side') ? "w-3 h-3 md:w-4 md:h-4 mr-2 border-2" : ""); }); } 
+                if (remain <= 0) { 
+                    remain = 0; 
+                    leds.forEach(l => { if(l) l.className = "led-indicator led-red-blink " + (l.id.includes('side') ? "w-3 h-3 md:w-4 md:h-4 mr-2 border-2" : ""); }); 
+                    
+                    // [POPRAWKA]: Zdejmij wiszące pudło, gdy licznik po prostu dobije do zera
+                    if (alert15Triggers[n]) { clearStickyAlertForServer(n); alert15Triggers[n] = false; }
+                } 
                 else if (remain <= 15 * 60 * 1000 && state === 'ON') {
                     if (!alert15Triggers[n]) { 
                         logEvent(`[WD] WARNING: ${n} RESTART IN 15 MINUTES`, "text-cyan-400 font-bold"); addSystemAlert(`WARNING: ${n} REBOOT IN 15 MIN`); 
@@ -1774,7 +1806,10 @@
                         if(audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`Warning. 15 minutes to scheduled restart on ${n.replace('EU1', 'EU One')}`); } 
                         alert15Triggers[n] = true; 
                     }
-                } else { alert15Triggers[n] = false; }
+                } else { 
+                    if (alert15Triggers[n]) { clearStickyAlertForServer(n); }
+                    alert15Triggers[n] = false; 
+                }
 
                 const h = Math.floor(remain / 3600000); const m = Math.floor((remain % 3600000) / 60000); const s = Math.floor((remain % 60000) / 1000);
                 
@@ -1838,7 +1873,7 @@
                     const sessionTime = statsData[n]?.sessionTime || 0;
                     const totalTime = statsData[n]?.totalTime || sessionTime; 
                     
-                    const perc = Math.min(100, (sessionTime / (6 * 3600000)) * 100); 
+                    const perc = Math.min(100, (sessionTime / (8 * 3600000)) * 100); // UPDATED TO 8H
                     
                     item.innerHTML = `<div class="stats-bar-fill" style="width: ${perc}%; background: ${isOnline ? colors.bg : 'rgba(255,255,255,0.05)'};"></div>`;
                     
