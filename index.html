@@ -1422,18 +1422,24 @@
                     // [v5] COOLDOWN: jeśli niedawno wykryto restart, blokuj ponowną detekcję
                     let inCooldown = (Date.now() - lastRestartDetected[name]) < RESTART_DETECTION_COOLDOWN_MS;
 
-                    // PRIORYTET: Jeśli API mówi DEAD/OFFLINE, to na pewno restart
+                    // PRIORYTET: API DEAD/OFFLINE = restart (ale tylko gdy potwierdzony przez UPTIME RESET, lub gdy bufor >=2 wpisów to potwierdza - chroni przed pojedynczym glitchem API)
                     if (isCrash && !inCooldown) {
-                        isConfirmedRestart = true;
-                        heuristicReason = "HARD RESTART (API STATUS DEAD/OFFLINE)";
+                        let crashConfirmCount = serverBuffers[name].filter(e => e.status === 'offline' || e.status === 'dead').length;
+                        if (crashConfirmCount >= 2 || isUptimeReset) {
+                            isConfirmedRestart = true;
+                            heuristicReason = "HARD RESTART (API STATUS DEAD/OFFLINE)";
+                        } else if (advMode) {
+                            logEvent(`[ADV] ${name} single API crash blip ignored (need 2+ samples or uptime reset)`, "text-gray-500", true);
+                        }
                     }
-                    // HEURYSTYKA: Czyste cięcie / wstrząs weteranów (bez tarczy czasowej - zegar liczy elapsed)
-                    else if (!inCooldown) {
+                    // HEURYSTYKA: Czyste cięcie - WYMAGA potwierdzenia przez UPTIME RESET (faktyczny restart procesu)
+                    // Bez tego pojedynczy lag + odejście gracza powodował false-positive (bug EU1/EU3)
+                    else if (!inCooldown && isUptimeReset) {
                         let hasLagOrOfflineInRam = serverBuffers[name].some(entry => entry.ping > 500 || entry.status === 'offline' || entry.status === 'dead');
-                        
+
                         if (currentPlayers <= 1 && droppedPlayersCount > 0 && hasLagOrOfflineInRam) {
                             isConfirmedRestart = true;
-                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (LOW-POP PING SPIKE)";
+                            heuristicReason = "HEURISTIC: CZYSTE CIĘCIE (LOW-POP + UPTIME RESET)";
                         }
 
                         if (droppedPlayersCount > 15 && !isConfirmedRestart) {
@@ -1444,7 +1450,7 @@
 
                             if (veteranCount >= 2) {
                                 isConfirmedRestart = true;
-                                heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW (${veteranCount} ELITE OPR. LOST)`;
+                                heuristicReason = `HEURISTIC: WSTRZĄS WETERANÓW + UPTIME RESET (${veteranCount} ELITE)`;
                             }
                         }
                     }
