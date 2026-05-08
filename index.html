@@ -318,7 +318,6 @@
                             <h2 class="font-black text-xl text-[#00ff9c] drop-shadow-[0_0_8px_#00ff9c] tracking-wider">EU-1</h2>
                             <div id="alertsEU1" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU1')" id="btnAddAllEU1" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU1" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU1" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU1" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU1" class="text-right font-bold">-ms</div></div>
@@ -331,7 +330,6 @@
                             <h2 class="font-black text-xl text-[#ff8c00] drop-shadow-[0_0_8px_#ff8c00] tracking-wider">EU-2</h2>
                             <div id="alertsEU2" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU2')" id="btnAddAllEU2" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU2" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU2" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU2" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU2" class="text-right font-bold">-ms</div></div>
@@ -344,7 +342,6 @@
                             <h2 class="font-black text-xl text-[#00e5ff] drop-shadow-[0_0_8px_#00e5ff] tracking-wider">EU-3</h2>
                             <div id="alertsEU3" class="flex gap-1 items-center"></div>
                         </div>
-                        <button onclick="addAllToWatch('EU3')" id="btnAddAllEU3" class="btn-system-led" style="font-size:8px; padding: 3px 6px;">ADD ALL</button>
                     </div>
                     <div id="statusEU3" class="text-[10px] px-2 py-0.5 rounded border border-current uppercase w-full text-right mb-3">Loading</div>
                     <div class="grid grid-cols-2 gap-2 text-sm mb-4 items-center"><div class="opacity-70">OPR:</div> <div id="playersEU3" class="text-right players-count-glow">-/-</div><div class="opacity-70">AO:</div> <div id="mapEU3" class="text-right truncate text-[11px]">-</div><div class="opacity-70">LAT:</div> <div id="pingEU3" class="text-right font-bold">-ms</div></div>
@@ -364,7 +361,7 @@
                                 <span id="title-EU1-side">EU1 UPTIME</span>
                                 <span id="aprx-EU1" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU1-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Show Last Restart Time | Double-click: Manual Override" onclick="handleClockClick('EU1')">--:--:--</div>
+                            <div id="clock-EU1-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle elapsed/restart time | Double-click: Manual Override" onclick="handleClockClick('EU1')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU1-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -395,7 +392,7 @@
                                 <span id="title-EU2-side">EU2 UPTIME</span>
                                 <span id="aprx-EU2" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU2-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Show Last Restart Time | Double-click: Manual Override" onclick="handleClockClick('EU2')">--:--:--</div>
+                            <div id="clock-EU2-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle elapsed/restart time | Double-click: Manual Override" onclick="handleClockClick('EU2')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU2-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -426,7 +423,7 @@
                                 <span id="title-EU3-side">EU3 UPTIME</span>
                                 <span id="aprx-EU3" class="ml-2 text-[10px] text-yellow-400 font-black animate-pulse hidden tracking-widest border border-yellow-400 px-1 rounded-sm bg-yellow-400/10">APRX</span>
                             </div>
-                            <div id="clock-EU3-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Show Last Restart Time | Double-click: Manual Override" onclick="handleClockClick('EU3')">--:--:--</div>
+                            <div id="clock-EU3-side" class="text-3xl md:text-4xl font-black clock-wait opacity-30 tracking-widest text-gray-500 whitespace-nowrap cursor-pointer hover:text-white transition-colors" title="Click: Toggle elapsed/restart time | Double-click: Manual Override" onclick="handleClockClick('EU3')">--:--:--</div>
                             <div class="flex items-center justify-between w-full mt-2 pr-2">
                                 <div id="eta-EU3-side" class="text-[9px] opacity-60 font-bold tracking-widest text-orange-400 uppercase whitespace-nowrap">NEXT: --:--:--</div>
                                 <div class="wd-switch-container">
@@ -613,14 +610,25 @@
         const TITLE_COLORS = { 'EU1': 'text-[#00ff9c]', 'EU2': 'text-[#ff8c00]', 'EU3': 'text-[#00e5ff]' };
 
         let isServerFullAlerted = { EU1: false, EU2: false, EU3: false }; 
+
+        function safeJsonGet(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch (e) {
+                console.warn(`[LS] corrupted key: ${key}`, e);
+                localStorage.removeItem(key);
+                return fallback;
+            }
+        }
         
-        let wdState = JSON.parse(localStorage.getItem('jsoc_wd_state')) || { EU1: 'AUTO', EU2: 'AUTO', EU3: 'AUTO' };
-        let isApprox = JSON.parse(localStorage.getItem('jsoc_approx_state')) || { EU1: false, EU2: false, EU3: false };
+        let wdState = safeJsonGet('jsoc_wd_state', { EU1: 'AUTO', EU2: 'AUTO', EU3: 'AUTO' });
+        let isApprox = safeJsonGet('jsoc_approx_state', { EU1: false, EU2: false, EU3: false });
         let clockMode = { EU1: 'countdown', EU2: 'countdown', EU3: 'countdown' };
         let clockClickTimers = { EU1: null, EU2: null, EU3: null };
 
         let radarMode = localStorage.getItem('jsoc_radar_mode') || 'NORM';
-        let telemetryLog = JSON.parse(localStorage.getItem('jsoc_telemetry_log')) || { EU1: [], EU2: [], EU3: [] };
+        let telemetryLog = safeJsonGet('jsoc_telemetry_log', { EU1: [], EU2: [], EU3: [] });
         
         // AUTO BACKUP VARS
         let autoBackupEnabled = localStorage.getItem('jsoc_auto_backup') === 'true';
@@ -631,7 +639,7 @@
         let playerHistory = { EU1: Array(30).fill(0), EU2: Array(30).fill(0), EU3: Array(30).fill(0) };
 
         let currentSquadIdx = parseInt(localStorage.getItem('jsoc_sq_idx')) || 1;
-        let ALL_SQUADS = JSON.parse(localStorage.getItem('jsoc_all_squads')) || { 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[] };
+        let ALL_SQUADS = safeJsonGet('jsoc_all_squads', { 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[] });
         // FIX v2: licznik wersji squadów - bumpuj przy KAŻDEJ mutacji ALL_SQUADS,
         // używany w listHash żeby renderUI odświeżył kolory po reassignach.
         let squadsVersion = 0;
@@ -652,9 +660,9 @@
         let renderDirty = true; // flag: true when data changed, renderUI needed
         let playerSessions = {}; 
         
-        let lastRestartData = JSON.parse(localStorage.getItem('jsoc_last_restarts')) || { EU1: null, EU2: null, EU3: null };
-        let statsData = JSON.parse(localStorage.getItem('jsoc_stats')) || {}; 
-        let calibrationData = JSON.parse(localStorage.getItem('jsoc_calibration_data')) || { EU1: 0, EU2: 0, EU3: 0 };
+        let lastRestartData = safeJsonGet('jsoc_last_restarts', { EU1: null, EU2: null, EU3: null });
+        let statsData = safeJsonGet('jsoc_stats', {}); 
+        let calibrationData = safeJsonGet('jsoc_calibration_data', { EU1: 0, EU2: 0, EU3: 0 });
         
         let isMuted = localStorage.getItem('jsoc_muted') === 'true';
         let storedVol = localStorage.getItem('jsoc_volume');
@@ -678,7 +686,15 @@
         let dmdQueue = [];
         let isDmdProcessing = false;
         let dmdTimeout = null;
-        const DMD_DEFAULT_TEXT = `Re-Tek corp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..::77th JSOC::.. Server Tactical Monitor PRO V6.0//........SYSTEM READY<span class="cursor-blink">!█</span>`;
+        const DMD_DEFAULT_TEXT = 'Re-Tek corp.      ..::77th JSOC::.. Server Tactical Monitor PRO V6.0//........SYSTEM READY!';
+        function setDMDText(el, text, cursor = '█') {
+            if (!el) return;
+            el.textContent = text;
+            const cur = document.createElement('span');
+            cur.className = 'cursor-blink';
+            cur.textContent = cursor;
+            el.appendChild(cur);
+        }
         function escapeHTML(str) {
             const div = document.createElement('div');
             div.textContent = str;
@@ -786,16 +802,19 @@
         };
 
         window.handleClockClick = function(server) {
-            // [v6] Zegar zawsze liczy elapsed. Dbl-click = manualny override godziny restartu.
+            // Single click: toggle elapsed/restart time. Double click: manual override.
             if (clockClickTimers[server]) {
                 clearTimeout(clockClickTimers[server]);
                 clockClickTimers[server] = null;
                 resetClock(server);
-            } else {
-                clockClickTimers[server] = setTimeout(() => {
-                    clockClickTimers[server] = null;
-                }, 250);
+                return;
             }
+
+            clockClickTimers[server] = setTimeout(() => {
+                clockClickTimers[server] = null;
+                clockMode[server] = clockMode[server] === 'elapsed' ? 'restartTime' : 'elapsed';
+                updateClock();
+            }, 250);
         };
 
         window.resetClock = function(server) {
@@ -926,7 +945,7 @@
                 dmdStream.style.opacity = '1';
                 hides.forEach(el => { if(el) el.style.opacity = '1'; });
                 dmdOverride.style.opacity = '0';
-                dmdStream.innerHTML = DMD_DEFAULT_TEXT;
+                setDMDText(dmdStream, DMD_DEFAULT_TEXT, '█');
                 dmdNode.className = "flex-1 dmd-container w-full min-w-0";
                 return;
             }
@@ -939,10 +958,10 @@
                 dmdStream.style.opacity = '0';
                 hides.forEach(el => { if(el) el.style.opacity = '0'; });
                 dmdOverride.style.opacity = '1';
-                dmdOverride.innerHTML = `${item.msg}<span class="cursor-blink">█</span>`;
+                setDMDText(dmdOverride, item.msg, '█');
                 dmdNode.className = "flex-1 dmd-container w-full min-w-0 " + (item.colorClass || 'dmd-alarm-red');
             } else {
-                dmdStream.innerHTML = `Re-Tek corp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> ${item.msg}<span class="cursor-blink">█</span>`;
+                setDMDText(dmdStream, `Re-Tek corp.      >> ${item.msg}`, '█');
                 dmdNode.className = "flex-1 dmd-container w-full min-w-0"; 
                 if (item.colorClass) dmdNode.classList.add(item.colorClass);
             }
@@ -1023,7 +1042,7 @@
         function unlockAudioFallback() { if(window.speechSynthesis && !window.speechSynthesis.speaking){ let msg = new SpeechSynthesisUtterance(""); msg.volume=0; window.speechSynthesis.speak(msg); } }
 
         function updateApiHeatUI() {
-            let log = JSON.parse(localStorage.getItem('jsoc_api_heat')) || [];
+            let log = safeJsonGet('jsoc_api_heat', []);
             let now = Date.now(); log = log.filter(t => now - t < 60000); 
             localStorage.setItem('jsoc_api_heat', JSON.stringify(log));
             const heatVisual = document.getElementById('heat-visual');
@@ -1041,7 +1060,7 @@
         }
 
         function recordApiCall() {
-            let log = JSON.parse(localStorage.getItem('jsoc_api_heat')) || [];
+            let log = safeJsonGet('jsoc_api_heat', []);
             let now = Date.now(); log = log.filter(t => now - t < 60000); log.push(now);
             localStorage.setItem('jsoc_api_heat', JSON.stringify(log)); updateApiHeatUI();
         }
@@ -1095,7 +1114,7 @@
         }
 
         function exportDatabase() {
-            let db = JSON.parse(localStorage.getItem('jsoc_stats')) || {};
+            let db = safeJsonGet('jsoc_stats', {});
             let arr = Object.keys(db).map(k => ({ name: k, total: db[k].totalTime || 0, session: db[k].sessionTime || 0 }));
             arr.sort((a, b) => b.total - a.total);
             
@@ -1264,11 +1283,11 @@
         window.addEventListener('beforeunload', lsFlush);
 
         // ===== WATCHDOG v2 STATE =====
-        let pingBaseline = JSON.parse(localStorage.getItem('jsoc_ping_baseline')) || { EU1: null, EU2: null, EU3: null };
+        let pingBaseline = safeJsonGet('jsoc_ping_baseline', { EU1: null, EU2: null, EU3: null });
         let pingSpikeStrike = { EU1: 0, EU2: 0, EU3: 0 };
         let lastSpikeAlert = { EU1: 0, EU2: 0, EU3: 0 };
         let healthScore = { EU1: 100, EU2: 100, EU3: 100 };
-        let restartPattern = JSON.parse(localStorage.getItem('jsoc_restart_pattern')) || { EU1: {}, EU2: {}, EU3: {} };
+        let restartPattern = safeJsonGet('jsoc_restart_pattern', { EU1: {}, EU2: {}, EU3: {} });
 
         function updatePingBaseline(server, ping) {
             if (ping <= 0 || ping > 2000) return;
@@ -1549,6 +1568,7 @@
                         if (!squadDetails && autoFavEnabled) {
                             if (!ALL_SQUADS[8].includes(pName)) {
                                 ALL_SQUADS[8].push(pName);
+                                bumpSquads();
                                 squadDetails = { squadIdx: 8, squadName: "FAV", playerNumber: ALL_SQUADS[8].length };
                             }
                         }
@@ -1812,10 +1832,11 @@
                 const s = Math.floor((elapsed % 60000) / 1000);
 
                 // [v6] Zegar zawsze pokazuje TIME-SINCE-RESTART (elapsed hh:mm:ss)
-                const displayStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                els.forEach(e => { if(e) { e.innerText = displayStr; e.title = `Last restart: ${lastDate.toLocaleString('en-GB', { hour12: false })}\nDouble-click to set manually.`; } });
+                const elapsedStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
                 const lastStr = lastDate.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-                etas.forEach(t=>{if(t) { t.className = "text-[9px] opacity-60 font-bold tracking-widest mt-1 uppercase text-white whitespace-nowrap"; t.innerText = `SINCE LAST RESTART @ ${lastStr}`; }});
+                const displayStr = clockMode[n] === 'restartTime' ? `RST ${lastStr}` : elapsedStr;
+                els.forEach(e => { if(e) { e.innerText = displayStr; e.title = `Last restart: ${lastDate.toLocaleString('en-GB', { hour12: false })}\nClick to toggle elapsed/restart time. Double-click to set manually.`; } });
+                etas.forEach(t=>{if(t) { t.className = "text-[9px] opacity-60 font-bold tracking-widest mt-1 uppercase text-white whitespace-nowrap"; t.innerText = clockMode[n] === 'restartTime' ? `ELAPSED ${elapsedStr}` : `SINCE LAST RESTART @ ${lastStr}`; }});
             });
         }
 
@@ -1829,9 +1850,7 @@
         }
         
         function renderWatchList() { 
-            // FIX v2: bumpujemy wersję squadów - renderUI odświeży kolory na liście serwerowej
-            squadsVersion++;
-            const rawList = ALL_SQUADS[currentSquadIdx]; 
+            const rawList = ALL_SQUADS[currentSquadIdx] || []; 
             let displayList = [...rawList];
 
             if (sortMode === 'A-Z') {
@@ -1895,25 +1914,108 @@
 
                 div.appendChild(item); 
             }); 
-            document.getElementById("squadCounter").innerText = `${rawList.length}/${max}`; localStorage.setItem('jsoc_all_squads', JSON.stringify(ALL_SQUADS)); div.scrollTop = scrollPos;
+            document.getElementById("squadCounter").innerText = `${rawList.length}/${max}`; div.scrollTop = scrollPos;
         }
         
-        function addWatch(val) { 
-            const input = document.getElementById("watchInput"); const nick = (val || input.value).trim(); const max = currentSquadIdx === 8 ? 210 : 11;
-            if (nick) {
-                let existingSquad = null; for (let i = 1; i <= 8; i++) { if (ALL_SQUADS[i].some(w => w.toLowerCase() === nick.toLowerCase())) { existingSquad = SQUAD_NAMES[i]; break; } }
-                if (existingSquad) { input.value = ""; const ogPlaceholder = input.placeholder; input.placeholder = `IN ${existingSquad}!`; input.classList.remove("border-green-900"); input.classList.add("border-yellow-500", "placeholder-yellow-500"); queueSound(SOUND_SQUAD, currentVolume * 0.2); logEvent(`ADD FAILED: ALREADY IN ${existingSquad}`, "text-yellow-500"); setTimeout(() => { input.placeholder = ogPlaceholder; input.classList.remove("border-yellow-500", "placeholder-yellow-500"); input.classList.add("border-green-900"); }, 2000); return; }
-                if (ALL_SQUADS[currentSquadIdx].length < max) { ALL_SQUADS[currentSquadIdx].push(nick); renderWatchList(); renderUI(); input.value = ""; } else { input.value = ""; const ogPlaceholder = input.placeholder; input.placeholder = "ROSTER AT MAX CAPACITY!"; input.classList.remove("border-green-900"); input.classList.add("border-red-500", "placeholder-red-500"); queueSound(SOUND_SQUAD, currentVolume * 0.2); logEvent("SQUAD ADD FAILED: CAPACITY REACHED", "text-red-500"); setTimeout(() => { input.placeholder = ogPlaceholder; input.classList.remove("border-red-500", "placeholder-red-500"); input.classList.add("border-green-900"); }, 2000); }
-            } 
+        function showInputError(input, placeholder, classes, sound = true) {
+            input.value = "";
+            const ogPlaceholder = input.placeholder;
+            input.placeholder = placeholder;
+            input.classList.remove("border-green-900");
+            input.classList.add(...classes);
+            if (sound) queueSound(SOUND_SQUAD, currentVolume * 0.2);
+            setTimeout(() => {
+                input.placeholder = ogPlaceholder;
+                input.classList.remove(...classes);
+                input.classList.add("border-green-900");
+            }, 2000);
         }
 
-        function removeWatch(n) { for (let i = 1; i <= 8; i++) { ALL_SQUADS[i] = ALL_SQUADS[i].filter(x => x !== n); } renderWatchList(); renderUI(); }
-        function clearAllWatch() { ALL_SQUADS[currentSquadIdx] = []; renderWatchList(); renderUI(); }
+        function addWatch(val) { 
+            const input = document.getElementById("watchInput");
+            const nick = (val || input.value).trim();
+            const max = currentSquadIdx === 8 ? 210 : 11;
+            if (!nick) return;
+
+            let existingSquad = null;
+            for (let i = 1; i <= 8; i++) {
+                if ((ALL_SQUADS[i] || []).some(w => w.toLowerCase() === nick.toLowerCase())) {
+                    existingSquad = SQUAD_NAMES[i];
+                    break;
+                }
+            }
+
+            if (existingSquad) {
+                showInputError(input, `IN ${existingSquad}!`, ["border-yellow-500", "placeholder-yellow-500"]);
+                logEvent(`ADD FAILED: ALREADY IN ${existingSquad}`, "text-yellow-500");
+                return;
+            }
+
+            if (ALL_SQUADS[currentSquadIdx].length >= max) {
+                showInputError(input, "ROSTER AT MAX CAPACITY!", ["border-red-500", "placeholder-red-500"]);
+                logEvent("SQUAD ADD FAILED: CAPACITY REACHED", "text-red-500");
+                return;
+            }
+
+            ALL_SQUADS[currentSquadIdx].push(nick);
+            bumpSquads();
+            input.value = "";
+            renderWatchList();
+            renderUI();
+        }
+
+        function removeWatch(n) {
+            let changed = false;
+            for (let i = 1; i <= 8; i++) {
+                const before = ALL_SQUADS[i].length;
+                ALL_SQUADS[i] = ALL_SQUADS[i].filter(x => x !== n);
+                if (ALL_SQUADS[i].length !== before) changed = true;
+            }
+            if (changed) bumpSquads();
+            renderWatchList();
+            renderUI();
+        }
+
+        function clearAllWatch() {
+            if (ALL_SQUADS[currentSquadIdx].length > 0) {
+                ALL_SQUADS[currentSquadIdx] = [];
+                bumpSquads();
+            }
+            renderWatchList();
+            renderUI();
+        }
+
         function addAllToWatchCurrent() {
-            let activePlayers = []; ['EU1', 'EU2', 'EU3'].forEach(server => { if (cache[server] && cache[server].list) { cache[server].list.forEach(p => { if (!activePlayers.includes(p.name)) { activePlayers.push(p.name); } }); } });
-            const max = currentSquadIdx === 8 ? 210 : 11; let addedCount = 0;
-            for (let i = 0; i < activePlayers.length; i++) { const nick = activePlayers[i]; let isAnywhere = false; for (let s = 1; s <= 8; s++) { if (ALL_SQUADS[s].some(w => w.toLowerCase() === nick.toLowerCase())) { isAnywhere = true; break; } } if (!isAnywhere) { if (ALL_SQUADS[currentSquadIdx].length < max) { ALL_SQUADS[currentSquadIdx].push(nick); addedCount++; } else { logEvent(`SQUAD FULL: ADDED ${addedCount} PLAYERS`, "text-yellow-400"); break; } } }
-            if (addedCount > 0) { renderWatchList(); renderUI(); logEvent(`SYNCED ${addedCount} ACTIVE UNASSIGNED PLAYERS TO SQUAD`, "text-green-400"); } else { logEvent("SYNC FAILED: NO UNASSIGNED ACTIVE PLAYERS OR SQUAD FULL", "text-gray-500"); }
+            const activePlayers = [];
+            ['EU1', 'EU2', 'EU3'].forEach(server => {
+                if (cache[server] && cache[server].list) {
+                    cache[server].list.forEach(p => {
+                        if (!activePlayers.some(n => n.toLowerCase() === p.name.toLowerCase())) activePlayers.push(p.name);
+                    });
+                }
+            });
+
+            const max = currentSquadIdx === 8 ? 210 : 11;
+            let addedCount = 0;
+
+            for (const nick of activePlayers) {
+                if (isInAnySquad(nick)) continue;
+                if (ALL_SQUADS[currentSquadIdx].length >= max) {
+                    logEvent(`SQUAD FULL: ADDED ${addedCount} PLAYERS`, "text-yellow-400");
+                    break;
+                }
+                ALL_SQUADS[currentSquadIdx].push(nick);
+                addedCount++;
+            }
+
+            if (addedCount > 0) {
+                bumpSquads();
+                renderWatchList();
+                renderUI();
+                logEvent(`SYNCED ${addedCount} ACTIVE UNASSIGNED PLAYERS TO SQUAD`, "text-green-400");
+            } else {
+                logEvent("SYNC FAILED: NO UNASSIGNED ACTIVE PLAYERS OR SQUAD FULL", "text-gray-500");
+            }
         }
         
         function setVolume(v) { currentVolume = v; localStorage.setItem('jsoc_volume', v); updateVolumeUI(); queueSound(SOUND_SQUAD, currentVolume * 0.15); }
