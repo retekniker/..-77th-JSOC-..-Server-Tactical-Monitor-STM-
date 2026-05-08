@@ -786,14 +786,13 @@
         };
 
         window.handleClockClick = function(server) {
+            // [v6] Zegar zawsze liczy elapsed. Dbl-click = manualny override godziny restartu.
             if (clockClickTimers[server]) {
                 clearTimeout(clockClickTimers[server]);
                 clockClickTimers[server] = null;
                 resetClock(server);
             } else {
                 clockClickTimers[server] = setTimeout(() => {
-                    clockMode[server] = clockMode[server] === 'countdown' ? 'absolute' : 'countdown';
-                    updateClock();
                     clockClickTimers[server] = null;
                 }, 250);
             }
@@ -1806,18 +1805,11 @@
                 const m = Math.floor((elapsed % 3600000) / 60000);
                 const s = Math.floor((elapsed % 60000) / 1000);
 
-                let displayStr = "";
-                if (clockMode[n] === 'countdown') {
-                    // tryb default: ELAPSED hh:mm:ss od restartu
-                    displayStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                } else {
-                    // tryb alt (klik): pokaż godzinę ostatniego restartu
-                    displayStr = "@" + lastDate.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-                }
-
-                els.forEach(e => { if(e) e.innerText = displayStr; });
-                const lastStr = lastDate.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                etas.forEach(t=>{if(t) { t.className = "text-[9px] opacity-60 font-bold tracking-widest mt-1 uppercase text-white whitespace-nowrap"; t.innerText = `LAST: ${lastStr}`; }});
+                // [v6] Zegar zawsze pokazuje TIME-SINCE-RESTART (elapsed hh:mm:ss)
+                const displayStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                els.forEach(e => { if(e) { e.innerText = displayStr; e.title = `Last restart: ${lastDate.toLocaleString('en-GB', { hour12: false })}\nDouble-click to set manually.`; } });
+                const lastStr = lastDate.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+                etas.forEach(t=>{if(t) { t.className = "text-[9px] opacity-60 font-bold tracking-widest mt-1 uppercase text-white whitespace-nowrap"; t.innerText = `SINCE LAST RESTART @ ${lastStr}`; }});
             });
         }
 
