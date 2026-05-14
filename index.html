@@ -1345,6 +1345,22 @@
             lsSet('jsoc_restart_pattern', JSON.stringify(restartPattern));
         }
 
+        window.resetRestartPattern = function(server) {
+            if (server && restartPattern[server]) {
+                restartPattern[server] = {};
+            } else {
+                restartPattern = { EU1: {}, EU2: {}, EU3: {} };
+            }
+            lsSet('jsoc_restart_pattern', JSON.stringify(restartPattern));
+            try { localStorage.removeItem('jsoc_last_restarts'); } catch(e){}
+            console.log('%c[RESET] restartPattern wyczyszczony' + (server?` (${server})`:' (ALL)'), 'color:#0f0;font-weight:bold');
+            return restartPattern;
+        };
+        window.resetSteamIds = function() {
+            try { localStorage.removeItem('jsoc_steam_ids'); } catch(e){}
+            console.log('%c[RESET] Steam ID baseline wyczyszczony - następny tick ustawi nowe', 'color:#0f0;font-weight:bold');
+        };
+
         function predictNextRestartWindow(server) {
             const hist = restartPattern[server] || {};
             const entries = Object.entries(hist).map(([h,c]) => [parseInt(h), c]);
