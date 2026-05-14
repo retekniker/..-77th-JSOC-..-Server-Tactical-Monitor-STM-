@@ -66,6 +66,7 @@
 
         @keyframes alert-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
         .full-text-blink { font-size: 10px; font-weight: 900; color: #ff4d4d; text-shadow: 0 0 8px #ff4d4d; animation: alert-blink 0.5s infinite; }
+        .blink-text { animation: alert-blink 1s infinite; }
         
         /* MIGAJĄCE TŁO DLA PRZYCISKU INIT COMM */
         @keyframes btn-attention-blink { 0%, 100% { background: rgba(234, 179, 8, 0.1); border-color: #eab308; color: #eab308; box-shadow: 0 0 5px rgba(234, 179, 8, 0.2); } 50% { background: rgba(234, 179, 8, 0.8); border-color: #eab308; color: #0b0f14; box-shadow: 0 0 20px rgba(234, 179, 8, 0.8); } }
@@ -550,6 +551,7 @@
                         <button onclick="systemBackup()" class="btn-system-led text-purple-400 border-purple-400 hover:bg-purple-400 hover:text-black">SYS BACKUP</button>
                         <label for="restoreUpload" class="btn-system-led text-blue-400 border-blue-400 hover:bg-blue-400 hover:text-black cursor-pointer mb-0 flex items-center">RESTORE</label>
                         <input type="file" id="restoreUpload" accept=".json" class="hidden" onchange="restoreSystem(event)">
+                        <button onclick="resetBrowserMemory()" class="btn-system-led-red">MEM RESET</button>
                         
                         <button id="advToggle" onclick="toggleAdvanced()" class="btn-system-led-red">ADV: OFF</button>
                         <button onclick="exportDatabase()" class="btn-system-led text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-black">DB</button>
@@ -587,7 +589,7 @@
         
         let serverBuffers = { EU1: [], EU2: [], EU3: [] };
 
-        const SERVERS = { EU1: "14808491", EU2: "30137964", EU3: "28825461" };
+        const SERVERS = { EU1: "14808491", EU2: "28825461", EU3: "30137964" };
         const SQUAD_NAMES = ["", "ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT", "GOLF", "FAV"];
         
         const SOUND_LEAVE = "https://actions.google.com/sounds/v1/cartoon/pop.ogg";
@@ -676,6 +678,7 @@
         // [v5] COOLDOWN: blokuje ponowną detekcję restartu zaraz po wykryciu (anti-storm)
         const RESTART_DETECTION_COOLDOWN_MS = 30 * 60 * 1000; // 30 min
         let lastRestartDetected = { EU1: 0, EU2: 0, EU3: 0 };
+        let lastBmStaleAlert = { EU1: 0, EU2: 0, EU3: 0 };
 
         let advMode = localStorage.getItem('jsoc_adv_mode') === 'true';
         let audioUnlocked = false; let voiceEnabled = false; let ttsVoice = null;
@@ -858,6 +861,7 @@
         };
 
         function systemBackup() {
+            lsFlush();
             exportDatabase();
             
             setTimeout(() => {
@@ -926,6 +930,66 @@
                 btn.classList.remove("active");
                 logEvent("[SYS] 48H AUTO-BACKUP OFFLINE", "text-gray-500");
                 pushToDMD(`[SYS] 48H AUTO-BACKUP: OFF`, 1, 'dmd-alarm-yellow');
+            }
+        }
+
+        function resetBrowserMemory() {
+            const ok = confirm(
+                "[STM MEMORY RESET]\n\n" +
+                "To usunie dane zapisane w pamięci przeglądarki dla STM:\n" +
+                "- squady / watchlisty\n" +
+                "- statystyki graczy\n" +
+                "- watchdog state\n" +
+                "- restart history\n" +
+                "- Steam server IDs\n" +
+                "- radar / volume / mute / backup settings\n\n" +
+                "Nie rusza plików na dysku ani danych BattleMetrics.\n\n" +
+                "Kontynuować?"
+            );
+
+            if (!ok) return;
+
+            try {
+                if (typeof _lsTimer !== "undefined" && _lsTimer) {
+                    clearTimeout(_lsTimer);
+                    _lsTimer = null;
+                }
+
+                if (typeof _lsPending !== "undefined") {
+                    Object.keys(_lsPending).forEach(k => delete _lsPending[k]);
+                }
+
+                const STM_KEYS = [
+                    "jsoc_wd_state",
+                    "jsoc_approx_state",
+                    "jsoc_radar_mode",
+                    "jsoc_telemetry_log",
+                    "jsoc_auto_backup",
+                    "jsoc_last_backup_time",
+                    "jsoc_all_squads",
+                    "jsoc_sq_idx",
+                    "jsoc_steam_ids",
+                    "jsoc_stats",
+                    "jsoc_calibration_data",
+                    "jsoc_last_restarts",
+                    "jsoc_muted",
+                    "jsoc_volume",
+                    "jsoc_adv_mode",
+                    "jsoc_sort_mode",
+                    "jsoc_api_heat",
+                    "jsoc_ping_baseline",
+                    "jsoc_restart_pattern"
+                ];
+
+                STM_KEYS.forEach(k => localStorage.removeItem(k));
+
+                console.log("%c[STM RESET] browser memory cleared", "color:#00ff9c;font-weight:bold");
+                alert("STM browser memory cleared. Reloading interface...");
+                location.reload();
+
+            } catch (e) {
+                console.error("[STM RESET] failed", e);
+                alert("MEM RESET failed. Check console.");
             }
         }
 
@@ -1116,7 +1180,8 @@
         }
 
         function exportDatabase() {
-            let db = safeJsonGet('jsoc_stats', {});
+            lsFlush();
+            let db = statsData || safeJsonGet('jsoc_stats', {});
             let arr = Object.keys(db).map(k => ({ name: k, total: db[k].totalTime || 0, session: db[k].sessionTime || 0 }));
             arr.sort((a, b) => b.total - a.total);
             
@@ -1357,8 +1422,10 @@
             return restartPattern;
         };
         window.resetSteamIds = function() {
+            prevSteamId = { EU1: null, EU2: null, EU3: null };
             try { localStorage.removeItem('jsoc_steam_ids'); } catch(e){}
             console.log('%c[RESET] Steam ID baseline wyczyszczony - następny tick ustawi nowe', 'color:#0f0;font-weight:bold');
+            return prevSteamId;
         };
 
         function predictNextRestartWindow(server) {
@@ -1390,6 +1457,42 @@
             });
         }
 
+        // ===== STM v8: deterministic restart signal from BattleMetrics/Steam =====
+        function normalizeSteamId(value) {
+            if (value === undefined || value === null || value === '') return null;
+            return String(value).trim();
+        }
+
+        function extractSteamIdFromRawJson(rawText) {
+            // serverSteamId can exceed Number.MAX_SAFE_INTEGER, so read it from raw JSON before JSON.parse can round it.
+            const m = rawText.match(/\"serverSteamId\"\s*:\s*\"?(\d{8,})\"?/);
+            return m ? m[1] : null;
+        }
+
+        function getCurrentSteamId(rawText, attr) {
+            return extractSteamIdFromRawJson(rawText) ||
+                normalizeSteamId(attr.details?.serverSteamId) ||
+                normalizeSteamId(attr.details?.steamId) ||
+                normalizeSteamId(attr.details?.serverId);
+        }
+
+        function getDetailsUptime(attr) {
+            const t = Number(attr.details?.time);
+            return Number.isFinite(t) && t > 0 ? t : 0;
+        }
+
+        function checkBattlemetricsFreshness(server, attr) {
+            const stamp = attr.updatedAt ? Date.parse(attr.updatedAt) : 0;
+            if (!stamp) return;
+            const ageMs = Date.now() - stamp;
+            if (ageMs > 5 * 60 * 1000 && Date.now() - lastBmStaleAlert[server] > 5 * 60 * 1000) {
+                lastBmStaleAlert[server] = Date.now();
+                const ageMin = Math.round(ageMs / 60000);
+                logEvent(`[BM] ${server} DATA STALE: UPDATED ${ageMin}M AGO`, "text-yellow-500 font-bold");
+                pushToDMD(`[BM] ${server} DATA STALE: ${ageMin}M`, 1, 'dmd-alarm-yellow');
+            }
+        }
+
         async function fetchServer(name, id) {
             const start = performance.now();
             try {
@@ -1407,11 +1510,24 @@
                     throw new Error("429"); 
                 }
 
-                const json = await res.json(); const attr = json.data ? json.data.attributes : {};
+                const rawText = await res.text();
+                let json;
+                try {
+                    json = JSON.parse(rawText);
+                } catch (e) {
+                    logEvent(`[WD] ${name} BAD JSON FROM BATTLEMETRICS`, "text-red-500 font-bold");
+                    throw e;
+                }
+
+                const attr = json.data ? json.data.attributes : {};
+                checkBattlemetricsFreshness(name, attr);
+
                 const players = (json.included || []).filter(x => x.type === "player").map(p => p.attributes.name);
-                const currentPlayers = attr.players || 0; const maxPlayers = attr.maxPlayers || 0; const currentUptime = attr.details?.time || 0;
-                // [v8] Wyciągnij Steam Server ID - rotuje przy każdym restarcie procesu (100% pewny sygnał, działa nawet bez graczy).
-                const currentSteamId = attr.details?.serverSteamId || attr.details?.steamId || attr.details?.serverId || null;
+                const currentPlayers = attr.players || 0;
+                const maxPlayers = attr.maxPlayers || 0;
+                const currentUptime = getDetailsUptime(attr);
+                // [v8] 100% signal: Steam server ID rotation. Extracted as string from raw JSON to avoid 64-bit rounding.
+                const currentSteamId = getCurrentSteamId(rawText, attr);
                 
                 if (!lastRestartData[name]) {
                     lastRestartData[name] = currentUptime > 0 ? Date.now() - (currentUptime * 1000) : Date.now();
@@ -1466,24 +1582,24 @@
                     let crashConfirmCount = serverBuffers[name].filter(e => e.status === 'offline' || e.status === 'dead').length;
                     let hasLagOrOfflineInRam = serverBuffers[name].some(entry => entry.ping > 500 || entry.status === 'offline' || entry.status === 'dead');
 
-                    if (!inCooldown) {
-                        // [v8] P0: STEAM SERVER ID ROTATION - 100% pewny sygnał. Działa nawet gdy nikt nie gra i gdy API nie zwraca uptime.
-                        // Wymaga: poprzednie ID było znane (nie null), aktualne też (nie null), oraz różnią się.
-                        if (prevSteamId[name] && currentSteamId && prevSteamId[name] !== currentSteamId) {
-                            isConfirmedRestart = true;
-                            heuristicReason = `STEAM ID ROTATION (${prevSteamId[name]} -> ${currentSteamId})`;
-                        }
-                        // P1: jawny reset uptime z API (mocny sygnał, gdy gra wspiera details.time)
-                        else if (isUptimeReset) {
+                    // P1 / v8: serverSteamId rotation is deterministic and must bypass cooldown.
+                    // Cooldown only suppresses heuristic fallback signals, never the Steam ID signal.
+                    if (prevSteamId[name] && currentSteamId && prevSteamId[name] !== currentSteamId) {
+                        isConfirmedRestart = true;
+                        heuristicReason = `STEAM ID ROTATION (${prevSteamId[name]} -> ${currentSteamId})`;
+                    }
+                    else if (!inCooldown) {
+                        // P2: jawny reset uptime z API (mocny sygnał, gdy gra wspiera details.time)
+                        if (isUptimeReset) {
                             isConfirmedRestart = true;
                             heuristicReason = `UPTIME RESET (${prevUptime[name]}s -> ${currentUptime}s)`;
                         }
-                        // P2: API DEAD/OFFLINE potwierdzone min. 2 próbkami w buforze 60s (chroni przed pojedynczym blipem)
+                        // P3: API DEAD/OFFLINE potwierdzone min. 2 próbkami w buforze 60s (chroni przed pojedynczym blipem)
                         else if (isCrash && crashConfirmCount >= 2) {
                             isConfirmedRestart = true;
                             heuristicReason = `HARD RESTART (API DEAD x${crashConfirmCount})`;
                         }
-                        // P3: Mass-leave fallback - działa gdy API nie zwraca uptime.
+                        // P4: Mass-leave fallback - działa gdy API nie zwraca uptime.
                         // Wymaga: realnie dużo odejść (>=8 abs. lub >=70% poprzedniej pop), niska populacja po, oraz turbulencja (lag/offline w 60s buforze).
                         else if (
                             (droppedPlayersCount >= 8 || (prevPlayerSnapshot >= 5 && droppedPlayersCount >= prevPlayerSnapshot * 0.7))
@@ -1493,7 +1609,7 @@
                             isConfirmedRestart = true;
                             heuristicReason = `MASS LEAVE (${droppedPlayersCount}/${prevPlayerSnapshot}) + LAG`;
                         }
-                        // P4: Wstrząs weteranów (>=2 graczy z >90min totalTime znika jednocześnie + lag) - silne potwierdzenie nawet bez uptime
+                        // P5: Wstrząs weteranów (>=2 graczy z >90min totalTime znika jednocześnie + lag) - silne potwierdzenie nawet bez uptime
                         else if (droppedPlayersCount >= 4 && hasLagOrOfflineInRam && currentPlayers < prevPlayerSnapshot - 3) {
                             let veteranCount = 0;
                             leftPlayers.forEach(pName => {
@@ -1514,9 +1630,12 @@
                     }
 
                     if (isConfirmedRestart) {
-                        isBooting[name] = true;
-                        lastRestartData[name] = Date.now();
-                        lastRestartDetected[name] = Date.now();  // [v5] Aktywuj cooldown
+                        const restartDetectedAt = Date.now();
+                        // If Steam ID changed and BM already reports ONLINE, the process has already returned.
+                        // Do not force a fake BOOTING state that would shift the restart clock on the next sample.
+                        isBooting[name] = !(finalStatus === 'online' && currentSteamId && heuristicReason.startsWith('STEAM ID ROTATION'));
+                        lastRestartData[name] = restartDetectedAt;
+                        lastRestartDetected[name] = restartDetectedAt;  // cooldown for heuristic fallbacks only
                         lsSet('jsoc_last_restarts', JSON.stringify(lastRestartData)); recordRestartPattern(name);
                         
                         isApprox[name] = false;
@@ -1547,9 +1666,11 @@
                         if (isBooting[name]) {
                             isBooting[name] = false;
                             // Zabezpieczenie przed błędem z brakiem "time" z API Battlemetrics.
-                            let restartOffset = currentUptime > 0 ? (currentUptime * 1000) : 0; 
-                            lastRestartData[name] = Date.now() - restartOffset; 
-                            lsSet('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                            if (currentUptime > 0) {
+                                let restartOffset = currentUptime * 1000;
+                                lastRestartData[name] = Date.now() - restartOffset;
+                                lsSet('jsoc_last_restarts', JSON.stringify(lastRestartData));
+                            }
                             
                             addSystemAlert(`${name} SYSTEM ONLINE. CYCLE LOCKED.`); 
                             if(audioUnlocked && voiceEnabled && !isMuted) { queueSpeech(`System online. ${name.replace('EU1', 'EU One')} cycle locked.`); }
@@ -1560,13 +1681,19 @@
                 }
                 
                 prevUptime[name] = currentUptime;
-                // [v8] Zapamiętaj Steam ID (tylko jeśli API zwróciło sensowną wartość). Persystujemy w localStorage by przeżyło F5.
+                // [v8] Zapamiętaj Steam ID jako string. Pierwszy odczyt = baseline, nie alarm.
                 if (currentSteamId) {
                     if (prevSteamId[name] !== currentSteamId) {
+                        const wasEmpty = !prevSteamId[name];
                         prevSteamId[name] = currentSteamId;
                         lsSet('jsoc_steam_ids', JSON.stringify(prevSteamId));
-                        if (advMode) logEvent(`[ADV] ${name} STEAM ID: ${currentSteamId}`, "text-gray-500", true);
+                        if (advMode) {
+                            const label = wasEmpty ? 'STEAM ID BASELINE' : 'STEAM ID UPDATED';
+                            logEvent(`[ADV] ${name} ${label}: ${currentSteamId}`, "text-gray-500", true);
+                        }
                     }
+                } else if (advMode) {
+                    logEvent(`[ADV] ${name} STEAM ID MISSING IN BM RESPONSE`, "text-yellow-900", true);
                 }
 
                 if (maxPlayers > 0 && currentPlayers >= maxPlayers) {
@@ -1941,7 +2068,7 @@
                                 <span class="text-white font-black text-sm md:text-base tracking-widest drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] leading-none mb-1" title="Session Time">S: ${String(sH).padStart(2, '0')}h ${String(sM).padStart(2, '0')}m</span>
                                 <span class="text-yellow-500 font-bold text-[10px] tracking-widest leading-none" title="Total Time">T: ${String(tH).padStart(2, '0')}h ${String(tM).padStart(2, '0')}m</span>
                             </div>
-                            <span class="cursor-pointer hover:text-red-500 px-2 text-lg ml-1" style="color: ${colors.text}" onclick="removeWatch('${escapeAttr(n)}')">✖</span>
+                            <span class="cursor-pointer hover:text-red-500 px-2 text-lg ml-1" style="color: ${colors.text}" onclick="removeWatch(${escapeAttr(JSON.stringify(n))})">✖</span>
                         </div>
                     `;
                 } else {
@@ -1949,7 +2076,7 @@
                     item.className = `flex justify-between items-center p-2 rounded font-bold tracking-wide border-l-2 transition-colors ${isOnline?'':'opacity-70'}`; 
                     item.style.backgroundColor = isOnline ? colors.bg : 'rgba(0,0,0,0.4)'; item.style.borderColor = isOnline ? colors.border : '#555';
                     
-                    item.innerHTML = `<div class="flex items-center flex-1 min-w-0"><span class="${numClass} mr-2 w-6 text-right shrink-0" style="color: ${colors.text}">${i + 1}.</span><span class="${isOnline?'text-white':'text-gray-300'} text-sm md:text-base font-black tracking-wider truncate flex-1">${escapeHTML(n)}</span>${sessionTimeStr}</div><div class="flex items-center shrink-0 ml-1"><span class="${arrowColor} font-black text-sm mr-2 tracking-[-0.15em] drop-shadow-md" title="${statusLabel}">${arrowStr}</span><span class="cursor-pointer hover:text-red-500 px-2 text-lg" style="color: ${colors.text}" onclick="removeWatch('${escapeAttr(n)}')">✖</span></div>`; 
+                    item.innerHTML = `<div class="flex items-center flex-1 min-w-0"><span class="${numClass} mr-2 w-6 text-right shrink-0" style="color: ${colors.text}">${i + 1}.</span><span class="${isOnline?'text-white':'text-gray-300'} text-sm md:text-base font-black tracking-wider truncate flex-1">${escapeHTML(n)}</span>${sessionTimeStr}</div><div class="flex items-center shrink-0 ml-1"><span class="${arrowColor} font-black text-sm mr-2 tracking-[-0.15em] drop-shadow-md" title="${statusLabel}">${arrowStr}</span><span class="cursor-pointer hover:text-red-500 px-2 text-lg" style="color: ${colors.text}" onclick="removeWatch(${escapeAttr(JSON.stringify(n))})">✖</span></div>`; 
                 }
 
                 div.appendChild(item); 
