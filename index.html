@@ -1481,8 +1481,16 @@
             return Number.isFinite(t) && t > 0 ? t : 0;
         }
 
-        function checkBattlemetricsFreshness(server, attr) {
+        function getBattlemetricsUpdatedAtMs(attr) {
             const stamp = attr.updatedAt ? Date.parse(attr.updatedAt) : 0;
+            if (!stamp || !Number.isFinite(stamp)) return 0;
+            // Ignore impossible future timestamps. Small clock skew tolerance: 30s.
+            if (stamp > Date.now() + 30000) return 0;
+            return stamp;
+        }
+
+        function checkBattlemetricsFreshness(server, attr) {
+            const stamp = getBattlemetricsUpdatedAtMs(attr);
             if (!stamp) return;
             const ageMs = Date.now() - stamp;
             if (ageMs > 5 * 60 * 1000 && Date.now() - lastBmStaleAlert[server] > 5 * 60 * 1000) {
@@ -1491,6 +1499,21 @@
                 logEvent(`[BM] ${server} DATA STALE: UPDATED ${ageMin}M AGO`, "text-yellow-500 font-bold");
                 pushToDMD(`[BM] ${server} DATA STALE: ${ageMin}M`, 1, 'dmd-alarm-yellow');
             }
+        }
+
+        function getRestartTimestampFromBm(server, attr, fallbackTs) {
+            const bmUpdatedAt = getBattlemetricsUpdatedAtMs(attr);
+            if (!bmUpdatedAt) return fallbackTs;
+
+            const previousRestart = lastRestartData[server] || 0;
+
+            // For serverSteamId rotation, BM updatedAt is the closest timestamp we get from the same API response.
+            // It prevents the clock from being late by the browser polling delay or BM cache age.
+            if (bmUpdatedAt > previousRestart && bmUpdatedAt <= fallbackTs) {
+                return bmUpdatedAt;
+            }
+
+            return fallbackTs;
         }
 
         async function fetchServer(name, id) {
@@ -1631,17 +1654,22 @@
 
                     if (isConfirmedRestart) {
                         const restartDetectedAt = Date.now();
+                        const isSteamIdRotation = currentSteamId && heuristicReason.startsWith('STEAM ID ROTATION');
+                        const restartEventAt = isSteamIdRotation ? getRestartTimestampFromBm(name, attr, restartDetectedAt) : restartDetectedAt;
+                        const correctionSec = Math.max(0, Math.round((restartDetectedAt - restartEventAt) / 1000));
+
                         // If Steam ID changed and BM already reports ONLINE, the process has already returned.
                         // Do not force a fake BOOTING state that would shift the restart clock on the next sample.
-                        isBooting[name] = !(finalStatus === 'online' && currentSteamId && heuristicReason.startsWith('STEAM ID ROTATION'));
-                        lastRestartData[name] = restartDetectedAt;
+                        isBooting[name] = !(finalStatus === 'online' && isSteamIdRotation);
+                        lastRestartData[name] = restartEventAt;
                         lastRestartDetected[name] = restartDetectedAt;  // cooldown for heuristic fallbacks only
                         lsSet('jsoc_last_restarts', JSON.stringify(lastRestartData)); recordRestartPattern(name);
                         
                         isApprox[name] = false;
                         lsSet('jsoc_approx_state', JSON.stringify(isApprox));
                         
-                        logEvent(`[TELEMETRY] ${name} TRUE RESTART DETECTED (${heuristicReason}).`, "text-red-500 font-bold");
+                        const correctionText = correctionSec >= 10 ? ` | BM TIME CORRECTION: -${correctionSec}s` : '';
+                        logEvent(`[TELEMETRY] ${name} TRUE RESTART DETECTED (${heuristicReason})${correctionText}.`, "text-red-500 font-bold");
 
                         if (state === 'AUTO' && hasPassedQuarantine) {
                             setWdState(name, 'ON');
