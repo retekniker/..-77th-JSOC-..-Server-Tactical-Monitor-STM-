@@ -1,3 +1,15 @@
+# ⚠️ ARCHIVED — NO LONGER MAINTAINED
+
+This project has been archived and is no longer maintained.
+
+Due to changes introduced by **BattleMetrics**, this legacy browser-only version no longer works correctly and will not receive further updates.
+
+The current actively maintained version is **STM Core**, available for both **Linux and Windows**:
+
+**https://github.com/retekniker/STM-Core**
+
+---
+
 # Re-Tek corp. ..::77th JSOC::.. Server Tactical Monitor (STM) PRO V6.0
 
 **STM PRO V6.0** is a browser-based tactical monitoring dashboard designed for quick observation of the 77th JSOC EU-1, EU-2, and EU-3 servers.
